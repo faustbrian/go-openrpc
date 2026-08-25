@@ -876,6 +876,9 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Verify JSON-RPC interoperability through the configured module proxy instead
+  of requiring a sibling repository checkout.
+
 - Exclude intentional nested modules from root local-proxy archives so local,
   bootstrap, CI, and public module checksums describe the same source
   boundary.
