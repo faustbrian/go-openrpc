@@ -2,14 +2,11 @@
 set -euo pipefail
 
 openrpc_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-jsonrpc_root="${openrpc_root}/../jsonrpc"
-if [[ ! -f "${jsonrpc_root}/go.mod" ]]; then
-    echo "sibling jsonrpc checkout is required for integration verification" >&2
-    exit 1
-fi
-
-integration_dir=$(mktemp -d)
-trap 'rm -rf "${integration_dir}"' EXIT
+integration_dir=$(mktemp -d "${TMPDIR:-/tmp}/openrpc-jsonrpc.XXXXXX")
+cleanup() {
+    find "${integration_dir}" -depth -delete
+}
+trap cleanup EXIT HUP INT TERM
 
 cat > "${integration_dir}/go.mod" <<EOF
 module integration.test/openrpcjsonrpc
@@ -17,11 +14,10 @@ module integration.test/openrpcjsonrpc
 go 1.26.6
 
 require (
-    github.com/faustbrian/go-jsonrpc v0.0.0
+    github.com/faustbrian/go-jsonrpc v1.0.0
     github.com/faustbrian/go-openrpc v0.0.0
 )
 
-replace github.com/faustbrian/go-jsonrpc => ${jsonrpc_root}
 replace github.com/faustbrian/go-openrpc => ${openrpc_root}
 EOF
 
@@ -73,6 +69,6 @@ EOF
 
 (
     cd "${integration_dir}"
-    go mod tidy
-    go test ./... -count=1
+    GOWORK=off go mod tidy
+    GOWORK=off go test ./... -count=1
 )
