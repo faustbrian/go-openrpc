@@ -24,6 +24,9 @@ Changelog principles, and releases use semantic versioning.
 
 ### Documentation
 
+- Regenerate the complete standalone documentation bundle from current source
+  documents.
+
 - Correct stale package, standalone, and authoritative-source links in public
   documentation.
 

@@ -874,6 +874,31 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- Exclude intentional nested modules from root local-proxy archives so local,
+  bootstrap, CI, and public module checksums describe the same source
+  boundary.
+
+- Track the pinned documentation-tool lockfile so clean CI checkouts install
+  the exact validated cspell dependency.
+
+- Reconcile standalone dependency checksums against deterministic current
+  module archives so CI, local verification, and release consumers resolve
+  identical content.
+
+- Harden standalone documentation validation with deterministic spelling and
+  link checks, package-specific documentation gates, and repository-local
+  contributor guidance.
+
+### Documentation
+
+- Regenerate the complete standalone documentation bundle from current source
+  documents.
+
+- Correct stale package, standalone, and authoritative-source links in public
+  documentation.
+
 ## 1.0.0 - 2026-08-25
 
 ### Documentation
