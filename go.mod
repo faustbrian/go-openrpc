@@ -4,7 +4,7 @@ go 1.26.6
 
 require (
 	github.com/dlclark/regexp2 v1.11.0
-	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
+	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	go.uber.org/goleak v1.3.0
 )
 
