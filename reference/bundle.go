@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 // ResourceBundle is a lossless, immutable OpenRPC reference bundle. It keeps

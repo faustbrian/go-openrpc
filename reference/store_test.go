@@ -6,7 +6,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/faustbrian/golib/pkg/openrpc/reference"
+	"github.com/faustbrian/go-openrpc/reference"
 )
 
 func TestMemoryStoreOwnsDocumentsAndEnforcesBounds(t *testing.T) {

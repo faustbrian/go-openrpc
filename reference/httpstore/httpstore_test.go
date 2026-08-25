@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/reference"
-	"github.com/faustbrian/golib/pkg/openrpc/reference/httpstore"
+	"github.com/faustbrian/go-openrpc/reference"
+	"github.com/faustbrian/go-openrpc/reference/httpstore"
 )
 
 func TestStoreLoadsAllowedBoundedIdentityResponses(t *testing.T) {

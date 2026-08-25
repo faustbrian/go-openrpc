@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func FuzzParseStrictJSON(f *testing.F) {

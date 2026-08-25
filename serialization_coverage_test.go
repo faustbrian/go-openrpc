@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonschema"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonschema"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func TestSerializationStandardFieldCollisions(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 	validator "github.com/santhosh-tekuri/jsonschema/v6"
 )
 

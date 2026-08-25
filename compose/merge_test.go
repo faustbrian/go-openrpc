@@ -5,10 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/compose"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonschema"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/compose"
+	"github.com/faustbrian/go-openrpc/jsonschema"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func TestMergeCombinesMethodsDeterministically(t *testing.T) {

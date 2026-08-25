@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/discovery"
-	"github.com/faustbrian/golib/pkg/openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/discovery"
+	"github.com/faustbrian/go-openrpc/validate"
 )
 
 func TestServiceProducesCanonicalDiscoverySnapshot(t *testing.T) {

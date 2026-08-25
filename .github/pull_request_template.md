@@ -1,13 +1,21 @@
-## Behavior
+## Result
 
-Describe the user-visible or contract change and why it is needed.
+Describe the resulting behavior and why it is needed.
 
-## Compatibility and security
+## Compatibility And Delivery
 
-State OpenRPC, Go API, reference-resolution, resource-bound, and data-exposure
-impact. Include the semantic diff classification where relevant.
+Describe material compatibility, migration, rollout, or risk consequences.
+Omit topics that do not apply.
 
-## Verification
+## Specification Decisions
 
-List exact commands and results. Update normative or object-field evidence when
-the change implements or modifies a specification requirement.
+For parsing, validation, serialization, resolution, canonicalization,
+transport, or protocol changes, list:
+
+- affected decision identifiers;
+- changed normative sources, registries, fixtures, or errata;
+- selected observable behavior and alternatives considered;
+- compatibility and wire consequences;
+- executable conformance and interoperability evidence.
+
+State `Not applicable` only when no specification-backed behavior can change.

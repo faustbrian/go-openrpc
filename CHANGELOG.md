@@ -5,6 +5,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-25
+
 ### Documentation
 
 - Replace obsolete standalone-repository links and workflow claims with
@@ -14,6 +16,7 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Publish the module from its standalone `github.com/faustbrian/go-openrpc` identity while preserving its documented API and behavior.
 - Upgrade `golang.org/x/text` to v0.41.0 so the dependency graph no longer
   contains GO-2026-5970.
 - Link authoritative specification inputs directly to the canonical decision

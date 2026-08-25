@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
+	openrpc "github.com/faustbrian/go-openrpc"
 )
 
 // Classification describes the compatibility impact of one change.

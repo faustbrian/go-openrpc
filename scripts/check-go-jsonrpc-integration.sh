@@ -17,12 +17,12 @@ module integration.test/openrpcjsonrpc
 go 1.26.6
 
 require (
-    github.com/faustbrian/golib/pkg/jsonrpc v0.0.0
-    github.com/faustbrian/golib/pkg/openrpc v0.0.0
+    github.com/faustbrian/go-jsonrpc v0.0.0
+    github.com/faustbrian/go-openrpc v0.0.0
 )
 
-replace github.com/faustbrian/golib/pkg/jsonrpc => ${jsonrpc_root}
-replace github.com/faustbrian/golib/pkg/openrpc => ${openrpc_root}
+replace github.com/faustbrian/go-jsonrpc => ${jsonrpc_root}
+replace github.com/faustbrian/go-openrpc => ${openrpc_root}
 EOF
 
 cat > "${integration_dir}/integration_test.go" <<'EOF'
@@ -33,10 +33,10 @@ import (
     "encoding/json"
     "testing"
 
-    gojsonrpc "github.com/faustbrian/golib/pkg/jsonrpc"
-    "github.com/faustbrian/golib/pkg/openrpc/discovery"
-    openrpcjsonrpc "github.com/faustbrian/golib/pkg/openrpc/jsonrpc"
-    openrpcparse "github.com/faustbrian/golib/pkg/openrpc/parse"
+    gojsonrpc "github.com/faustbrian/go-jsonrpc"
+    "github.com/faustbrian/go-openrpc/discovery"
+    openrpcjsonrpc "github.com/faustbrian/go-openrpc/jsonrpc"
+    openrpcparse "github.com/faustbrian/go-openrpc/parse"
 )
 
 func TestRegisterDiscoveryWithGoJSONRPCRegistry(t *testing.T) {

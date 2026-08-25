@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/expression"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/expression"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func TestEvaluateLinkParamsPreservesExpressionTypesAndConstants(t *testing.T) {

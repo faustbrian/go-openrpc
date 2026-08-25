@@ -6,7 +6,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func TestResolverCoversInputErrorsCancellationAndLoadFailures(t *testing.T) {

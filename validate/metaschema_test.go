@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/golib/pkg/openrpc/parse"
-	"github.com/faustbrian/golib/pkg/openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/parse"
+	"github.com/faustbrian/go-openrpc/validate"
 )
 
 func TestPinnedOfficialExamplesRespectSupportedVersionLines(t *testing.T) {

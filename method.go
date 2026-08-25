@@ -3,8 +3,8 @@ package openrpc
 import (
 	"errors"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonschema"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonschema"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 // ErrInvalidParamStructure reports a value outside the specification's closed

@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/diff"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/golib/pkg/openrpc/parse"
+	"github.com/faustbrian/go-openrpc/diff"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/parse"
 )
 
 func FuzzSemanticDiffIsDeterministic(f *testing.F) {

@@ -1,1 +1,5 @@
-/coverage.out
+.artifacts/
+.tools/
+.gocache*/
+.DS_Store
+coverage.out

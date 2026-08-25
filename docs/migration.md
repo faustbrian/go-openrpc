@@ -21,7 +21,7 @@ and do not fall back to supported behavior.
 
 ## Public API evolution
 
-Before v1, incompatible Go API changes remain possible but must preserve
-document semantics and be recorded in `CHANGELOG.md`. After v1, release checks
+Incompatible Go API changes require a new major release, must preserve document
+semantics, and must be recorded in `CHANGELOG.md`. Release checks
 must compare exported APIs and document migrations before an incompatible major
 release.

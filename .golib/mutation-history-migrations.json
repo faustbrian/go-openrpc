@@ -1,0 +1,548 @@
+{
+  "schema_version": 3,
+  "reason": "Exact mutation checkpoints retained across history rewrites only when the approved old and replacement package input fingerprints, tool version, and report digest match.",
+  "verifier_migration_review": {
+    "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+    "reason": "Each listed checkpoint was executed with the complete current Gremlins semantic patch set introduced by ac300cf3; the four omitted checkpoints require fresh campaigns.",
+    "reviewed_at": "2026-08-20"
+  },
+  "verifier_migrations": [
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "52fc31483a9a6dc8c1dabc3e623470887d1b1c070c7a86e164bec15bd9558c20",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": ".",
+      "report_sha256": "d9c4d4c4bd88c5d61836f209305f64ba58fbd0b370870205b0604ba3c0790071"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "eacc5d54cd4561515c77944c70c8a561cf3b7a8109ee9beafb25e8f4f13110a0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "builder",
+      "report_sha256": "73c0720e0b606f7e9420ecc50c79900fed48e2893d5ee6cc1c0f8fd9960d7ba3"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "233734a8546554bc5b751589ff0cea0c962951b6822149c0f9e83eb727c5ec24",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "compose",
+      "report_sha256": "0765fb1d39378007a9858844e585dfe6ebf03bf383a603bd4ba37d4c1f01b9ff"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "f8c12fee7436a5d63adb442e12c3a44b8428af135c7991c8015e4ab401955f43",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "diff",
+      "report_sha256": "4bc9ee8c60027fede2cf9a5cbccd1fcff98c6da58db62c116c6b521e2d35d3b9"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "9ed99ea7b8afded6463a529b985af11292bc7fd4896ed40baef94c95eaace4e4",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "discovery",
+      "report_sha256": "759ad0b1a416435a9ca77403f6b7c545752ee920f35a40f725175f23586bae8e"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "a9e55b950a1a6aa2b70cae0373baa835d565a6eef101d18e282d8e072ae47768",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "expression",
+      "report_sha256": "b9fabccccb107e1736ed6a40ce9ba0c6e3eb51a247d414f69515a39f1abbf314"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "fd5e05567773436c6173776a3e079740a864498564447659a211bf89fe414cc0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "internal/specification",
+      "report_sha256": "8206df7e909169fb04fa728b0d2bf7d1c84475c91b32fb54c9077e9318cd83fc"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5e5b2471e0e20e79121dd1a00d0d55b4c993bea31f8243abf63d08af3f98ab79",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonrpc",
+      "report_sha256": "7412b2f3244ff18db09377f2f22ead9c7f59cf1b73d6a7a833fd241fcd36248e"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "29d521888c5c76b87e4855dec1d1bf295515cf9a3724e097fa148b6b370e99a8",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonschema",
+      "report_sha256": "d874612fcc27b69bfe5b782c874cd28b8b7188a4071fe0984f534782892236d3"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5c9fa793af5df9bf6eb3408b972501b3fcd8b61378997b9296b2305ec3c36dce",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonvalue",
+      "report_sha256": "ef8989327e73dfa59e0e0eeadd81e1527a9d28cc9d0441c6c65c428812ba401b"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "60f5be65497f89bf7dbbff6ffd3c23cb62f43914c6d7b9e0b17a4a66e0354c2f",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "observe",
+      "report_sha256": "f5c803e4274b47b279ba917530f3eecbde8376f0a4ea7b6d6ec3c8a0584bbfd8"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "1e88640ef29b8148829fa88c5964a8caf3dac154bbf36a402ddeb6d4c11a1486",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "parse",
+      "report_sha256": "746a5b581a2f31eb3d579aa8f65260271b531fc659086fad5f4ba5568413e114"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "11f04092d927bb4bd6e550e4eae076ebbeb77681cf0cc4969d2cd8b4a9e769b7",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "reference",
+      "report_sha256": "c84c086ff871da92b7d97d2190194e53a3bee3b8523cff92338e87665990d44a"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "070b74c3abe80f192e49913519166deeec724150a4affdca14a8c6b784048b70",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "reference/httpstore",
+      "report_sha256": "6e361a2caf60e437b245e7e9caf84875e9944c9ee458826d8c84992731ea2097"
+    },
+    {
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5114d2eaaede21aab7ba6355e804892dce9b6b0454aabd14ea22ec5c4e53558e",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "validate",
+      "report_sha256": "6af5ef4968c4caa7ad932d3b60c994239a3258bba49f3f871636fa0ca32907f3"
+    }
+  ],
+  "entries": [
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "50f1b65350c8f2a91efcab0d2265ea9bfca513992a01932108855e5f5be58873",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": ".",
+      "report_sha256": "1506c4b28ec198734a6fe4a206cb8dd5ab2d34c77685a0ddf7d4b1286ce2b5fa"
+    },
+    {
+      "execution_revision": "f6236f895ce76595382e918ad2c06c69432937a3",
+      "gate_input_digest": "d310f76546666884e0317f311ad4fa6a9fed8f5cf8e4396c18636fae12f8454c",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": ".",
+      "replacement_gate_input_digest": "07538740200fb2a50e69050d4c42a5ee9998e720eccdc54116817dd3eca32526",
+      "report_sha256": "a7d66b670d0321d3d34aeb28c450ae69e8d8843fbb84abe3051c8b10f1764e74"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "5bd5a4a40b3b0ed32fa20fe871f95ddc28c7ede5701d95ddd8b347c012c8520e",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "builder",
+      "report_sha256": "4a89ae3cc93be90ab69715bdf4a86e02b0777fa002fe0b62aea4698215145f11"
+    },
+    {
+      "execution_revision": "f6236f895ce76595382e918ad2c06c69432937a3",
+      "gate_input_digest": "fd38c7fa6866434d163f376b649e2863a658afb01e653f2a4df9c018ce0eb599",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "builder",
+      "replacement_gate_input_digest": "0af5c449f3c9c95b581de2ad148982d3ba0cfb52bdfa25ff54e1cd7fbab5c324",
+      "report_sha256": "639babccdd59a8380446e55f2d2f7b5ddbc8417dc5a9a3b3a0dd369b8f8b91fd"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "e423718fb53d09083cc2c7c57b7186e5ec9a36b1040004351a3bdfa3393127cc",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "compose",
+      "replacement_gate_input_digest": "75aeef9a03723ed4f9bf878bd82451461215fe09e4d05e3eff1de7a8083112d8",
+      "report_sha256": "68334d945b2f305d27b82542bbcfad80405a3e41f5aeb0c377e0aa9c4426b9b3"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "809d3c4c4d1b7c4bf264236269416013d29a1b00a5f228551bf7b082b0822579",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "compose",
+      "report_sha256": "03611c0178760db4108d6343e47f378b1d2693ae6b21fcdf00ea194f7cef32ef"
+    },
+    {
+      "execution_revision": "8b2ab6b6e2a6920efe7d265f0ed7221cd7cd7e83",
+      "gate_input_digest": "b17a1543323fb2f5865c8dc3fca2a34674a7f4cc323fc18b6b55f97445ec37d8",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "diff",
+      "replacement_gate_input_digest": "0c2319f6685a9c350666f1c90a63fbbc5ca64cdbb257185d54c1140da5fe4370",
+      "report_sha256": "c70cb130d65e7c9314ec1ed6ec26f8a47e65817d2338865b9e38ef856b9316c2"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "69c04b7fa46d169b76cb3204dade316a71d0b6329f3a516410c50e5219bfc231",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "diff",
+      "report_sha256": "d0885610b811d10a5865615d9d2cf3a6a3989127b61e7cbcc3eeccde7eb97d20"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "8e4924c0d54de864b5f371b085b5355809d3c8b4e2e65b1dd707db17a980ac5f",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "discovery",
+      "replacement_gate_input_digest": "7ded124d479e49b7d545bfe86e7b37d1bf2061c64e28915de4c8f890aa6f9921",
+      "report_sha256": "735f9faea273ee558a2bc94d698fdf56d5e14c917bcde9c1a8bd3e6f3605f3d6"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "f013ea994a334c9b900c5f3b3cf7bd4fdb4e78a03b77bfe42b3af8556e16195d",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "discovery",
+      "report_sha256": "388e12b5ef2de08453ae8d50b2b6e2f6a31cdf32755848e48801330844a7687e"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "039360fc505d168be7cad23e8d37ff82f4763bf75b10bc4c57190020a7cfc07b",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "expression",
+      "report_sha256": "50e89aff672f9c07fb7729e80f15a1b1b8ae8e8304cbba1e0a26ce9a9d28663d"
+    },
+    {
+      "execution_revision": "c6a824e8f0fdf63531cfd39134733198047a3d0f",
+      "gate_input_digest": "57f7ad3c73bbdf649508131bfb24e3babb834ffbfcfc2565aafb036e442ee3aa",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "expression",
+      "replacement_gate_input_digest": "5982662749f8627b89727de1e53e82945c55526ec53a0b4295819257ac3fd9b6",
+      "report_sha256": "b543ba74a1007d805b83e080be942a2edb664ae84191276d9df7e13695542f88"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "07065157d30e77e8b7883179d882b6571fd9436ff5d77f72f4cdf06839371a60",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "internal/specification",
+      "report_sha256": "e681ec5ec524fba8fd39a1c9ec6ddaaef944d46c34aae3eb8fd9a826f18c6ca3"
+    },
+    {
+      "execution_revision": "c6a824e8f0fdf63531cfd39134733198047a3d0f",
+      "gate_input_digest": "d2b0ad9417944e2f52ee6e8ae3cf6cc2ec43b3ee4072be6e37ab3463aaf1a349",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "internal/specification",
+      "replacement_gate_input_digest": "d6f5a6edbd3f39915ee31569c5b06ab8f0fe8887bed22aae7b14614be8c0a648",
+      "report_sha256": "a4e445a8871f6f15848aceeb4c4d7aea62f329796dfc4e929d2799ba413c4da4"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "252d87cbc79473e984c0147277141a4535efadb5781efc6a7f46d0ca3829044f",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "jsonrpc",
+      "replacement_gate_input_digest": "a884259c74a915fa71b5697f76e6a67595e97875fc63c55077e5fe1a2ff0bfd2",
+      "report_sha256": "09e3394886e5eb5a325c0e9c98df85bbc01971b6a1396a52d313464d1130f7c1"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "b29a40ed32dab14db3c9e7f22e820ccc916940403e960075f5109727743262d1",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonrpc",
+      "report_sha256": "2ba22b81678701cd704fe30bb8319ec5d4c02a6cefe7b1c1fbb4c5d5a5637c6b"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "cca70a811fea42b230e7c83ee852b831aca24d87b7e6f2e574efdaa491c61506",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonschema",
+      "report_sha256": "13c3ea425d43672d40a59edb37316437b2651ae444655845a3f284f15a5bca43"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "d75f82ffa821a67609a0cab78ff105eeae6cf2542e987fc3c461dd4f3f5f8c2a",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "jsonvalue",
+      "report_sha256": "b3ba825955363b0f5c5a053fa1d64747a8d18f7394c0850e3754aa4fd31b5665"
+    },
+    {
+      "execution_revision": "c6a824e8f0fdf63531cfd39134733198047a3d0f",
+      "gate_input_digest": "0aeb977cc9b7d64be9e6b35f48b44b368ddc8b0523aba84434ddbeb86d4d2650",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "jsonvalue",
+      "replacement_gate_input_digest": "302e69e6d97e8bbd390013611d7ad92f743057e88ba2b653e5b696d6638d20ed",
+      "report_sha256": "a3876612b3e3f7381dc1465cde6c6772df60f50f2c580d2b0f486641d7325227"
+    },
+    {
+      "execution_revision": "8b2ab6b6e2a6920efe7d265f0ed7221cd7cd7e83",
+      "gate_input_digest": "f3c2060306616841e6181b2412c620b6163ad03109089fb105b975a66634b9d3",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "observe",
+      "replacement_gate_input_digest": "bd882c61d5d529dc159b149ed16cdd7cabcdaba8dc1bb5af1c81762ee4a31e39",
+      "report_sha256": "0de641872ed48ccd5c9147abb5bef2eef0d7e0661433e44c940510528b8f1913"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "053ecd90cd4bda80823575b6b3d1e7745a643dca917f52aa010ea87faf2252ba",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "observe",
+      "report_sha256": "5be68bba8f1922ab65d32dd4413e4f2d809495333fa02441e7505060c26d62dd"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "4ec0774cfee444b731f246771625828dcc42f658f5bc47a0ecae9e89341d37fb",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "parse",
+      "replacement_gate_input_digest": "71d312d81f81221b107490b7fe19a16b9451219f6c0a520c463786798633e277",
+      "report_sha256": "27b4506075c7828653785a13a649c97a13e1bc7285bac1dbd88b481d00583e5d"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "3c4854e3e7300ea786b08365f207b3661e8b150103d9178228b111b6ff2f0956",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "parse",
+      "report_sha256": "2dd6bc1782ee9191caa6ed0a7d1d5742cad8039dae59af8235b103cc683864e9"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "f3ea1eef14f5b05ef2ada88a3258113f7bca1fcbe7381cfb76dd0100896ce7e2",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "reference",
+      "replacement_gate_input_digest": "efe02203f6757c82e0af1d287e321def9e9d0baffcb46bd5ffd5ada07745e07a",
+      "report_sha256": "c6c0171b97d6673062e279e2715dd0736be617bd04dee70e8d065e245f65153d"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "d3033ea9187a6985bf03e334d69396883cdd5d6b0dc092744609185f5c3f100f",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "reference",
+      "report_sha256": "01a848978c738d07f56d21075817b74e37449ebe5e3e8240b6ab0788bcdb0643"
+    },
+    {
+      "execution_revision": "1cd09d9b3b3727e9f02e5bdbafecf36a741cb716",
+      "gate_input_digest": "21a8080b9943f9e9e9dda02027660427415ee06789e0971be4bd0f01ade26b0c",
+      "gremlins_version": "v0.6.0",
+      "migration_reason": "gate-version-input-isolation",
+      "module": ".",
+      "package": "reference/httpstore",
+      "replacement_gate_input_digest": "77b39521ed099298ad3d39e182df688528aabfae9750426b78ccb8ab099db94d",
+      "report_sha256": "33356e1c27c548940cf4d398b146de76363553f1895e637972957d8b5e41f894"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "8beb27a9244d4aa7f7dfe845622833106e376eb0e551d27a308451428b3c5fac",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "reference/httpstore",
+      "report_sha256": "37271285302a520c6cc51925c3c43d57a1d97a7c1b533411cc10c3abdde703e8"
+    },
+    {
+      "execution_revision": "8cb85e2f184a5fd013396bdb6521ecead1a61cc4",
+      "gate_input_digest": "0e202a411674280deca73cafccd4f305f2354fd27a5aef71b3c78a3dca5f5f8b",
+      "gremlins_version": "v0.6.0",
+      "module": ".",
+      "package": "validate",
+      "report_sha256": "2590746625d78a4e4c9f01429b8953ab4fddec007ece8d5240bd0797dd2d02d7"
+    },
+    {
+      "module": ".",
+      "package": ".",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "52fc31483a9a6dc8c1dabc3e623470887d1b1c070c7a86e164bec15bd9558c20",
+      "replacement_gate_input_digest": "753fae61d25d02a5889a21c5b2f7ab5edf4fbceb1c010374a86dfc1121d2b874",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "d9c4d4c4bd88c5d61836f209305f64ba58fbd0b370870205b0604ba3c0790071"
+    },
+    {
+      "module": ".",
+      "package": "builder",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "eacc5d54cd4561515c77944c70c8a561cf3b7a8109ee9beafb25e8f4f13110a0",
+      "replacement_gate_input_digest": "af7fd7bc49c01c1dc71c26692f3a8bd690db568100d949f37dd6fa40b007f2de",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "73c0720e0b606f7e9420ecc50c79900fed48e2893d5ee6cc1c0f8fd9960d7ba3"
+    },
+    {
+      "module": ".",
+      "package": "compose",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "233734a8546554bc5b751589ff0cea0c962951b6822149c0f9e83eb727c5ec24",
+      "replacement_gate_input_digest": "27d63425d4130a500ac63933310928b8bea37e570b98efd20bb2619f126d8ea9",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "0765fb1d39378007a9858844e585dfe6ebf03bf383a603bd4ba37d4c1f01b9ff"
+    },
+    {
+      "module": ".",
+      "package": "diff",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "f8c12fee7436a5d63adb442e12c3a44b8428af135c7991c8015e4ab401955f43",
+      "replacement_gate_input_digest": "1977da44d5d880d0508e92ff404228ce7245cc367cd1a01b667ebd1c60823ab6",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "4bc9ee8c60027fede2cf9a5cbccd1fcff98c6da58db62c116c6b521e2d35d3b9"
+    },
+    {
+      "module": ".",
+      "package": "discovery",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "9ed99ea7b8afded6463a529b985af11292bc7fd4896ed40baef94c95eaace4e4",
+      "replacement_gate_input_digest": "01c318a259ee0824f11d23affb5540d4f072428073edd7d7cd9c10cea462f573",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "759ad0b1a416435a9ca77403f6b7c545752ee920f35a40f725175f23586bae8e"
+    },
+    {
+      "module": ".",
+      "package": "expression",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "a9e55b950a1a6aa2b70cae0373baa835d565a6eef101d18e282d8e072ae47768",
+      "replacement_gate_input_digest": "281ccb0c2d13f666be3a26d27e7f902894ad76b1b9d09ea961fa4cedd5f1593f",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "b9fabccccb107e1736ed6a40ce9ba0c6e3eb51a247d414f69515a39f1abbf314"
+    },
+    {
+      "module": ".",
+      "package": "internal/specification",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "fd5e05567773436c6173776a3e079740a864498564447659a211bf89fe414cc0",
+      "replacement_gate_input_digest": "990767fd53396d6f42e1ca93296c8c4fcfaaf050de0a6553de1a2477e4deb9c8",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "8206df7e909169fb04fa728b0d2bf7d1c84475c91b32fb54c9077e9318cd83fc"
+    },
+    {
+      "module": ".",
+      "package": "jsonrpc",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5e5b2471e0e20e79121dd1a00d0d55b4c993bea31f8243abf63d08af3f98ab79",
+      "replacement_gate_input_digest": "63179742f3dc33c163b2062848ce4f7b35ff5ffeb3ea4e17e281d1bc802dd6d2",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "7412b2f3244ff18db09377f2f22ead9c7f59cf1b73d6a7a833fd241fcd36248e"
+    },
+    {
+      "module": ".",
+      "package": "jsonschema",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "29d521888c5c76b87e4855dec1d1bf295515cf9a3724e097fa148b6b370e99a8",
+      "replacement_gate_input_digest": "b1b550f48a714215bdedfe40feefd274d835f697882361032790452728234aae",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "d874612fcc27b69bfe5b782c874cd28b8b7188a4071fe0984f534782892236d3"
+    },
+    {
+      "module": ".",
+      "package": "jsonvalue",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5c9fa793af5df9bf6eb3408b972501b3fcd8b61378997b9296b2305ec3c36dce",
+      "replacement_gate_input_digest": "d1062956c7ee226d4bf169bc554e9e4adcbb4a4bd94a6763f54b7536220d8865",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "ef8989327e73dfa59e0e0eeadd81e1527a9d28cc9d0441c6c65c428812ba401b"
+    },
+    {
+      "module": ".",
+      "package": "observe",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "60f5be65497f89bf7dbbff6ffd3c23cb62f43914c6d7b9e0b17a4a66e0354c2f",
+      "replacement_gate_input_digest": "82c5b69557e80d0612141e9787f5b0b4e2ecd6e730d3647b103c645f3bece90b",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "f5c803e4274b47b279ba917530f3eecbde8376f0a4ea7b6d6ec3c8a0584bbfd8"
+    },
+    {
+      "module": ".",
+      "package": "parse",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "1e88640ef29b8148829fa88c5964a8caf3dac154bbf36a402ddeb6d4c11a1486",
+      "replacement_gate_input_digest": "4526d826b306c305e07967d87844c9e55a257f12e931e2a677c699ae2399db47",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "746a5b581a2f31eb3d579aa8f65260271b531fc659086fad5f4ba5568413e114"
+    },
+    {
+      "module": ".",
+      "package": "reference",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "11f04092d927bb4bd6e550e4eae076ebbeb77681cf0cc4969d2cd8b4a9e769b7",
+      "replacement_gate_input_digest": "09a89ce925231e461e91aa6ca2426ccfb954a9a01739167e63fc2b8c4d367dcd",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "c84c086ff871da92b7d97d2190194e53a3bee3b8523cff92338e87665990d44a"
+    },
+    {
+      "module": ".",
+      "package": "reference/httpstore",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "070b74c3abe80f192e49913519166deeec724150a4affdca14a8c6b784048b70",
+      "replacement_gate_input_digest": "8f3a66d4c5bc46ea04ce8a81e90118f5acf1e3dbf18186278f7f9ae4f6d90e54",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "6e361a2caf60e437b245e7e9caf84875e9944c9ee458826d8c84992731ea2097"
+    },
+    {
+      "module": ".",
+      "package": "validate",
+      "execution_revision": "dd07cf92586a4d0459f8692f26e2a9aac70552f1",
+      "gate_input_digest": "5114d2eaaede21aab7ba6355e804892dce9b6b0454aabd14ea22ec5c4e53558e",
+      "replacement_gate_input_digest": "942ec28c65b6eddf15ca72030f55ad51e3f1f0a6a7a94f65a8327370cf661752",
+      "gremlins_version": "v0.6.0",
+      "gremlins_verifier_sha256": "9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+      "report_sha256": "6af5ef4968c4caa7ad932d3b60c994239a3258bba49f3f871636fa0ca32907f3"
+    }
+  ]
+}

@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
-	"github.com/faustbrian/golib/pkg/openrpc/reference"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/reference"
 )
 
 func TestPointerParsesEscapesAndEvaluatesRawTargets(t *testing.T) {

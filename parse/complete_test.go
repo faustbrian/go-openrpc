@@ -10,10 +10,10 @@ import (
 	"strconv"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
-	"github.com/faustbrian/golib/pkg/openrpc/parse"
-	"github.com/faustbrian/golib/pkg/openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/parse"
+	"github.com/faustbrian/go-openrpc/validate"
 )
 
 func TestCompleteObjectFieldRoundTrip(t *testing.T) {

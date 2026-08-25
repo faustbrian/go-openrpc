@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 // ErrInvalidSchema reports a valid JSON value that is neither an object nor a

@@ -1,4 +1,4 @@
-module github.com/faustbrian/golib/pkg/openrpc
+module github.com/faustbrian/go-openrpc
 
 go 1.26.6
 

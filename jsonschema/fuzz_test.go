@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/jsonschema"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/jsonschema"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func FuzzDraft7CompileAndValidateDeterministically(f *testing.F) {

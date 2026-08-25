@@ -8,8 +8,8 @@ import (
 	"encoding/hex"
 	"errors"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/validate"
 )
 
 const (

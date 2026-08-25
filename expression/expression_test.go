@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/expression"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/expression"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 func TestTemplateEvaluatesJSONTemplateLanguageVectors(t *testing.T) {

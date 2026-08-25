@@ -1,33 +1,55 @@
 # Contributing
 
-## Development setup
+## Before Editing
 
-Install the Go version in `.go-version`, clone the repository, and run:
-
-```sh
-make test
-make race
-make conformance
-make fuzz FUZZ_TIME=1s
-make benchmark BENCH_TIME=1x
-```
-
-`make check-all` is the release gate. It intentionally fails until every
-required quality target, including meaningful 100% coverage and mutation
-testing, is satisfied.
+1. Read [`AGENTS.md`](AGENTS.md) and the affected module's goals and docs.
+2. Run `make inventory` and the narrow baseline gate for the module.
+3. Identify owned dependencies and reverse dependants in `modules.json`.
+4. Preserve unrelated work and generated/corpus provenance.
 
 ## Changes
 
-- Preserve exact OpenRPC and Draft 7 semantics; do not narrow arbitrary JSON.
-- Record every new ambiguity or changed interpretation in the
-  [specification decision register](docs/specification-decisions.md).
-- Add a failing behavioral test before changing production behavior.
-- Keep parsing, validation, and resolution resource-bounded.
-- Do not add implicit network, filesystem, telemetry, or global registry use.
-- Update conformance evidence when a normative behavior changes.
-- Run `go mod tidy -diff`; dependency changes require provenance and license
-  review.
+Keep commits focused and conventional. Update every affected changelog with
+the behavior and migration impact. Public API changes require compatibility
+evidence and documentation. Specification behavior requires a decision record,
+fixture coverage, and interoperability evidence.
 
-Use focused conventional commits with a body explaining why. Pull requests
-should state behavior, security impact, compatibility impact, and exact
-verification commands.
+New direct dependencies and dependency updates must follow the
+[dependency governance policy](docs/dependency-governance.md). Package-local
+update bots are forbidden; the root policy owns every module and action update.
+
+Specification-backed changes must follow the
+[specification governance contract](docs/specification-governance.md), update
+the affected stable decision entries, and complete the Specification Decisions
+section of the pull request template. An unresolved interpretation or stale
+source pin is release-blocking; peer behavior cannot silently select policy.
+
+Do not add package-local workflows, permanent replacements, machine-specific
+paths, bypass flags, broad mutation exclusions, or aggregate quality metrics
+that hide a failing package.
+
+## Verification
+
+Run during development:
+
+```bash
+make inventory
+make specification-decisions
+make check MODULES=pkg/<library>
+```
+
+Before submitting a repository-wide change:
+
+```bash
+make ci-changed BASE=origin/main
+```
+
+The full scheduled and release gate is `make ci`. Report every unavailable or
+failing command; do not describe partial results as release-ready.
+
+## Adding A Module
+
+Follow [module lifecycle procedures](docs/module-lifecycle.md). New modules
+require an explicit purpose, ownership boundary, dependency review, package
+catalog entry, full quality gates, documentation, changelog, license, security
+policy, compatibility plan, and release dry-run.

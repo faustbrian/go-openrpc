@@ -1,5 +1,5 @@
 // Package jsonrpc adapts transport-neutral OpenRPC discovery to the handler
-// signature used by github.com/faustbrian/golib/pkg/jsonrpc without coupling the core
+// signature used by github.com/faustbrian/go-jsonrpc without coupling the core
 // model, parser, or validator to that server implementation.
 package jsonrpc
 
@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/faustbrian/golib/pkg/openrpc/discovery"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/discovery"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
 
 var (

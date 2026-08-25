@@ -7,9 +7,9 @@ import (
 	"sort"
 	"strings"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	openrpcparse "github.com/faustbrian/golib/pkg/openrpc/parse"
-	"github.com/faustbrian/golib/pkg/openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc"
+	openrpcparse "github.com/faustbrian/go-openrpc/parse"
+	"github.com/faustbrian/go-openrpc/validate"
 )
 
 var (

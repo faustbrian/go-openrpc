@@ -16,7 +16,7 @@ run_apidiff() {
     fi
 }
 
-run_apidiff -m -w "$current" github.com/faustbrian/golib/pkg/openrpc
+run_apidiff -m -w "$current" github.com/faustbrian/go-openrpc
 
 if [[ ! -s "$baseline" ]]; then
     echo "API compatibility baseline is missing: $baseline" >&2

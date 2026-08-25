@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/faustbrian/golib/pkg/openrpc/internal/specification"
+	"github.com/faustbrian/go-openrpc/internal/specification"
 )
 
 const (

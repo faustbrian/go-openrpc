@@ -5,9 +5,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/faustbrian/golib/pkg/openrpc/discovery"
-	"github.com/faustbrian/golib/pkg/openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/golib/pkg/openrpc/parse"
+	"github.com/faustbrian/go-openrpc/discovery"
+	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/parse"
 )
 
 func FuzzDiscoverySnapshotsAreDeterministic(f *testing.F) {

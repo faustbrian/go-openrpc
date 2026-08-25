@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/golib/pkg/openrpc"
-	"github.com/faustbrian/golib/pkg/openrpc/expression"
+	openrpc "github.com/faustbrian/go-openrpc"
+	"github.com/faustbrian/go-openrpc/expression"
 )
 
 func TestEvaluateServerUsesDefaultsAndValidatedOverrides(t *testing.T) {
