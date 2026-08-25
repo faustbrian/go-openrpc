@@ -1,4 +1,4 @@
-# openrpc
+# go-openrpc
 
 > Documentation map for package users and maintainers.
 

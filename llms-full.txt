@@ -1,10 +1,18 @@
-# openrpc Complete Documentation
+# go-openrpc Complete Documentation
 
 ## Source: README.md
 
 # openrpc
 
-[![CI](https://github.com/faustbrian/golib/actions/workflows/ci.yml/badge.svg)](https://github.com/faustbrian/golib/actions/workflows/ci.yml)
+[![CI](https://github.com/faustbrian/go-openrpc/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/faustbrian/go-openrpc/actions/workflows/ci.yml)
+[![CodeQL](https://img.shields.io/badge/CodeQL-required-blue)](https://github.com/faustbrian/go-openrpc/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
+[![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc)
+[![Release](https://img.shields.io/github/v/release/faustbrian/go-openrpc?sort=semver)](https://github.com/faustbrian/go-openrpc/releases)
+[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `openrpc` is a design-first Go implementation of OpenRPC 1.3.x and 1.4.x. It
 models their shared document shape, preserves arbitrary Draft 7 schemas and
@@ -545,8 +553,8 @@ and do not fall back to supported behavior.
 
 ## Public API evolution
 
-Before v1, incompatible Go API changes remain possible but must preserve
-document semantics and be recorded in `CHANGELOG.md`. After v1, release checks
+Incompatible Go API changes require a new major release, must preserve document
+semantics, and must be recorded in `CHANGELOG.md`. Release checks
 must compare exported APIs and document migrations before an incompatible major
 release.
 
@@ -751,37 +759,60 @@ visible even when it is not blocking.
 
 # Contributing
 
-## Development setup
+## Before Editing
 
-Install the Go version in `.go-version`, clone the repository, and run:
-
-```sh
-make test
-make race
-make conformance
-make fuzz FUZZ_TIME=1s
-make benchmark BENCH_TIME=1x
-```
-
-`make check-all` is the release gate. It intentionally fails until every
-required quality target, including meaningful 100% coverage and mutation
-testing, is satisfied.
+1. Read [`AGENTS.md`](AGENTS.md) and the affected module's goals and docs.
+2. Run `make inventory` and the narrow baseline gate for the module.
+3. Identify owned dependencies and reverse dependants in `modules.json`.
+4. Preserve unrelated work and generated/corpus provenance.
 
 ## Changes
 
-- Preserve exact OpenRPC and Draft 7 semantics; do not narrow arbitrary JSON.
-- Record every new ambiguity or changed interpretation in the
-  [specification decision register](docs/specification-decisions.md).
-- Add a failing behavioral test before changing production behavior.
-- Keep parsing, validation, and resolution resource-bounded.
-- Do not add implicit network, filesystem, telemetry, or global registry use.
-- Update conformance evidence when a normative behavior changes.
-- Run `go mod tidy -diff`; dependency changes require provenance and license
-  review.
+Keep commits focused and conventional. Update every affected changelog with
+the behavior and migration impact. Public API changes require compatibility
+evidence and documentation. Specification behavior requires a decision record,
+fixture coverage, and interoperability evidence.
 
-Use focused conventional commits with a body explaining why. Pull requests
-should state behavior, security impact, compatibility impact, and exact
-verification commands.
+New direct dependencies and dependency updates must follow the
+[dependency governance policy](AGENTS.md#dependencies-and-supply-chain). Package-local
+update bots are forbidden; the root policy owns every module and action update.
+
+Specification-backed changes must follow the
+[specification governance contract](AGENTS.md#design), update
+the affected stable decision entries, and complete the Specification Decisions
+section of the pull request template. An unresolved interpretation or stale
+source pin is release-blocking; peer behavior cannot silently select policy.
+
+Required mutation gates must finish with zero surviving viable mutants.
+
+Do not add package-local workflows, permanent replacements, machine-specific
+paths, bypass flags, broad mutation exclusions, or aggregate quality metrics
+that hide a failing package.
+
+## Verification
+
+Run during development:
+
+```bash
+make inventory
+make check
+```
+
+Before submitting a repository-wide change:
+
+```bash
+make ci
+```
+
+The full scheduled and release gate is `make ci`. Report every unavailable or
+failing command; do not describe partial results as release-ready.
+
+## Adding A Module
+
+Follow [repository structure policy](AGENTS.md#repository-structure). New modules
+require an explicit purpose, ownership boundary, dependency review, package
+catalog entry, full quality gates, documentation, changelog, license, security
+policy, compatibility plan, and release dry-run.
 
 ## Source: SECURITY.md
 
@@ -843,6 +874,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-25
+
 ### Documentation
 
 - Replace obsolete standalone-repository links and workflow claims with
@@ -852,6 +885,7 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Publish the module from its standalone `github.com/faustbrian/go-openrpc` identity while preserving its documented API and behavior.
 - Upgrade `golang.org/x/text` to v0.41.0 so the dependency graph no longer
   contains GO-2026-5970.
 - Link authoritative specification inputs directly to the canonical decision
@@ -1195,7 +1229,7 @@ package-wide [evidence report](evidence.md), [compatibility contract](compatibil
 | Known peer behavior | The official meta-schema and pinned examples establish structural shapes but do not provide a conformance corpus for value-to-schema assertion. Tooling may render or execute examples with application-specific semantics. |
 | Selected behavior | Typed parsing preserves exact example values, explicit nulls, references, and notification result absence. Semantic document validation checks Example Pairing structure and reference syntax but does not claim that values satisfy method schemas. It never performs a partial or implicit schema assertion. Callers that execute or assert examples must do so explicitly after reference resolution with their chosen application semantics. |
 | Security and resource consequences | Documentation validation cannot trigger schema callbacks, remote loading, or execution. Example JSON remains subject to parser byte, depth, value, and collection limits. |
-| Compatibility and wire consequences | Schema-incompatible example values remain round-trippable and do not make an otherwise valid description invalid. A future assertion API must be opt-in and cannot silently change `validate.Document`. |
+| Compatibility and wire consequences | Schema-incompatible example values remain round-trip-safe and do not make an otherwise valid description invalid. A future assertion API must be opt-in and cannot silently change `validate.Document`. |
 | Executable evidence | `TestExamplesPreserveNullAndNotificationResultAbsence`, `TestValidationChecksExamplePairingReferenceSyntax`, `TestSemanticValidationPreservesExampleValuesWithoutSchemaAssertion`, and `TestPinnedOfficialExamplesRespectSupportedVersionLines` |
 | Public surface | `Example`, `ExamplePairing`, `validate.Document`, parsing, preserving serialization, and canonical serialization; the limitation is documented in the [compatibility contract](compatibility.md) |
 | Upstream record | No OpenRPC 1.4.1 algorithm or official value-validation fixture is available in the pinned [specification and examples inputs](../specification/manifest.json). |
