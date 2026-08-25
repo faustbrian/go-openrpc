@@ -5,6 +5,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 1.0.0 - 2026-08-25
+
 ### Changed
 
 - Verify JSON-RPC interoperability through the configured module proxy instead
@@ -32,8 +34,6 @@ Changelog principles, and releases use semantic versioning.
 
 - Correct stale package, standalone, and authoritative-source links in public
   documentation.
-
-## 1.0.0 - 2026-08-25
 
 ### Documentation
 
