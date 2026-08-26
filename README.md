@@ -22,7 +22,7 @@ resolution requires a caller-supplied store and an allowlist policy. Earlier
 or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
-## Five-minute design-first quickstart
+## Quick start
 
 ```go
 version, _ := openrpc.ParseVersion("1.4.1")
@@ -41,7 +41,7 @@ document, _ := documentBuilder.Build()
 encoded, _ := openrpc.MarshalCanonical(document)
 ```
 
-## Parsing and validation quickstart
+### Parse and validate
 
 ```go
 options := parse.DefaultOptions()
@@ -66,7 +66,7 @@ if !structural.Valid() {
 `parse.Preserving` retains the exact accepted source for lossless re-emission;
 canonical serialization sorts object keys and omits insignificant whitespace.
 
-## Discovery quickstart
+### Discovery
 
 ```go
 service, _ := discovery.NewService(discovery.Static(document), visibilityPolicy)
@@ -99,7 +99,7 @@ result, err := observe.Parse(ctx, input, parse.DefaultOptions(),
 )
 ```
 
-## jsonrpc integration quickstart
+## JSON-RPC integration
 
 ```go
 registry := gojsonrpc.NewRegistry()
@@ -151,8 +151,8 @@ See [security](docs/security.md), [architecture](docs/architecture.md),
 [specification decisions](docs/specification-decisions.md), and the generated
 conformance evidence under `specification/conformance/`.
 
-AI-assisted documentation consumers can use [llms.txt](llms.txt) or the
-complete generated [llms-full.txt](llms-full.txt) bundle.
+The [documentation index](docs/README.md) organizes adoption, reference,
+operations, specification, and maintainer material.
 
 ## Local verification
 
@@ -161,12 +161,13 @@ make check
 make check-all
 ```
 
-The implementation is still working toward the goal's meaningful 100%
-production statement coverage. `make coverage` reports the current value; it
-does not disguise uncovered code as generated or unreachable. `make check-all`
-is intentionally blocking until coverage and mutation requirements are met.
+`make coverage` enforces exact production statement coverage. `make check-all`
+runs the complete repository contract, including mutation and conformance
+checks.
 
-## Ecosystem
+## Related packages
 
-Use the [Golib documentation portal](https://github.com/faustbrian/golib/blob/main/docs/index.md)
-to choose companion packages, supported stacks, recipes, and operations guidance.
+- [JSON-RPC](https://github.com/faustbrian/go-jsonrpc) provides the runtime
+  protocol implementation used by the discovery adapter.
+- [JSON Schema](https://github.com/faustbrian/go-json-schema) is appropriate
+  when applications need schema validation outside OpenRPC documents.

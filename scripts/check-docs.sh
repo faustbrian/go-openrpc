@@ -3,12 +3,11 @@ set -euo pipefail
 
 required=(
   CHANGELOG.md CODE_OF_CONDUCT.md CONTRIBUTING.md LICENSE NOTICE README.md
-  ROADMAP.md SECURITY.md THIRD_PARTY_NOTICES.md
-	llms.txt llms-full.txt api/README.md
+  ROADMAP.md SECURITY.md THIRD_PARTY_NOTICES.md api/README.md
   docs/README.md docs/adoption.md docs/api.md docs/architecture.md
-  docs/compatibility.md docs/cookbook.md docs/dependencies.md docs/evidence.md
+  docs/compatibility.md docs/cookbook.md docs/dependencies.md
   docs/examples.md docs/faq.md docs/go-safety-and-concurrency.md
-  docs/hardening.md docs/migration.md docs/performance.md docs/quickstart.md
+  docs/migration.md docs/performance.md docs/quickstart.md
   docs/releasing.md docs/repository-standards.md
   docs/resolver-threat-model.md docs/resource-budgets.md docs/security.md
   docs/specification-decisions.md docs/specification-report.md benchmarks/baseline.txt
@@ -48,7 +47,5 @@ for document in documents:
 
 print("required documentation exists and relative links resolve")
 PY
-
-python3 scripts/generate-llms.py --check
 
 go test ./... -run '^Example' -count=1

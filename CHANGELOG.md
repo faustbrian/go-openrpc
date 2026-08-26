@@ -5,6 +5,11 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Documentation
+
+- Replace archived monorepo and AI-generated documentation entry points with
+  a standalone, human-oriented documentation structure.
+
 ## 1.0.0 - 2026-08-25
 
 ### Changed
@@ -39,8 +44,6 @@ Changelog principles, and releases use semantic versioning.
 
 - Replace obsolete standalone-repository links and workflow claims with
   monorepo-canonical targets and current release guidance.
-
-- Link the package README to the repository-wide Golib documentation portal.
 
 ### Changed
 

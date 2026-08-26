@@ -16,7 +16,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 Statuses are `resolved`, `unresolved`, or `superseded`. Resolved decisions are
 part of the compatibility contract. Changing one requires specification,
 security, compatibility, executable-evidence, and changelog review. The
-package-wide [evidence report](evidence.md), [compatibility contract](compatibility.md),
+package-wide [compatibility contract](compatibility.md),
 [specification report](specification-report.md), and
 [changelog](../CHANGELOG.md) apply to every decision below.
 
@@ -197,7 +197,7 @@ package-wide [evidence report](evidence.md), [compatibility contract](compatibil
 | Compatibility and wire consequences | No duplicate is silently selected under defaults. Choosing first/last is an explicit compatibility decision; overlays are order-sensitive by contract, while emitted collections are deterministic. |
 | Executable evidence | `TestMergeAppliesExplicitConflictPolicy`, `TestMergeDetectsComponentCollisionsAndBounds`, `TestApplyOverlaysUsesOrderedRFC7396Semantics`, and `TestRenameComponentsRewritesEveryMatchingReference` |
 | Public surface | `compose.Merge`, `compose.ConflictPolicy`, `ConflictError`, `KeepFirst`, `KeepLast`, `compose.ApplyOverlays`, and `compose.RenameComponents` |
-| Upstream record | Composition is outside OpenRPC 1.4.1; package behavior and limits are documented in the [API guide](api.md) and [evidence report](evidence.md). |
+| Upstream record | Composition is outside OpenRPC 1.4.1; package behavior and limits are documented in the [API guide](api.md) and [specification report](specification-report.md). |
 | Reconsider when | OpenRPC standardizes overlays or multi-document composition, or a new component identity rule changes collision semantics. |
 
 ## OPENRPC-DEC-011: Semantic diff and unresolved compatibility

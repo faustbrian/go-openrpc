@@ -2,8 +2,9 @@
 
 ## Supported versions
 
-Security fixes are developed for the latest released version. Until a stable
-release exists, only the current `main` branch is supported.
+Security fixes are developed for the latest stable v1 release and `main`.
+Additional supported release lines and end-of-support dates will be documented
+here when offered.
 
 ## Reporting a vulnerability
 
