@@ -85,19 +85,10 @@ goroutine, or registry is process-global.
 
 ## Optional observability
 
-The `observe` leaf package wraps parse, validate, resolve, bundle, diff, and
-discovery operations without changing core APIs or installing an exporter.
-Observers receive only finite phase and outcome labels, diagnostic or reference
-counts, and duration. Events never contain documents, schemas, method names,
-references, URLs, or error strings. Observer panics are contained.
-
-```go
-result, err := observe.Parse(ctx, input, parse.DefaultOptions(),
-    observe.ObserverFunc(func(ctx context.Context, event observe.Event) {
-        metrics.Record(event.Phase, event.Outcome, event.Duration)
-    }),
-)
-```
+The `observe` leaf package wraps core operations without installing an
+exporter. Observers receive bounded phase, outcome, count, and duration fields
+without documents, schemas, method names, URLs, or error strings. Panics are
+contained.
 
 ## JSON-RPC integration
 
@@ -119,22 +110,10 @@ or transport behavior.
 
 ## Explicit references
 
-```go
-store, _ := reference.NewMemoryStore(map[string][]byte{
-    "https://schemas.example/value.json": schemaBytes,
-})
-policy := reference.DefaultResolvePolicy()
-policy.AllowExternal = true
-policy.AllowedSchemes = []string{"https"}
-policy.AllowedHosts = []string{"schemas.example"}
-resolver, _ := reference.NewResolver(store, policy)
-
-target, err := resolver.Resolve(ctx, rootJSON, documentURI, rawReference)
-```
-
-`reference.NewFSStore` scopes an explicit `fs.FS`. The optional
-`reference/httpstore` package adds DNS/IP checks, HTTPS-by-default behavior,
-redirect and timeout limits, compression rejection, and streamed byte limits.
+Resolvers require an explicit bounded store and policy. Filesystem and optional
+HTTP stores scope access, enforce limits, and fail closed. See the
+[resolver threat model](docs/resolver-threat-model.md) and
+[API reference](docs/api.md).
 
 ## Compatibility and support
 
@@ -154,16 +133,10 @@ conformance evidence under `specification/conformance/`.
 The [documentation index](docs/README.md) organizes adoption, reference,
 operations, specification, and maintainer material.
 
-## Local verification
+## Development
 
-```sh
-make check
-make check-all
-```
-
-`make coverage` enforces exact production statement coverage. `make check-all`
-runs the complete repository contract, including mutation and conformance
-checks.
+Run `make check`. See [CONTRIBUTING.md](CONTRIBUTING.md) for conformance,
+mutation, and release verification.
 
 ## Related packages
 
