@@ -1,0 +1,105 @@
+schema_version: 1
+tool_version: v1.0.5
+tool_checksums_sha256: 7ee6c6c9bccd76cc1071fb891073055d393701abaed047e0357370f128ba771b
+manifest:
+  modules: modules.json
+  packages: packages.json
+evidence:
+  root: .verification
+mutation:
+  root: .verification/mutation
+  imports:
+    - module: .
+      archive: .verification/mutation/bootstrap/root.zip
+      ledger: .verification/mutation/migration-ledger.json
+api:
+  baselines:
+    - module: .
+      mode: apidiff
+      path: api/v1.export
+operations:
+  - module: .
+    gate: conformance
+    steps:
+      - type: make
+        makefile: verification/package.mk
+        target: conformance
+        timeout: 20m
+  - module: .
+    gate: interoperability
+    steps:
+      - type: make
+        makefile: verification/package.mk
+        target: interoperability
+        timeout: 20m
+  - module: .
+    gate: fuzz
+    steps:
+      - type: go-test
+        packages: ["."]
+        fuzz: '^FuzzAcceptedDocumentsRoundTripDeterministically$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./jsonvalue"]
+        fuzz: '^FuzzParseStrictJSON$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./jsonvalue"]
+        fuzz: '^FuzzParseNeverPanics$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./parse"]
+        fuzz: '^FuzzDecodeOpenRPCDocument$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./jsonschema"]
+        fuzz: '^FuzzDraft7CompileAndValidateDeterministically$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./expression"]
+        fuzz: '^FuzzTemplateNeverPanics$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./reference"]
+        fuzz: '^FuzzReferenceAndPointerParsing$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./reference"]
+        fuzz: '^FuzzResolverInternalReferences$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./reference"]
+        fuzz: '^FuzzPointerNeverPanics$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./compose"]
+        fuzz: '^FuzzCompositionIsDeterministicAndPanicFree$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./diff"]
+        fuzz: '^FuzzSemanticDiffIsDeterministic$'
+        budget: 2s
+        timeout: 2m
+      - type: go-test
+        packages: ["./discovery"]
+        fuzz: '^FuzzDiscoverySnapshotsAreDeterministic$'
+        budget: 2s
+        timeout: 2m
+  - module: .
+    gate: benchmark
+    steps:
+      - type: go-test
+        packages: ["./..."]
+        benchmark: "."
+        budget: 100ms
+        timeout: 20m

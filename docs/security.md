@@ -51,6 +51,20 @@ defense for code-first documents.
 The production module does not use `unsafe`, cgo, `go:linkname`, background
 network fetches, global mutable registries, or telemetry exporters.
 
+## Deployment checklist
+
+- Reduce parser and JSON limits when the deployment contract is smaller than
+  the defaults.
+- Keep unknown-field rejection enabled for untrusted current-version input.
+- Run both meta-schema and semantic validation for externally supplied
+  documents.
+- Prefer embedded or in-memory reference stores. When HTTP resolution is
+  required, keep HTTPS, exact host allowlists, private-address rejection,
+  redirect limits, compression rejection, timeouts, and streamed byte limits.
+- Treat conditional compatibility findings as requiring application review.
+- Scope discovery filtering and caching to the caller's authorization model.
+- Export only bounded `observe` events, never raw documents or provider errors.
+
 ## Reporting vulnerabilities
 
 Do not open a public issue for a suspected vulnerability. Send a private report

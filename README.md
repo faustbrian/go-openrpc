@@ -22,7 +22,7 @@ resolution requires a caller-supplied store and an allowlist policy. Earlier
 or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
-## Five-minute design-first quickstart
+## Quick start
 
 ```go
 version, _ := openrpc.ParseVersion("1.4.1")
@@ -41,7 +41,7 @@ document, _ := documentBuilder.Build()
 encoded, _ := openrpc.MarshalCanonical(document)
 ```
 
-## Parsing and validation quickstart
+### Parse and validate
 
 ```go
 options := parse.DefaultOptions()
@@ -66,7 +66,7 @@ if !structural.Valid() {
 `parse.Preserving` retains the exact accepted source for lossless re-emission;
 canonical serialization sorts object keys and omits insignificant whitespace.
 
-## Discovery quickstart
+### Discovery
 
 ```go
 service, _ := discovery.NewService(discovery.Static(document), visibilityPolicy)
@@ -85,25 +85,17 @@ goroutine, or registry is process-global.
 
 ## Optional observability
 
-The `observe` leaf package wraps parse, validate, resolve, bundle, diff, and
-discovery operations without changing core APIs or installing an exporter.
-Observers receive only finite phase and outcome labels, diagnostic or reference
-counts, and duration. Events never contain documents, schemas, method names,
-references, URLs, or error strings. Observer panics are contained.
+The `observe` leaf package wraps core operations without installing an
+exporter. Observers receive bounded phase, outcome, count, and duration fields
+without documents, schemas, method names, URLs, or error strings. Panics are
+contained.
 
-```go
-result, err := observe.Parse(ctx, input, parse.DefaultOptions(),
-    observe.ObserverFunc(func(ctx context.Context, event observe.Event) {
-        metrics.Record(event.Phase, event.Outcome, event.Duration)
-    }),
-)
-```
-
-## jsonrpc integration quickstart
+## JSON-RPC integration
 
 ```go
 registry := gojsonrpc.NewRegistry()
-err := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler](registry, service)
+registerDiscovery := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler]
+err := registerDiscovery(registry, service)
 if err != nil {
     return err
 }
@@ -119,22 +111,10 @@ or transport behavior.
 
 ## Explicit references
 
-```go
-store, _ := reference.NewMemoryStore(map[string][]byte{
-    "https://schemas.example/value.json": schemaBytes,
-})
-policy := reference.DefaultResolvePolicy()
-policy.AllowExternal = true
-policy.AllowedSchemes = []string{"https"}
-policy.AllowedHosts = []string{"schemas.example"}
-resolver, _ := reference.NewResolver(store, policy)
-
-target, err := resolver.Resolve(ctx, rootJSON, documentURI, rawReference)
-```
-
-`reference.NewFSStore` scopes an explicit `fs.FS`. The optional
-`reference/httpstore` package adds DNS/IP checks, HTTPS-by-default behavior,
-redirect and timeout limits, compression rejection, and streamed byte limits.
+Resolvers require an explicit bounded store and policy. Filesystem and optional
+HTTP stores scope access, enforce limits, and fail closed. See the
+[resolver threat model](docs/resolver-threat-model.md) and
+[API reference](docs/api.md).
 
 ## Compatibility and support
 
@@ -151,22 +131,17 @@ See [security](docs/security.md), [architecture](docs/architecture.md),
 [specification decisions](docs/specification-decisions.md), and the generated
 conformance evidence under `specification/conformance/`.
 
-AI-assisted documentation consumers can use [llms.txt](llms.txt) or the
-complete generated [llms-full.txt](llms-full.txt) bundle.
+The [documentation index](docs/README.md) organizes adoption, reference,
+operations, specification, and maintainer material.
 
-## Local verification
+## Development
 
-```sh
-make check
-make check-all
-```
+Run `make check`. See [CONTRIBUTING.md](CONTRIBUTING.md) for conformance,
+mutation, and release verification.
 
-The implementation is still working toward the goal's meaningful 100%
-production statement coverage. `make coverage` reports the current value; it
-does not disguise uncovered code as generated or unreachable. `make check-all`
-is intentionally blocking until coverage and mutation requirements are met.
+## Related packages
 
-## Ecosystem
-
-Use the [Golib documentation portal](https://github.com/faustbrian/golib/blob/main/docs/index.md)
-to choose companion packages, supported stacks, recipes, and operations guidance.
+- [JSON-RPC](https://github.com/faustbrian/go-jsonrpc) provides the runtime
+  protocol implementation used by the discovery adapter.
+- [JSON Schema](https://github.com/faustbrian/go-json-schema) is appropriate
+  when applications need schema validation outside OpenRPC documents.

@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"os"
 	"testing"
+	"time"
 
 	"github.com/faustbrian/go-openrpc/jsonvalue"
 )
@@ -202,6 +204,27 @@ func TestParseRejectsIncompleteContainers(t *testing.T) {
 		if !errors.Is(err, jsonvalue.ErrInvalidJSON) {
 			t.Errorf("Parse(%q) error = %v, want ErrInvalidJSON", input, err)
 		}
+	}
+}
+
+func TestParseMalformedArrayTerminates(t *testing.T) {
+	done := make(chan error, 1)
+	go func() {
+		_, err := jsonvalue.Parse([]byte(`[`), jsonvalue.DefaultPolicy())
+		done <- err
+	}()
+
+	timer := time.NewTimer(time.Second)
+	defer timer.Stop()
+
+	select {
+	case err := <-done:
+		if !errors.Is(err, jsonvalue.ErrInvalidJSON) {
+			t.Fatalf("error = %v, want ErrInvalidJSON", err)
+		}
+	case <-timer.C:
+		_, _ = os.Stderr.WriteString("Parse did not terminate for a malformed array\n")
+		os.Exit(1)
 	}
 }
 
