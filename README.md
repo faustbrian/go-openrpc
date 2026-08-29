@@ -94,7 +94,8 @@ contained.
 
 ```go
 registry := gojsonrpc.NewRegistry()
-err := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler](registry, service)
+registerDiscovery := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler]
+err := registerDiscovery(registry, service)
 if err != nil {
     return err
 }

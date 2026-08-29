@@ -5,6 +5,14 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Changed
+
+- Adopt the checksum-pinned `go-library-tools` v1.0.5 release for repository
+  verification, while keeping OpenRPC conformance and JSON-RPC interoperability
+  checks as source-owned operations.
+- Replace repository-local generic tooling with the standalone repository
+  contract and retain mutation evidence under `.verification`.
+
 ### Documentation
 
 - Replace archived monorepo and AI-generated documentation entry points with

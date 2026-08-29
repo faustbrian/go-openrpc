@@ -221,7 +221,9 @@
       "required_services": [],
       "build_tags": [],
       "test_tags": [],
-      "interoperability_tools": [],
+      "interoperability_tools": [
+        "github.com/faustbrian/go-jsonrpc@v1.0.0"
+      ],
       "specifications": [
         "OpenRPC 1.3.x and 1.4.x",
         "JSON Schema Draft 7",
@@ -245,6 +247,7 @@
         "coverage": true,
         "documentation": true,
         "fuzz": true,
+        "interoperability": true,
         "lint": true,
         "mutation": true,
         "race": true,

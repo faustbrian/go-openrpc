@@ -63,7 +63,8 @@ the cache when its provider revision changes.
 
 ```go
 registry := gojsonrpc.NewRegistry()
-err := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler](registry, service)
+registerDiscovery := openrpcjsonrpc.RegisterDiscovery[gojsonrpc.Handler]
+err := registerDiscovery(registry, service)
 ```
 
 The adapter registers `rpc.discover` through the sibling registry's trusted

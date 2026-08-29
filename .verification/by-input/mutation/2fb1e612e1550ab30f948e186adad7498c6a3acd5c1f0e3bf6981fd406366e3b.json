@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "repository": "github.com/faustbrian/go-openrpc",
+  "module": ".",
+  "package": "validate",
+  "gate": "mutation",
+  "input_digest": "sha256:2fb1e612e1550ab30f948e186adad7498c6a3acd5c1f0e3bf6981fd406366e3b",
+  "verifier_digest": "sha256:9a9499ff68a8dfd49a0be7995590297a8ee563a1aa226bfd8b9361dc53058108",
+  "result": "passed",
+  "report_digest": "sha256:729dae2d35650b9bbd5576f2c76f957a9b4b71e284a85d6e5413e144239e0ce3",
+  "environment": {
+    "CGO_ENABLED": "1",
+    "GOARCH": "arm64",
+    "GOOS": "darwin",
+    "GOVERSION": "go1.27.0",
+    "gremlins_binary_sha256": "sha256:6a2beddc477eb410f8a670b6c9049558563d3c4327498fe31604d31c773a959e"
+  },
+  "completed_at": "2026-08-29T06:48:03.978521Z"
+}

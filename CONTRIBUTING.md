@@ -7,6 +7,12 @@
 3. Identify owned dependencies and reverse dependants in `modules.json`.
 4. Preserve unrelated work and generated/corpus provenance.
 
+Repository-wide checks are provided by the checksum-pinned
+`go-library-tools` release configured in [`.golib.yaml`](.golib.yaml). Keep
+generic verification behavior in that shared tool; repository-specific checks
+belong under `verification/` and must be documented here and in the relevant
+technical guide.
+
 ## Changes
 
 Keep commits focused and conventional. Update every affected changelog with
@@ -46,7 +52,9 @@ make ci
 ```
 
 The full scheduled and release gate is `make ci`. Report every unavailable or
-failing command; do not describe partial results as release-ready.
+failing command; do not describe partial results as release-ready. Local runs
+must use the same released tooling contract as CI rather than copied scripts or
+machine-specific replacements.
 
 ## Adding A Module
 
