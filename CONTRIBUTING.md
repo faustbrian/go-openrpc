@@ -26,9 +26,11 @@ update bots are forbidden; the root policy owns every module and action update.
 
 Specification-backed changes must follow the
 [specification governance contract](AGENTS.md#design), update
-the affected stable decision entries, and complete the Specification Decisions
-section of the pull request template. An unresolved interpretation or stale
-source pin is release-blocking; peer behavior cannot silently select policy.
+the affected stable entries in the
+[specification decision register](docs/specification-decisions.md), and complete
+the Specification Decisions section of the pull request template. An
+unresolved interpretation or stale source pin is release-blocking; peer
+behavior cannot silently select policy.
 
 Required mutation gates must finish with zero surviving viable mutants.
 

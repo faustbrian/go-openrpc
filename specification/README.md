@@ -36,3 +36,19 @@ The canonical
 [`docs/specification-decisions.md`](../docs/specification-decisions.md)
 records every material interpretation, consequence, and reconsideration
 condition behind those matrices.
+
+## Decision conformance matrix
+
+Interoperability and maintained-peer comparisons are recorded only when they
+were actually performed. `not assessed` is intentional evidence status, not a
+passing interoperability claim.
+
+| Authority boundary | Decisions | Executable evidence |
+| --- | --- | --- |
+| OpenRPC prose, meta-schema, and examples | OPENRPC-DEC-001, OPENRPC-DEC-002, OPENRPC-DEC-003, OPENRPC-DEC-004, OPENRPC-DEC-005, OPENRPC-DEC-008, OPENRPC-DEC-009, OPENRPC-DEC-010, OPENRPC-DEC-011 | `specification/conformance.json` |
+| JSON Schema Draft 7 | OPENRPC-DEC-006 | `specification/conformance.json` |
+| JSON-RPC 2.0 discovery binding | OPENRPC-DEC-007 | `specification/conformance.json` |
+
+The structured register, source monitoring, conformance bindings, and immutable
+decision digests live in `decisions.json`, `monitoring.json`,
+`conformance.json`, and `decision-history.json` in this directory.

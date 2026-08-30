@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-08-30",
+  "review_interval_days": 90,
+  "authorities": [
+    {
+      "id": "openrpc-1.4.1-source",
+      "kind": "specification",
+      "version": "OpenRPC 1.4.1",
+      "url": "https://raw.githubusercontent.com/open-rpc/spec/3a13c7a8bad248e6edd2d48339cd1c06b57f8f22/spec/1.4/spec-template.md",
+      "sha256": "70efadbae60557578d689f225f1edcb9d0f56b9b4d49c3a3e79a42ba934f46df",
+      "specifications": ["OpenRPC 1.3.x and 1.4.x"]
+    },
+    {
+      "id": "openrpc-1.4.1-schema",
+      "kind": "specification",
+      "version": "OpenRPC 1.4.1",
+      "url": "https://raw.githubusercontent.com/open-rpc/spec/3a13c7a8bad248e6edd2d48339cd1c06b57f8f22/spec/1.4/schema.json",
+      "sha256": "a8a733cd87ef6ba2e1a38e6500090581b0f52b91051a0bad8386004366b11c56",
+      "specifications": ["OpenRPC 1.3.x and 1.4.x"]
+    },
+    {
+      "id": "openrpc-releases",
+      "kind": "releases",
+      "version": "",
+      "url": "https://raw.githubusercontent.com/open-rpc/spec/master/CHANGELOG.md",
+      "sha256": "4549c0e79358005ae98c30dc41243352f40ccbf6c6de77e9f79f20263ec41d07",
+      "specifications": ["OpenRPC 1.3.x and 1.4.x"]
+    },
+    {
+      "id": "json-schema-draft-07-source",
+      "kind": "specification",
+      "version": "JSON Schema Draft 7",
+      "url": "https://json-schema.org/draft-07/schema",
+      "sha256": "692e1d165e47afcb5f11b2ce1c639635ffa834035d6ecb6bcf3087481dae8404",
+      "specifications": ["JSON Schema Draft 7"]
+    },
+    {
+      "id": "json-schema-draft-07-releases",
+      "kind": "releases",
+      "version": "",
+      "url": "https://raw.githubusercontent.com/json-schema-org/json-schema-spec/main/specs/jsonschema-core.md",
+      "sha256": "545aea6453cf680d77e832f76a8bc666124862fe82d409127f1903c985329c2e",
+      "specifications": ["JSON Schema Draft 7"]
+    },
+    {
+      "id": "jsonrpc-2.0-source",
+      "kind": "specification",
+      "version": "JSON-RPC 2.0",
+      "url": "https://www.jsonrpc.org/specification",
+      "sha256": "8fe1edfdca511d309e712e47447457ea5159b728ec02071a84593aed692aefeb",
+      "specifications": ["JSON-RPC 2.0"]
+    },
+    {
+      "id": "jsonrpc-2.0-releases",
+      "kind": "releases",
+      "version": "",
+      "url": "https://www.jsonrpc.org/specification",
+      "sha256": "8fe1edfdca511d309e712e47447457ea5159b728ec02071a84593aed692aefeb",
+      "specifications": ["JSON-RPC 2.0"]
+    }
+  ]
+}

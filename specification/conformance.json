@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "decisions": [
+    {
+      "id": "OPENRPC-DEC-001",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestPinnedMetaSchemaAcceptsNormativeServerURLForms", "TestPinnedOfficialExamplesRespectSupportedVersionLines", "TestPinnedMetaSchemaAcceptsCurrentMinimalDocument", "TestVerifyPinnedInputsChecksEveryManifestDigest"],
+      "fixtures": ["specification/manifest.json", "specification/openrpc-1.4.1/schema.json", "specification/examples/metrics-openrpc.json"],
+      "fuzz": ["FuzzAcceptedDocumentsRoundTripDeterministically"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Normative prose controls contradictory schema and example artifacts while all unaffected schema constraints remain active."]
+    },
+    {
+      "id": "OPENRPC-DEC-002",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestObjectFieldRequirednessAndNullabilityMatrix", "TestDecodeAcceptsEveryReferenceUnion", "TestDecodeRejectsMalformedReferencesInEveryUnion", "TestDecodeUnknownFieldsUsesExplicitMode"],
+      "fixtures": ["specification/openrpc-1.4.1/schema.json"],
+      "fuzz": ["FuzzDecodeOpenRPCDocument"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Strict parsing rejects every Reference Object sibling, including extension members."]
+    },
+    {
+      "id": "OPENRPC-DEC-003",
+      "authoritative_sources": ["openrpc-1.4.1-source", "json-schema-draft-07-source"],
+      "executable_evidence": ["TestResolverFollowsAliasesAndLoadsEachDocumentOnce", "TestResolverRejectsCyclesAndBounds", "TestDereferenceRejectsCyclesAndTransformLimits", "TestResolvedDocumentPreservesRecursiveJSONSchemaReferences", "TestResolvedDocumentAcceptsRecursiveExternalSchemaResources"],
+      "fixtures": ["parse/testdata/complete-openrpc.json"],
+      "fuzz": ["FuzzResolverInternalReferences", "FuzzReferenceAndPointerParsing"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["OpenRPC object cycles fail under bounded explicit resolution while recursive Draft 7 schemas remain valid resources."]
+    },
+    {
+      "id": "OPENRPC-DEC-004",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestCollectReportsDeterministicSemanticDiagnostics", "TestResolvedDocumentAppliesSemanticRulesThroughReferences", "TestErrorCodePreservesArbitraryPrecision"],
+      "fixtures": ["specification/conformance/evidence.tsv"],
+      "fuzz": ["FuzzAcceptedDocumentsRoundTripDeterministically"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Duplicate method, parameter, and error identities fail deterministically before and after reference resolution."]
+    },
+    {
+      "id": "OPENRPC-DEC-005",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestExamplesPreserveNullAndNotificationResultAbsence", "TestValidationChecksExamplePairingReferenceSyntax", "TestSemanticValidationPreservesExampleValuesWithoutSchemaAssertion", "TestPinnedOfficialExamplesRespectSupportedVersionLines"],
+      "fixtures": ["specification/examples/api-with-examples-openrpc.json"],
+      "fuzz": ["FuzzDecodeOpenRPCDocument"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Example pairings are structurally validated and losslessly preserved without implicit value-to-schema assertion."]
+    },
+    {
+      "id": "OPENRPC-DEC-006",
+      "authoritative_sources": ["json-schema-draft-07-source", "openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestDocumentCompilesEveryDraft7SchemaObject", "TestResolvedDocumentAcceptsRecursiveExternalSchemaResources", "TestResolvedDocumentUsesNestedSchemaIDsAsReferenceBases", "TestValidatorReportsRegexpTimeoutAsResourceLimit"],
+      "fixtures": ["specification/openrpc-1.4.1/schema.json", "specification/openrpc-1.4.1/json-schema-tools.json"],
+      "fuzz": ["FuzzDraft7CompileAndValidateDeterministically"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Every embedded OpenRPC Schema Object uses bounded Draft 7 semantics with no implicit external loader."]
+    },
+    {
+      "id": "OPENRPC-DEC-007",
+      "authoritative_sources": ["jsonrpc-2.0-source", "openrpc-1.4.1-source"],
+      "executable_evidence": ["TestDiscoveryHandlerReturnsCanonicalRawDocument", "TestRegisterDiscoveryUsesTypedSystemMethodContract", "TestCacheDeduplicatesConcurrentDiscoveryAndInvalidatesExplicitly"],
+      "fixtures": ["specification/conformance/normative.tsv"],
+      "fuzz": ["FuzzDiscoverySnapshotsAreDeterministic"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["rpc.discover uses explicit system-method registration, canonical results, and application-owned cache invalidation."]
+    },
+    {
+      "id": "OPENRPC-DEC-008",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestNewExtensionsRequiresUniquePrefixedNames", "TestDecodeUnknownFieldsUsesExplicitMode", "TestParseRejectsAmbiguousOrMalformedJSON", "TestMarshalCanonicalRejectsPreservedFieldCollision", "TestCompleteObjectFieldRoundTrip"],
+      "fixtures": ["parse/testdata/complete-openrpc.json", "specification/openrpc-1.4.1/schema.json"],
+      "fuzz": ["FuzzParseStrictJSON", "FuzzDecodeOpenRPCDocument"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Strict parsing rejects unknown standard members while explicit preserving mode retains them without granting semantics."]
+    },
+    {
+      "id": "OPENRPC-DEC-009",
+      "authoritative_sources": ["openrpc-1.4.1-source"],
+      "executable_evidence": ["TestMarshalCanonicalIsStableAcrossObjectOrderAndWhitespace", "TestCanonicalDocumentParsesAgain", "TestMarshalCanonicalRejectsPreservedFieldCollision"],
+      "fixtures": ["parse/testdata/complete-openrpc.json"],
+      "fuzz": ["FuzzAcceptedDocumentsRoundTripDeterministically"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Canonical serialization is deterministic package output, while preserving mode retains exact accepted source bytes."]
+    },
+    {
+      "id": "OPENRPC-DEC-010",
+      "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
+      "executable_evidence": ["TestMergeAppliesExplicitConflictPolicy", "TestMergeDetectsComponentCollisionsAndBounds", "TestApplyOverlaysUsesOrderedRFC7396Semantics", "TestRenameComponentsRewritesEveryMatchingReference"],
+      "fixtures": ["parse/testdata/complete-openrpc.json"],
+      "fuzz": ["FuzzCompositionIsDeterministicAndPanicFree"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Composition defaults to collision failure and only applies ordered overwrite when the caller selects it explicitly."]
+    },
+    {
+      "id": "OPENRPC-DEC-011",
+      "authoritative_sources": ["openrpc-1.4.1-source"],
+      "executable_evidence": ["TestCompareClassifiesMethodAndParameterCompatibility", "TestCompareClassifiesResultsErrorsServersLinksExamplesAndComponents", "TestCompareResolvedUsesReferenceTargetSemantics", "TestCompareResolvedPreservesUnresolvedSourcePointers", "TestReportCompatibilityAndHelperFailures"],
+      "fixtures": ["parse/testdata/complete-openrpc.json"],
+      "fuzz": ["FuzzSemanticDiffIsDeterministic"],
+      "interoperability_evidence": [],
+      "interoperability_classification": "not assessed",
+      "differential_evidence": [],
+      "differential_classification": "not assessed",
+      "public_behavior": ["Compatibility reports fail closed on conditional, truncated, cancelled, unresolved, or erroneous comparisons."]
+    }
+  ]
+}
