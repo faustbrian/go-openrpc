@@ -4,13 +4,13 @@
     {
       "id": "OPENRPC-DEC-001",
       "authoritative_sources": ["openrpc-1.4.1-source", "openrpc-1.4.1-schema"],
-      "executable_evidence": ["TestPinnedMetaSchemaAcceptsNormativeServerURLForms", "TestPinnedOfficialExamplesRespectSupportedVersionLines", "TestPinnedMetaSchemaAcceptsCurrentMinimalDocument", "TestVerifyPinnedInputsChecksEveryManifestDigest"],
+      "executable_evidence": ["TestPublishedMetaSchemaDiffersFromNormativeServerURLPolicy", "TestPinnedMetaSchemaAcceptsNormativeServerURLForms", "TestPinnedOfficialExamplesRespectSupportedVersionLines", "TestPinnedMetaSchemaAcceptsCurrentMinimalDocument", "TestVerifyPinnedInputsChecksEveryManifestDigest"],
       "fixtures": ["specification/manifest.json", "specification/openrpc-1.4.1/schema.json", "specification/examples/metrics-openrpc.json"],
       "fuzz": ["FuzzAcceptedDocumentsRoundTripDeterministically"],
-      "interoperability_evidence": [],
-      "interoperability_classification": "not assessed",
-      "differential_evidence": [],
-      "differential_classification": "not assessed",
+      "interoperability_evidence": ["specification/interoperability.tsv"],
+      "interoperability_classification": "official fixture agreement",
+      "differential_evidence": ["specification/interoperability.tsv"],
+      "differential_classification": "deliberate policy difference",
       "public_behavior": ["Normative prose controls contradictory schema and example artifacts while all unaffected schema constraints remain active."]
     },
     {
@@ -55,8 +55,8 @@
       "executable_evidence": ["TestExamplesPreserveNullAndNotificationResultAbsence", "TestValidationChecksExamplePairingReferenceSyntax", "TestSemanticValidationPreservesExampleValuesWithoutSchemaAssertion", "TestPinnedOfficialExamplesRespectSupportedVersionLines"],
       "fixtures": ["specification/examples/api-with-examples-openrpc.json"],
       "fuzz": ["FuzzDecodeOpenRPCDocument"],
-      "interoperability_evidence": [],
-      "interoperability_classification": "not assessed",
+      "interoperability_evidence": ["specification/interoperability.tsv"],
+      "interoperability_classification": "official fixture agreement",
       "differential_evidence": [],
       "differential_classification": "not assessed",
       "public_behavior": ["Example pairings are structurally validated and losslessly preserved without implicit value-to-schema assertion."]
@@ -69,8 +69,8 @@
       "fuzz": ["FuzzDraft7CompileAndValidateDeterministically"],
       "interoperability_evidence": [],
       "interoperability_classification": "not assessed",
-      "differential_evidence": [],
-      "differential_classification": "not assessed",
+      "differential_evidence": ["specification/interoperability.tsv"],
+      "differential_classification": "maintained peer agreement",
       "public_behavior": ["Every embedded OpenRPC Schema Object uses bounded Draft 7 semantics with no implicit external loader."]
     },
     {

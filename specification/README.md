@@ -52,3 +52,7 @@ passing interoperability claim.
 The structured register, source monitoring, conformance bindings, and immutable
 decision digests live in `decisions.json`, `monitoring.json`,
 `conformance.json`, and `decision-history.json` in this directory.
+
+The practical [interoperability register](interoperability.tsv) records the
+pinned official-example outcomes and the maintained
+`santhosh-tekuri/jsonschema` comparison separately from normative policy.
