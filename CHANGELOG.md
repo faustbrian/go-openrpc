@@ -7,9 +7,8 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
-- Pin CI to the immutable shared-tooling revision that enforces specification
-  decisions and record attributable official-corpus and maintained-validator
-  comparisons.
+- Record attributable official-corpus and maintained-validator comparisons for
+  specification decisions.
 - Make every OpenRPC, Draft 7, and JSON-RPC interpretation discoverable through
   a structured decision register with pinned authority monitoring, executable
   conformance bindings, and immutable decision history. See the
