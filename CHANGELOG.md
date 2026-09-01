@@ -25,7 +25,8 @@ Changelog principles, and releases use semantic versioning.
   - OPENRPC-DEC-009 sha256:30798813f1d0f951cf3fc0d702cd0e1b77c0b28b0bfcc24ea21f459b38d01ee7
   - OPENRPC-DEC-010 sha256:fb9d73438f4495c52c513a50eaba20faf4c18fd425a402966c122e012b51fa46
   - OPENRPC-DEC-011 sha256:a7fb6226a384fb39d107265c4954579ff8f4ed2a139e94153eed4f58080194b5
-- Adopt the checksum-pinned `go-library-tools` v1.0.13 release for repository
+- Adopt the checksum-pinned `go-library-tools` v1.2.0 release and immutable
+  `1f9629e5f27418600460b55a50a5b2fc81697fab` workflow for repository
   verification, while keeping OpenRPC conformance and JSON-RPC interoperability
   checks as source-owned operations.
 - Replace repository-local generic tooling with the standalone repository
