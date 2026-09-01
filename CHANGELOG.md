@@ -7,7 +7,26 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
-- Adopt the checksum-pinned `go-library-tools` v1.0.5 release for repository
+- Record attributable official-corpus and maintained-validator comparisons for
+  specification decisions.
+- Make every OpenRPC, Draft 7, and JSON-RPC interpretation discoverable through
+  a structured decision register with pinned authority monitoring, executable
+  conformance bindings, and immutable decision history. See the
+  [specification decision register](docs/specification-decisions.md).
+  Current decision digests:
+  - OPENRPC-DEC-001 sha256:005dd1f56d5dc911ebdae3d7ab500c1bc6a06a5b342dc56b9afdcd7164901e61
+  - OPENRPC-DEC-002 sha256:ba974caef310f07a68f587b7617742d013d3ac264fb887a7c88041ad751b24f1
+  - OPENRPC-DEC-003 sha256:e80273092fa3a728d3ae9b105121054f6b7434753052cdff7323670722dea1fe
+  - OPENRPC-DEC-004 sha256:ebbe99d02c8c58c5e2f4eed73abae7db3bf34e277b60adbfbb7d1920921a0860
+  - OPENRPC-DEC-005 sha256:15179e069b7678d93ed7c6ec8f653d81bc0e1f921c8e67983c8f547f54bd2740
+  - OPENRPC-DEC-006 sha256:f8f8e0b1ad9f0f16ee7715b8636308393def9db8042a2dc432f50eed51345f3c
+  - OPENRPC-DEC-007 sha256:6c89045cf9e5782af2f0abc52d8d7b92c57c74ee90e1839ba9ce14aa32d29f45
+  - OPENRPC-DEC-008 sha256:d13693bd67216a75c18f58eff0322b4ff7782371f79791fc0b7eccdd9d75d527
+  - OPENRPC-DEC-009 sha256:30798813f1d0f951cf3fc0d702cd0e1b77c0b28b0bfcc24ea21f459b38d01ee7
+  - OPENRPC-DEC-010 sha256:fb9d73438f4495c52c513a50eaba20faf4c18fd425a402966c122e012b51fa46
+  - OPENRPC-DEC-011 sha256:a7fb6226a384fb39d107265c4954579ff8f4ed2a139e94153eed4f58080194b5
+- Adopt the checksum-pinned `go-library-tools` v1.2.0 release and immutable
+  `1f9629e5f27418600460b55a50a5b2fc81697fab` workflow for repository
   verification, while keeping OpenRPC conformance and JSON-RPC interoperability
   checks as source-owned operations.
 - Replace repository-local generic tooling with the standalone repository
