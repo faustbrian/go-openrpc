@@ -7,6 +7,13 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Record the reviewed JSON Schema specification `main` range through
+  `0932747f3f3128758f3166e0d3e23e0b8d1025ee` as behavior-neutral for the
+  immutable Draft 7 reference and dialect contracts used by OpenRPC.
+  Updated decisions:
+  - OPENRPC-DEC-003 sha256:2b84ebb532fafa3e5e847a54d81734c55485c4b94b7628b1092cf8c1f9fb6d1b
+  - OPENRPC-DEC-006 sha256:da0fff954ae70517670301e510baec43d22d41d38689e8d84b8cc15584e3bcff
+
 - Publish complete schema-v2 cohesion metadata and versioned Golib ecosystem
   navigation for the OpenRPC module and its JSON-RPC integration.
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-30",
+  "reviewed_at": "2026-09-03",
   "review_interval_days": 90,
   "authorities": [
     {
@@ -40,7 +40,7 @@
       "kind": "releases",
       "version": "",
       "url": "https://raw.githubusercontent.com/json-schema-org/json-schema-spec/main/specs/jsonschema-core.md",
-      "sha256": "545aea6453cf680d77e832f76a8bc666124862fe82d409127f1903c985329c2e",
+      "sha256": "812a513adefe7b4ef88ffc59a9e643cd447c1da5a79023424406354ce8081184",
       "specifications": ["JSON Schema Draft 7"]
     },
     {

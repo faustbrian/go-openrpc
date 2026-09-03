@@ -56,3 +56,18 @@ decision digests live in `decisions.json`, `monitoring.json`,
 The practical [interoperability register](interoperability.tsv) records the
 pinned official-example outcomes and the maintained
 `santhosh-tekuri/jsonschema` comparison separately from normative policy.
+
+## Upstream review history
+
+### 2026-09-03
+
+- JSON Schema specification `main` advanced from
+  `499eba5749b0a22940e15660dafe50b74df05cb9` through
+  `0932747f3f3128758f3166e0d3e23e0b8d1025ee`. The reviewed changes affect
+  future v1 meta-test infrastructure and an illustrative trailing comma;
+  immutable Draft 7 sources are unchanged. The range is behavior-neutral for
+  the bound reference-resolution and embedded-schema dialect decisions, so
+  their selected behavior remains unchanged. The releases monitor advances
+  from response SHA-256
+  `545aea6453cf680d77e832f76a8bc666124862fe82d409127f1903c985329c2e`
+  to `812a513adefe7b4ef88ffc59a9e643cd447c1da5a79023424406354ce8081184`.

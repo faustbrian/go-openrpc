@@ -99,7 +99,7 @@
       "differential_evidence": [],
       "public_apis": ["reference.Resolver", "reference.ResolvePolicy", "reference.Dereference", "reference.Bundle", "validate.ResolveDocument"],
       "documentation": ["docs/specification-decisions.md", "docs/resolver-threat-model.md"],
-      "upstream_status": "OpenRPC 1.4.1 does not define a retrieval or cycle algorithm.",
+      "upstream_status": "OpenRPC 1.4.1 does not define a retrieval or cycle algorithm. JSON Schema specification main through 0932747f3f3128758f3166e0d3e23e0b8d1025ee changes only future v1 infrastructure and illustrative text; immutable Draft 7 reference semantics are unchanged.",
       "reconsider_when": "OpenRPC standardizes resolution, bundling, cycle, or retrieval semantics."
     },
     {
@@ -192,7 +192,7 @@
       "differential_evidence": ["specification/interoperability.tsv"],
       "public_apis": ["jsonschema.Schema", "validate.Document", "validate.ResolveDocument", "jsonschema.ValidationOptions"],
       "documentation": ["docs/specification-decisions.md", "docs/resource-budgets.md"],
-      "upstream_status": "Draft 7 and the OpenRPC companion meta-schema are pinned with hashes.",
+      "upstream_status": "Draft 7 and the OpenRPC companion meta-schema are pinned with hashes. JSON Schema specification main through 0932747f3f3128758f3166e0d3e23e0b8d1025ee leaves immutable Draft 7 dialect semantics unchanged.",
       "reconsider_when": "A supported OpenRPC feature line adopts another dialect or defines dialect negotiation."
     },
     {
