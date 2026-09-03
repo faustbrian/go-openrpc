@@ -7,6 +7,13 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Publish complete schema-v2 cohesion metadata and versioned Golib ecosystem
+  navigation for the OpenRPC module and its JSON-RPC integration.
+
+- Adopt the checksum-verified `go-library-tools` v1.3.0 CLI, add the local
+  `make cohesion` validation entry point, and pin reusable-workflow cohesion
+  enforcement to its final immutable revision.
+
 - Record attributable official-corpus and maintained-validator comparisons for
   specification decisions.
 - Make every OpenRPC, Draft 7, and JSON-RPC interpretation discoverable through

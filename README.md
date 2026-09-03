@@ -133,6 +133,8 @@ conformance evidence under `specification/conformance/`.
 
 The [documentation index](docs/README.md) organizes adoption, reference,
 operations, specification, and maintainer material.
+Shared construction, ownership, lifecycle, and composition expectations are in
+the versioned [Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/README.md).
 
 ## Development
 

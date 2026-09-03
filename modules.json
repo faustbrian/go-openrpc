@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "repository": "github.com/faustbrian/go-openrpc",
   "go_version": "1.26.6",
   "modules": [
@@ -209,6 +209,97 @@
       "family_label": "Protocols And Descriptions",
       "family_description": "Standards, envelopes, schemas, descriptions, signatures, and wire interoperability.",
       "family_order": 3,
+      "cohesion": {
+        "family": "protocols-and-descriptions",
+        "secondary_capabilities": [
+          "data-encoding",
+          "protocols-and-schemas",
+          "testing-and-conformance",
+          "transport-and-networking"
+        ],
+        "responsibility": "Provide bounded OpenRPC 1.3.x and 1.4.x document modeling, parsing, canonical serialization, validation, reference resolution, runtime expressions, discovery, composition, compatibility diffing, and JSON-RPC integration.",
+        "non_goals": [
+          "Own transport servers or business-method invocation.",
+          "Perform implicit external reference loading or install process-global registries.",
+          "Provide a shared schema runtime for unrelated protocol families."
+        ],
+        "public_package_identifier": "openrpc",
+        "primary_entry_packages": [
+          "github.com/faustbrian/go-openrpc"
+        ],
+        "package_selection": {
+          "github.com/faustbrian/go-openrpc": "Use openrpc for immutable document models, canonical serialization, and the entry point to bounded OpenRPC tooling."
+        },
+        "lifecycle_status": "active",
+        "maturity": "stable",
+        "construction_styles": [
+          "builder-build",
+          "new-options",
+          "plain-function",
+          "validated-value"
+        ],
+        "lifecycle_styles": [
+          "stateless"
+        ],
+        "ownership": {
+          "configuration": "caller",
+          "mutable_inputs": [
+            "borrow",
+            "copy"
+          ],
+          "runtime_resources": "caller",
+          "background_work": "none"
+        },
+        "optional_owned_dependencies": [],
+        "adapters": [
+          "github.com/faustbrian/go-openrpc/jsonrpc"
+        ],
+        "companions": [
+          "github.com/faustbrian/go-json-schema",
+          "github.com/faustbrian/go-jsonrpc"
+        ],
+        "supported_go": {
+          "minimum": "1.26.6",
+          "tested": [
+            "1.26.6"
+          ]
+        },
+        "supported_platforms": [
+          "portable-go"
+        ],
+        "supported_backends": [
+          "filesystem",
+          "http",
+          "memory"
+        ],
+        "supported_protocols": [
+          "json-rpc-2-0",
+          "json-schema-draft-7",
+          "openrpc-1-3",
+          "openrpc-1-4",
+          "rfc-6901-json-pointer",
+          "rfc-7396-json-merge-patch"
+        ],
+        "documentation": {
+          "readme": "README.md",
+          "api": "docs/api.md",
+          "adoption": "docs/adoption.md",
+          "security": "docs/security.md",
+          "compatibility": "docs/compatibility.md",
+          "performance": "docs/performance.md",
+          "examples": "docs/examples.md",
+          "faq": "docs/faq.md",
+          "changelog": "CHANGELOG.md",
+          "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-openrpc",
+          "ecosystem_index": "https://github.com/faustbrian/go-library-tools/blob/v1.3.0/docs/ecosystem/README.md"
+        },
+        "known_good_compatibility_sets": [],
+        "delivery": {
+          "implementation": "not-started",
+          "hardening": "not-started",
+          "release": "not-started"
+        }
+      },
       "version": "1.0.0",
       "tag_prefix": "v",
       "owned_dependencies": [],
