@@ -22,6 +22,8 @@ Start with the quickstart, then use the section matching your task.
 ## Operations
 
 - [Security](security.md)
+- [Support](../SUPPORT.md)
+- [Vulnerability reporting](../SECURITY.md)
 - [Resolver threat model](resolver-threat-model.md)
 - [Resource budgets](resource-budgets.md)
 - [Performance](performance.md)

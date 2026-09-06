@@ -22,6 +22,15 @@ resolution requires a caller-supplied store and an allowlist policy. Earlier
 or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
+The module is active and has a stable v1 API. The minimum supported and tested
+toolchain is Go 1.26.6.
+
+## Installation
+
+```sh
+go get github.com/faustbrian/go-openrpc@v1
+```
+
 ## Quick start
 
 ```go
@@ -40,6 +49,9 @@ documentBuilder, _ = documentBuilder.WithMethod(add)
 document, _ := documentBuilder.Build()
 encoded, _ := openrpc.MarshalCanonical(document)
 ```
+
+The same construction flow is available as a
+[compiler-checked package example](example_test.go).
 
 ### Parse and validate
 
@@ -121,7 +133,7 @@ HTTP stores scope access, enforce limits, and fail closed. See the
 - Supported OpenRPC feature lines: `1.3.x` and `1.4.x`.
 - Authoritative pinned release: OpenRPC 1.4.1.
 - JSON Schema dialect: Draft 7, including boolean schemas.
-- Minimum Go version: see `.go-version` and `go.mod`.
+- Minimum Go version: 1.26.6.
 - The official `1.3.0` metrics example is retained as accepted
   interoperability evidence. Examples on earlier feature lines remain explicit
   rejection fixtures.
@@ -130,6 +142,9 @@ See [security](docs/security.md), [architecture](docs/architecture.md),
 [compatibility](docs/compatibility.md), the explicit
 [specification decisions](docs/specification-decisions.md), and the generated
 conformance evidence under `specification/conformance/`.
+
+For help and vulnerability reporting, use the repository's
+[support guide](SUPPORT.md) and [security policy](SECURITY.md).
 
 The [documentation index](docs/README.md) organizes adoption, reference,
 operations, specification, and maintainer material.

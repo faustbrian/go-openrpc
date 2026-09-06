@@ -8,6 +8,10 @@ Changelog principles, and releases use semantic versioning.
 ### Changed
 
 - Record the reviewed JSON Schema specification `main` range through
+  `4f56a9900674b27804f0ec32e3b7fdfa4efad695` as behavior-neutral for the
+  immutable Draft 7 and OpenRPC schema contracts.
+
+- Record the reviewed JSON Schema specification `main` range through
   `0932747f3f3128758f3166e0d3e23e0b8d1025ee` as behavior-neutral for the
   immutable Draft 7 reference and dialect contracts used by OpenRPC.
   Updated decisions:
@@ -47,6 +51,9 @@ Changelog principles, and releases use semantic versioning.
   contract and retain mutation evidence under `.verification`.
 
 ### Documentation
+
+- Add stable-v1 and Go support guidance, canonical installation, support and
+  security navigation, and a compiler-checked document-building example.
 
 - Replace archived monorepo and AI-generated documentation entry points with
   a standalone, human-oriented documentation structure.
