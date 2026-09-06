@@ -59,6 +59,21 @@ pinned official-example outcomes and the maintained
 
 ## Upstream review history
 
+### 2026-09-06
+
+- JSON Schema specification `main` advanced from
+  `0932747f3f3128758f3166e0d3e23e0b8d1025ee` through
+  `4f56a9900674b27804f0ec32e3b7fdfa4efad695`. The monitored
+  `jsonschema-core.md` change corrects one code-fence label from `jsonschema`
+  to `json` for a future-v1 illustrative instance. The other two changed files
+  cover Relative JSON Pointer wording and validation-output examples. Draft 7
+  sources and the pinned OpenRPC schema payloads are byte-identical to their
+  recorded hashes, so the range is behavior-neutral for the bound reference
+  resolution and embedded-schema dialect decisions. The releases monitor
+  advances from response SHA-256
+  `812a513adefe7b4ef88ffc59a9e643cd447c1da5a79023424406354ce8081184`
+  to `083c814d77cb6385ed7addc93d4410612253c83681c8a41c10326dca915042e8`.
+
 ### 2026-09-03
 
 - JSON Schema specification `main` advanced from

@@ -8,6 +8,10 @@ Changelog principles, and releases use semantic versioning.
 ### Changed
 
 - Record the reviewed JSON Schema specification `main` range through
+  `4f56a9900674b27804f0ec32e3b7fdfa4efad695` as behavior-neutral for the
+  immutable Draft 7 and OpenRPC schema contracts.
+
+- Record the reviewed JSON Schema specification `main` range through
   `0932747f3f3128758f3166e0d3e23e0b8d1025ee` as behavior-neutral for the
   immutable Draft 7 reference and dialect contracts used by OpenRPC.
   Updated decisions:
