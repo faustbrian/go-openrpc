@@ -52,6 +52,9 @@ Changelog principles, and releases use semantic versioning.
 
 ### Documentation
 
+- Add stable-v1 and Go support guidance, canonical installation, support and
+  security navigation, and a compiler-checked document-building example.
+
 - Replace archived monorepo and AI-generated documentation entry points with
   a standalone, human-oriented documentation structure.
 
