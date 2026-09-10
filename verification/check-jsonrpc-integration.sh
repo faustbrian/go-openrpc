@@ -11,7 +11,7 @@ trap cleanup EXIT HUP INT TERM
 cat > "${integration_dir}/go.mod" <<EOF
 module integration.test/openrpcjsonrpc
 
-go 1.26.6
+go 1.27.0
 
 require (
     github.com/faustbrian/go-jsonrpc v1.0.0

@@ -7,7 +7,7 @@
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
 [![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-openrpc?sort=semver)](https://github.com/faustbrian/go-openrpc/releases)
-[![Go](https://img.shields.io/badge/go-1.26.6-00ADD8?logo=go)](https://go.dev/)
+[![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `openrpc` is a design-first Go implementation of OpenRPC 1.3.x and 1.4.x. It
@@ -23,7 +23,7 @@ or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
 The module is active and has a stable v1 API. The minimum supported and tested
-toolchain is Go 1.26.6.
+toolchain is Go 1.27.0.
 
 ## Installation
 
@@ -133,7 +133,7 @@ HTTP stores scope access, enforce limits, and fail closed. See the
 - Supported OpenRPC feature lines: `1.3.x` and `1.4.x`.
 - Authoritative pinned release: OpenRPC 1.4.1.
 - JSON Schema dialect: Draft 7, including boolean schemas.
-- Minimum Go version: 1.26.6.
+- Minimum Go version: 1.27.0.
 - The official `1.3.0` metrics example is retained as accepted
   interoperability evidence. Examples on earlier feature lines remain explicit
   rejection fixtures.
