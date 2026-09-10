@@ -7,6 +7,8 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Require Go 1.27.0 across module, development, CI, specification, and
+  compatibility metadata.
 - Record the reviewed JSON Schema specification `main` range through
   `4f56a9900674b27804f0ec32e3b7fdfa4efad695` as behavior-neutral for the
   immutable Draft 7 and OpenRPC schema contracts.

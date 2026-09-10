@@ -1,6 +1,6 @@
 module github.com/faustbrian/go-openrpc
 
-go 1.26.6
+go 1.27.0
 
 require (
 	github.com/dlclark/regexp2 v1.11.0
