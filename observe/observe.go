@@ -7,13 +7,13 @@ import (
 	"errors"
 	"time"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/diff"
-	"github.com/faustbrian/go-openrpc/discovery"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	"github.com/faustbrian/go-openrpc/parse"
-	"github.com/faustbrian/go-openrpc/reference"
-	"github.com/faustbrian/go-openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/diff"
+	"github.com/faustbrian/go-openrpc/v2/discovery"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/parse"
+	"github.com/faustbrian/go-openrpc/v2/reference"
+	"github.com/faustbrian/go-openrpc/v2/validate"
 )
 
 // ErrInvalidContext reports a nil operation context.

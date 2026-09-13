@@ -13,10 +13,10 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/expression"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	referencevalue "github.com/faustbrian/go-openrpc/reference"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/expression"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	referencevalue "github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 // Code is a stable machine-readable diagnostic identifier.

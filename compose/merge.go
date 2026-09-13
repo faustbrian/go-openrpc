@@ -5,8 +5,8 @@ import (
 	"errors"
 	"sort"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonschema"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
 )
 
 var (

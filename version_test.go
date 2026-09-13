@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
 )
 
 func TestParseVersionAcceptsSupportedPatchLine(t *testing.T) {

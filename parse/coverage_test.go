@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/faustbrian/go-openrpc/parse"
+	"github.com/faustbrian/go-openrpc/v2/parse"
 )
 
 func TestDecodeRejectsMalformedReferencesInEveryUnion(t *testing.T) {

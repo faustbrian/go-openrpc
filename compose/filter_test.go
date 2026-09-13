@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/compose"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/compose"
 )
 
 func TestFilterMethodsPreservesDocumentAndAllowsEmptyVisibility(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestParsePreservesExactJSONAndOwnsMemory(t *testing.T) {
@@ -30,6 +30,19 @@ func TestParsePreservesExactJSONAndOwnsMemory(t *testing.T) {
 	returned[1] = '['
 	if !bytes.Equal(value.Bytes(), want) {
 		t.Fatal("Bytes exposed mutable internal storage")
+	}
+}
+
+func TestValueReportsByteLengthWithoutAllocating(t *testing.T) {
+	value, err := jsonvalue.Parse([]byte(`{"value":true}`), jsonvalue.DefaultPolicy())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := value.ByteLen(); got != len(`{"value":true}`) {
+		t.Fatalf("ByteLen() = %d", got)
+	}
+	if allocations := testing.AllocsPerRun(100, func() { _ = value.ByteLen() }); allocations != 0 {
+		t.Fatalf("ByteLen allocations = %f", allocations)
 	}
 }
 

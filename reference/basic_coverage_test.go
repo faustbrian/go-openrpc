@@ -10,7 +10,7 @@ import (
 	"testing/fstest"
 	"time"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestPointerCoversExactLimitsAndEveryTargetFailure(t *testing.T) {
@@ -124,11 +124,11 @@ func TestMemoryAndFilesystemStoresCoverEveryFailure(t *testing.T) {
 
 	invalidBases := []string{"relative/", "https://example.com/base", "https://example.com/base/?q=1", "https://user@example.com/base/", "https://example.com/base/#fragment"}
 	for _, base := range invalidBases {
-		if _, err := NewFSStore(fstest.MapFS{}, base); !errors.Is(err, ErrStorePolicy) {
+		if _, err := NewFSStore(contextMapFS{MapFS: fstest.MapFS{}}, base); !errors.Is(err, ErrStorePolicy) {
 			t.Errorf("NewFSStore(%q) error = %v", base, err)
 		}
 	}
-	fsStore, err := NewFSStore(fstest.MapFS{"a.json": {Data: []byte("a")}}, "https://example.com/base/")
+	fsStore, err := NewFSStore(contextMapFS{MapFS: fstest.MapFS{"a.json": {Data: []byte("a")}}}, "https://example.com/base/")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -189,6 +189,25 @@ func TestBundleRejectsInvalidSetupAndRoot(t *testing.T) {
 type errorFS struct{}
 
 func (errorFS) Open(string) (fs.File, error) { return &errorFile{}, nil }
+func (errorFS) ReadFileContext(context.Context, string, int) ([]byte, error) {
+	return nil, errors.New("read")
+}
+
+type contextMapFS struct{ fstest.MapFS }
+
+func (filesystem contextMapFS) ReadFileContext(ctx context.Context, name string, maxBytes int) ([]byte, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	data, err := fs.ReadFile(filesystem.MapFS, name)
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > maxBytes {
+		return nil, ErrStoreLimit
+	}
+	return data, nil
+}
 
 type errorFile struct{ strings.Reader }
 

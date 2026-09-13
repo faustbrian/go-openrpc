@@ -7,9 +7,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 // CodeInvalidSchema reports a schema that cannot compile as Draft 7.

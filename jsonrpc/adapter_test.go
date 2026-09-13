@@ -6,9 +6,9 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/discovery"
-	adapter "github.com/faustbrian/go-openrpc/jsonrpc"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/discovery"
+	adapter "github.com/faustbrian/go-openrpc/v2/jsonrpc"
 )
 
 func TestDiscoveryHandlerReturnsCanonicalRawDocument(t *testing.T) {

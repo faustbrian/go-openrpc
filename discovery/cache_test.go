@@ -8,9 +8,25 @@ import (
 	"testing"
 	"time"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/discovery"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/discovery"
 )
+
+type cacheIdentityKey struct{}
+
+type typedNilDiscoverer struct{}
+
+type valueDiscoverer struct{ discovery.Discoverer }
+
+func (*typedNilDiscoverer) Discover(context.Context) (discovery.Snapshot, error) {
+	panic("typed-nil discoverer called")
+}
+
+func publicCacheOptions() discovery.CacheOptions {
+	return discovery.DefaultCacheOptions(func(context.Context) (string, error) {
+		return "public", nil
+	})
+}
 
 func TestCacheDeduplicatesConcurrentDiscoveryAndInvalidatesExplicitly(t *testing.T) {
 	t.Parallel()
@@ -34,7 +50,7 @@ func TestCacheDeduplicatesConcurrentDiscoveryAndInvalidatesExplicitly(t *testing
 	if err != nil {
 		t.Fatal(err)
 	}
-	cache, err := discovery.NewCache(service)
+	cache, err := discovery.NewPartitionedCache(service, publicCacheOptions())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,7 +123,7 @@ func TestCacheWaiterCanCancelWithoutCancelingSharedDiscovery(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cache, err := discovery.NewCache(service)
+	cache, err := discovery.NewPartitionedCache(service, publicCacheOptions())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -151,7 +167,7 @@ func TestCacheWaiterUsesCompletedSharedDiscovery(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cache, err := discovery.NewCache(service)
+	cache, err := discovery.NewPartitionedCache(service, publicCacheOptions())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -214,11 +230,192 @@ func (ctx *checkedContext) Err() error {
 	return ctx.Context.Err()
 }
 
-func TestNewCacheRequiresDiscoverer(t *testing.T) {
+func TestNewPartitionedCacheRequiresDiscovererAndOptions(t *testing.T) {
 	t.Parallel()
 
-	if _, err := discovery.NewCache(nil); !errors.Is(err, discovery.ErrInvalidOptions) {
-		t.Fatalf("NewCache error = %v", err)
+	if _, err := discovery.NewPartitionedCache(nil, discovery.DefaultCacheOptions(
+		func(context.Context) (string, error) { return "public", nil },
+	)); !errors.Is(err, discovery.ErrInvalidOptions) {
+		t.Fatalf("NewPartitionedCache nil discoverer error = %v", err)
+	}
+	var typedNil *typedNilDiscoverer
+	if _, err := discovery.NewPartitionedCache(typedNil, publicCacheOptions()); !errors.Is(err, discovery.ErrInvalidOptions) {
+		t.Fatalf("NewPartitionedCache typed-nil discoverer error = %v", err)
+	}
+	service, err := discovery.NewService(discovery.Static(testDocument(t, "public")), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := discovery.NewPartitionedCache(valueDiscoverer{Discoverer: service}, publicCacheOptions()); err != nil {
+		t.Fatalf("NewPartitionedCache value discoverer error = %v", err)
+	}
+	for _, options := range []discovery.CacheOptions{
+		{},
+		{Key: func(context.Context) (string, error) { return "public", nil }, MaxPartitions: 1},
+		{Key: func(context.Context) (string, error) { return "public", nil }, MaxKeyBytes: 1},
+	} {
+		if _, err := discovery.NewPartitionedCache(service, options); !errors.Is(err, discovery.ErrCachePartition) {
+			t.Fatalf("NewPartitionedCache options %#v error = %v", options, err)
+		}
+	}
+}
+
+func TestCachePartitionsFilteredSnapshotsByCallerKey(t *testing.T) {
+	t.Parallel()
+
+	service, err := discovery.NewService(
+		discovery.Static(testDocument(t, "base")),
+		discovery.FilterFunc(func(ctx context.Context, _ openrpc.Document) (openrpc.Document, error) {
+			identity, _ := ctx.Value(cacheIdentityKey{}).(string)
+			return testDocument(t, identity), nil
+		}),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cache, err := discovery.NewPartitionedCache(service, discovery.DefaultCacheOptions(
+		func(ctx context.Context) (string, error) {
+			identity, _ := ctx.Value(cacheIdentityKey{}).(string)
+			return identity, nil
+		},
+	))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	first, err := cache.Discover(context.WithValue(context.Background(), cacheIdentityKey{}, "first"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	second, err := cache.Discover(context.WithValue(context.Background(), cacheIdentityKey{}, "second"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	firstMethod, _ := first.Document().Methods()[0].Method()
+	secondMethod, _ := second.Document().Methods()[0].Method()
+	if firstMethod.Name() != "first" {
+		t.Fatalf("first partition returned %q", firstMethod.Name())
+	}
+	if secondMethod.Name() != "second" {
+		t.Fatalf("second partition returned %q", secondMethod.Name())
+	}
+}
+
+func TestCacheRejectsInvalidKeysAndBoundsPartitions(t *testing.T) {
+	t.Parallel()
+
+	service, err := discovery.NewService(discovery.Static(testDocument(t, "bounded")), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	keyError := errors.New("private key detail")
+	cache, err := discovery.NewPartitionedCache(service, discovery.CacheOptions{
+		Key:           func(context.Context) (string, error) { return "", keyError },
+		MaxKeyBytes:   64,
+		MaxPartitions: 1,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := cache.Discover(context.Background()); !errors.Is(err, discovery.ErrCachePartition) || errors.Is(err, keyError) {
+		t.Fatalf("cache key error = %v", err)
+	}
+
+	cache, err = discovery.NewPartitionedCache(service, discovery.CacheOptions{
+		Key: func(ctx context.Context) (string, error) {
+			key, _ := ctx.Value(cacheIdentityKey{}).(string)
+			return key, nil
+		},
+		MaxKeyBytes:   64,
+		MaxPartitions: 1,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := cache.Discover(context.WithValue(context.Background(), cacheIdentityKey{}, "first")); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := cache.Discover(context.WithValue(context.Background(), cacheIdentityKey{}, "second")); !errors.Is(err, discovery.ErrCacheLimit) {
+		t.Fatalf("partition limit error = %v", err)
+	}
+	if err := cache.InvalidatePartition("first"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := cache.Discover(context.WithValue(context.Background(), cacheIdentityKey{}, "second")); err != nil {
+		t.Fatalf("partition capacity was not released: %v", err)
+	}
+	if err := cache.InvalidatePartition(""); !errors.Is(err, discovery.ErrCachePartition) {
+		t.Fatalf("empty invalidation key error = %v", err)
+	}
+}
+
+func TestCacheReturnsCancellationThatOccursDuringKeyDerivation(t *testing.T) {
+	t.Parallel()
+
+	service, err := discovery.NewService(discovery.Static(testDocument(t, "bounded")), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []discovery.CacheKeyFunc{
+		func(ctx context.Context) (string, error) {
+			ctx.Value(cacheIdentityKey{}).(context.CancelFunc)()
+			return "", errors.New("private key detail")
+		},
+		func(ctx context.Context) (string, error) {
+			ctx.Value(cacheIdentityKey{}).(context.CancelFunc)()
+			return "public", nil
+		},
+	} {
+		cache, cacheErr := discovery.NewPartitionedCache(service, discovery.CacheOptions{
+			Key: key, MaxKeyBytes: 64, MaxPartitions: 1,
+		})
+		if cacheErr != nil {
+			t.Fatal(cacheErr)
+		}
+		baseContext, cancel := context.WithCancel(context.Background())
+		ctx := context.WithValue(baseContext, cacheIdentityKey{}, context.CancelFunc(cancel))
+		if _, discoverErr := cache.Discover(ctx); !errors.Is(discoverErr, context.Canceled) {
+			t.Fatalf("canceled key derivation error = %v", discoverErr)
+		}
+	}
+}
+
+func TestCacheBoundsPartitionKeysAndReleasesFailedEntries(t *testing.T) {
+	t.Parallel()
+
+	key := "first"
+	calls := 0
+	service, err := discovery.NewService(discovery.ProviderFunc(func(context.Context) (openrpc.Document, error) {
+		calls++
+		if calls == 1 {
+			return openrpc.Document{}, errors.New("provider failed")
+		}
+		return testDocument(t, key), nil
+	}), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cache, err := discovery.NewPartitionedCache(service, discovery.CacheOptions{
+		Key:           func(context.Context) (string, error) { return key, nil },
+		MaxKeyBytes:   5,
+		MaxPartitions: 1,
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := cache.Discover(context.Background()); err == nil {
+		t.Fatal("failed provider discovery succeeded")
+	}
+	key = "other"
+	if _, err := cache.Discover(context.Background()); err != nil {
+		t.Fatalf("failed partition retained capacity: %v", err)
+	}
+	key = "oversized"
+	if _, err := cache.Discover(context.Background()); !errors.Is(err, discovery.ErrCachePartition) {
+		t.Fatalf("oversized partition key error = %v", err)
+	}
+	if err := cache.InvalidatePartition("oversized"); !errors.Is(err, discovery.ErrCachePartition) {
+		t.Fatalf("oversized invalidation key error = %v", err)
 	}
 }
 
@@ -245,7 +442,7 @@ func TestCacheRejectsInvalidStateAndRetriesFailures(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cache, err := discovery.NewCache(service)
+	cache, err := discovery.NewPartitionedCache(service, publicCacheOptions())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -284,7 +481,7 @@ func TestCacheDoesNotPublishRefreshInvalidatedInFlight(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	cache, err := discovery.NewCache(service)
+	cache, err := discovery.NewPartitionedCache(service, publicCacheOptions())
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -6,9 +6,9 @@ import (
 	"sort"
 	"strings"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/reference"
-	"github.com/faustbrian/go-openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/reference"
+	"github.com/faustbrian/go-openrpc/v2/validate"
 )
 
 // ErrResolvedComparison reports a document that could not be resolved and

@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"sort"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 // EvaluateLinkParams evaluates every runtime-expression string in a Link

@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 	peer "github.com/santhosh-tekuri/jsonschema/v6"
 )
 

@@ -4,11 +4,13 @@ import (
 	"context"
 	"errors"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestValidatorAppliesDraft7WithoutNumericCoercion(t *testing.T) {
@@ -93,6 +95,8 @@ func TestCompileEnforcesExactOptionBoundaries(t *testing.T) {
 	for _, mutate := range []func(*jsonschema.ValidationOptions){
 		func(options *jsonschema.ValidationOptions) { options.MaxResources = 0 },
 		func(options *jsonschema.ValidationOptions) { options.MaxSchemaBytes = 0 },
+		func(options *jsonschema.ValidationOptions) { options.MaxInstanceBytes = 0 },
+		func(options *jsonschema.ValidationOptions) { options.MaxValidationSteps = 0 },
 		func(options *jsonschema.ValidationOptions) { options.MaxIssues = 0 },
 		func(options *jsonschema.ValidationOptions) { options.RegexpTimeout = 0 },
 		func(options *jsonschema.ValidationOptions) { options.RegexpTimeout = 10*time.Second + 1 },
@@ -107,6 +111,72 @@ func TestCompileEnforcesExactOptionBoundaries(t *testing.T) {
 	options.RegexpTimeout = 10 * time.Second
 	if _, err := jsonschema.Compile(parseSchema(t, `true`), options); err != nil {
 		t.Fatalf("exact timeout boundary error = %v", err)
+	}
+}
+
+type validationCancelContext struct {
+	context.Context
+	checks    atomic.Int64
+	cancelAt  int64
+	done      chan struct{}
+	closeOnce sync.Once
+}
+
+func (ctx *validationCancelContext) Done() <-chan struct{} { return ctx.done }
+
+func (ctx *validationCancelContext) Err() error {
+	if ctx.checks.Add(1) < ctx.cancelAt {
+		return nil
+	}
+	ctx.closeOnce.Do(func() { close(ctx.done) })
+	return context.Canceled
+}
+
+func TestValidatorCancellationInterruptsAggregateSchemaWork(t *testing.T) {
+	t.Parallel()
+
+	options := jsonschema.DefaultValidationOptions()
+	validator, err := jsonschema.Compile(
+		parseSchema(t, `{"allOf":[{"minimum":1},{"minimum":2},{"minimum":3},{"minimum":4},{"minimum":5},{"minimum":6},{"minimum":7},{"minimum":8}]}`),
+		options,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx := &validationCancelContext{Context: context.Background(), cancelAt: 5, done: make(chan struct{})}
+	if report := validator.Validate(ctx, parseValue(t, `0`)); !errors.Is(report.Err(), context.Canceled) {
+		t.Fatalf("aggregate cancellation error = %v", report.Err())
+	}
+}
+
+func TestValidatorBoundsAggregateSchemaEvaluations(t *testing.T) {
+	t.Parallel()
+
+	options := jsonschema.DefaultValidationOptions()
+	options.MaxValidationSteps = 16
+	validator, err := jsonschema.Compile(
+		parseSchema(t, `{"items":{"allOf":[{"minimum":0},{"minimum":1}]}}`),
+		options,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report := validator.Validate(context.Background(), parseValue(t, `[0,1,2,3,4]`)); !errors.Is(report.Err(), jsonschema.ErrValidationResourceLimit) {
+		t.Fatalf("aggregate work error = %v", report.Err())
+	}
+}
+
+func TestValidatorBoundsInstanceTraversalBeforeDependencyValidation(t *testing.T) {
+	t.Parallel()
+
+	options := jsonschema.DefaultValidationOptions()
+	options.MaxValidationSteps = 4
+	validator, err := jsonschema.Compile(parseSchema(t, `true`), options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report := validator.Validate(context.Background(), parseValue(t, `[0,1,2,3]`)); !errors.Is(report.Err(), jsonschema.ErrValidationResourceLimit) {
+		t.Fatalf("instance traversal error = %v", report.Err())
 	}
 }
 
@@ -128,6 +198,76 @@ func TestValidatorReportsRegexpTimeoutAsResourceLimit(t *testing.T) {
 	}
 	if report.Valid() || len(report.Issues()) != 0 {
 		t.Fatalf("regexp timeout report = %#v", report)
+	}
+}
+
+func TestValidatorCancellationBoundsRegexpValidation(t *testing.T) {
+	options := jsonschema.DefaultValidationOptions()
+	options.RegexpTimeout = time.Second
+	validator, err := jsonschema.Compile(
+		parseSchema(t, `{"pattern":"^(a+)+$"}`), options,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	instance := parseValue(t, `"`+strings.Repeat("a", 4_096)+`!"`)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Millisecond)
+	defer cancel()
+
+	started := time.Now()
+	report := validator.Validate(ctx, instance)
+	if !errors.Is(report.Err(), context.DeadlineExceeded) {
+		t.Fatalf("validation error = %v, want deadline exceeded", report.Err())
+	}
+	if elapsed := time.Since(started); elapsed > 500*time.Millisecond {
+		t.Fatalf("canceled validation returned after %s", elapsed)
+	}
+}
+
+func TestValidatorRejectsInstancesAboveDefaultByteBudget(t *testing.T) {
+	t.Parallel()
+
+	validator, err := jsonschema.Compile(
+		parseSchema(t, `true`), jsonschema.DefaultValidationOptions(),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	policy := jsonvalue.Policy{MaxBytes: (16 << 20) + 2, MaxDepth: 2, MaxTokens: 2}
+	instance, err := jsonvalue.Parse([]byte(`"`+strings.Repeat("a", 16<<20)+`"`), policy)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if report := validator.Validate(context.Background(), instance); !errors.Is(report.Err(), jsonschema.ErrValidationResourceLimit) {
+		t.Fatalf("oversized instance error = %v", report.Err())
+	}
+}
+
+func TestValidationByteLimitsRejectBeforeCopying(t *testing.T) {
+	instance := parseValue(t, `"oversized"`)
+	options := jsonschema.DefaultValidationOptions()
+	options.MaxInstanceBytes = instance.ByteLen() - 1
+	validator, err := jsonschema.Compile(parseSchema(t, `true`), options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if allocations := testing.AllocsPerRun(100, func() {
+		if report := validator.Validate(context.Background(), instance); !errors.Is(report.Err(), jsonschema.ErrValidationResourceLimit) {
+			t.Fatalf("oversized instance error = %v", report.Err())
+		}
+	}); allocations != 0 {
+		t.Fatalf("oversized validation allocations = %f", allocations)
+	}
+
+	schema := parseSchema(t, `{"type":"string"}`)
+	options = jsonschema.DefaultValidationOptions()
+	options.MaxSchemaBytes = schema.ByteLen() - 1
+	if allocations := testing.AllocsPerRun(100, func() {
+		if _, compileErr := jsonschema.Compile(schema, options); !errors.Is(compileErr, jsonschema.ErrValidationPolicy) {
+			t.Fatalf("oversized schema error = %v", compileErr)
+		}
+	}); allocations != 0 {
+		t.Fatalf("oversized compilation allocations = %f", allocations)
 	}
 }
 

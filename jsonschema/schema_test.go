@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestParsePreservesBooleanAndObjectSchemas(t *testing.T) {
@@ -80,5 +80,15 @@ func TestSchemaBytesReturnsOwnedStorage(t *testing.T) {
 	returned[0] = '['
 	if schema.Bytes()[0] != '{' {
 		t.Fatal("Bytes exposed mutable schema storage")
+	}
+}
+
+func TestSchemaReportsByteLengthWithoutAllocating(t *testing.T) {
+	schema := parseSchema(t, `{"type":"string"}`)
+	if got := schema.ByteLen(); got != len(`{"type":"string"}`) {
+		t.Fatalf("ByteLen() = %d", got)
+	}
+	if allocations := testing.AllocsPerRun(100, func() { _ = schema.ByteLen() }); allocations != 0 {
+		t.Fatalf("ByteLen allocations = %f", allocations)
 	}
 }
