@@ -138,12 +138,13 @@ func (cache *Cache) Discover(ctx context.Context) (Snapshot, error) {
 
 		snapshot, err := cache.discoverer.Discover(ctx)
 		cache.mu.Lock()
-		current, currentExists := cache.entries[key]
-		if err == nil && currentExists && current == entry {
-			entry.snapshot = snapshot
-			entry.valid = true
-		} else if err != nil && currentExists && current == entry {
-			delete(cache.entries, key)
+		if cache.entries[key] == entry {
+			if err == nil {
+				entry.snapshot = snapshot
+				entry.valid = true
+			} else {
+				delete(cache.entries, key)
+			}
 		}
 		entry.loading = false
 		close(done)
