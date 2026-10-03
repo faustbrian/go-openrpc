@@ -373,7 +373,7 @@ func TestCacheReturnsCancellationThatOccursDuringKeyDerivation(t *testing.T) {
 			t.Fatal(cacheErr)
 		}
 		baseContext, cancel := context.WithCancel(context.Background())
-		ctx := context.WithValue(baseContext, cacheIdentityKey{}, context.CancelFunc(cancel))
+		ctx := context.WithValue(baseContext, cacheIdentityKey{}, cancel)
 		if _, discoverErr := cache.Discover(ctx); !errors.Is(discoverErr, context.Canceled) {
 			t.Fatalf("canceled key derivation error = %v", discoverErr)
 		}

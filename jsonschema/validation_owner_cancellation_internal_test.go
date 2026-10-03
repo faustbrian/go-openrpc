@@ -64,7 +64,7 @@ func TestValidationOwnerDependencyCheckpointPreservesCancellationAndReuse(t *tes
 				t.Fatal(err)
 			}
 			stopped, cancel := context.WithCancel(context.Background())
-			if want == context.DeadlineExceeded {
+			if errors.Is(want, context.DeadlineExceeded) {
 				cancel()
 				stopped, cancel = context.WithDeadline(context.Background(), time.Unix(0, 0))
 			} else {
