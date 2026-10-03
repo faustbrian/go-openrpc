@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Published v1 reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc)
+[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc/v2.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc/v2)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-openrpc?sort=semver)](https://github.com/faustbrian/go-openrpc/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -22,21 +22,19 @@ resolution requires a caller-supplied store and an allowlist policy. Earlier
 or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
-This source tree prepares the next v2 API. No v2 tag has been published, so the
-hardened module is not yet installable through the public module proxy. The
-minimum supported and tested toolchain is Go 1.27.0.
+The latest stable release is v2.0.0. The minimum supported and tested
+toolchain is Go 1.27.0.
 
 ## Installation
 
-The current published release remains available at:
+Install the published v2 module:
 
 ```sh
-go get github.com/faustbrian/go-openrpc@v1
+go get github.com/faustbrian/go-openrpc/v2@v2
 ```
 
-The hardened v2 source is planned and unpublished. After its first release,
-its module path will be `github.com/faustbrian/go-openrpc/v2`; existing v1
-consumers must not update imports before that tag is available.
+When upgrading from v1, update imports to `/v2` and follow the cache and
+filesystem migration requirements in the [adoption guide](docs/adoption.md).
 
 ## Quick start
 

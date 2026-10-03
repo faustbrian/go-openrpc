@@ -1,20 +1,19 @@
 # Adoption guide
 
-## Pending v2 migration
+## V2 migration
 
-This source tree uses `github.com/faustbrian/go-openrpc/v2`, but no v2 tag is
-published. Consumer migration is blocked until that release exists. The known
-owned ecosystem consumers still referring to v1 are:
+Version v2.0.0 is published at `github.com/faustbrian/go-openrpc/v2`.
+Update module requirements and imports when adopting v2. Owned ecosystem
+consumer adoption is verified separately at these boundaries:
 
 - `go-jsonrpc` coordination metadata;
 - `go-openapi` coordination metadata; and
 - the `go-library-tools` release compatibility consumer.
 
-Those repositories remain unchanged here. After v2 publication, their owners
-must update imports or metadata deliberately and verify the affected integration
+Those repositories remain unchanged here. Their owners must update imports
+or metadata deliberately and verify the affected integration
 boundary. Existing v1 consumers continue to receive the published v1 behavior;
-the cache and filesystem hardening described below is available only in the
-pending v2 source.
+the cache and filesystem hardening described below requires the v2 release.
 
 ## Static documents
 

@@ -1,7 +1,7 @@
 # Security model
 
-Model revision: 2. Applies to the pending v2 source on `main`; this does not
-describe a published v2 release or change the behavior of published v1.
+Model revision: 2. Applies to the v2.0.0 source contract, published on
+2026-10-03; it does not change the behavior of published v1.
 
 All JSON inputs are untrusted. `jsonvalue` rejects invalid UTF-8, duplicate
 object names, trailing data, excessive bytes, depth, and tokens before a value
