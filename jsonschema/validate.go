@@ -230,11 +230,11 @@ func (expression ecmaRegexp) MatchString(input string) bool {
 		panic(validationCanceled{err: err})
 	}
 	if deadline, ok := ctx.Deadline(); ok {
-		remaining := time.Until(deadline)
-		if remaining <= 0 {
-			panic(validationCanceled{err: context.DeadlineExceeded})
+		deadlineTimeout, err := regexpDeadlineTimeout(time.Until(deadline), timeout)
+		if err != nil {
+			panic(validationCanceled{err: err})
 		}
-		timeout = min(timeout, remaining)
+		timeout = deadlineTimeout
 	}
 	expression.compiled.MatchTimeout = timeout
 	matched, err := expression.compiled.MatchString(input)
@@ -245,6 +245,13 @@ func (expression ecmaRegexp) MatchString(input string) bool {
 		panic(regexpTimeout{})
 	}
 	return matched
+}
+
+func regexpDeadlineTimeout(remaining, configured time.Duration) (time.Duration, error) {
+	if remaining <= 0 {
+		return 0, context.DeadlineExceeded
+	}
+	return min(remaining, configured), nil
 }
 
 type validationCheckpoint struct{ control *validationControl }
@@ -384,8 +391,7 @@ func (report Report) Valid() bool { return report.err == nil && len(report.issue
 // Validate checks one immutable JSON value and converts dependency diagnostics
 // into stable, payload-free package-owned issues.
 func (compiled Validator) Validate(ctx context.Context, instance jsonvalue.Value) Report {
-	if compiled.compiled == nil || compiled.maxIssues <= 0 || compiled.maxInstanceBytes <= 0 ||
-		compiled.maxValidationSteps <= 0 ||
+	if compiled.compiled == nil || compiled.maxIssues <= 0 ||
 		compiled.control == nil || ctx == nil {
 		return Report{err: ErrValidationPolicy}
 	}
