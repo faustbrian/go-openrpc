@@ -1,5 +1,8 @@
 # Security model
 
+Model revision: 2. Applies to the pending v2 source on `main`; this does not
+describe a published v2 release or change the behavior of published v1.
+
 All JSON inputs are untrusted. `jsonvalue` rejects invalid UTF-8, duplicate
 object names, trailing data, excessive bytes, depth, and tokens before a value
 enters the model. Parse, pointer, expression, validation, diff, resolver, and
@@ -26,6 +29,9 @@ defaults allow 1,024 resources, 64 MiB across the root and resources, a 16 MiB
 validation instance, and 1,000,000 validation steps. The per-call step budget
 covers context-aware instance decoding, reachable compiled-schema size,
 schema-evaluation checkpoints, regular expressions, and diagnostic traversal.
+Each compiled Draft 7 node is guarded before its original evaluation, including
+boolean results and references; post-evaluation extension callbacks alone do
+not enforce this boundary.
 Validation serializes access to compiled ECMAScript regular expressions. A
 nearer caller deadline replaces the per-expression timeout, canceled waiters do
 not start validation, and cancellation is returned as its context error rather

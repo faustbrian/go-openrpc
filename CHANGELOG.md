@@ -7,6 +7,9 @@ Changelog principles, and releases use semantic versioning.
 
 ### Changed
 
+- Charge the validation budget before every schema evaluation, including
+  boolean schemas and reference results that return before dependency
+  extension callbacks.
 - Move the module to `github.com/faustbrian/go-openrpc/v2`; callers must update
   imports, replace `discovery.NewCache` with `NewPartitionedCache` and an
   authorization-complete key, and adapt filesystem stores to `ContextReadFS`.

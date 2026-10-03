@@ -142,8 +142,8 @@ func TestAttachValidationCheckpointsTraversesEverySchemaEdge(t *testing.T) {
 		t.Fatalf("schema node count = %d, want %d", got, want)
 	}
 	for index, schema := range append(children, root) {
-		if len(schema.Extensions) != 1 {
-			t.Fatalf("schema %d extensions = %d", index, len(schema.Extensions))
+		if len(schema.AllOf) != 2 || len(schema.AllOf[0].Extensions) != 1 {
+			t.Fatalf("schema %d lacks its pre-evaluation checkpoint", index)
 		}
 	}
 }

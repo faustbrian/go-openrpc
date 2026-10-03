@@ -264,8 +264,6 @@ func attachValidationCheckpoints(root *validator.Schema, control *validationCont
 			return
 		}
 		seen[schema] = struct{}{}
-		schema.Extensions = append(schema.Extensions, validationCheckpoint{control: control})
-
 		visit(schema.Ref)
 		visit(schema.RecursiveRef)
 		if schema.DynamicRef != nil {
@@ -321,6 +319,23 @@ func attachValidationCheckpoints(root *validator.Schema, control *validationCont
 		visit(schema.Items2020)
 		visit(schema.UnevaluatedItems)
 		visit(schema.ContentSchema)
+
+		// Draft 7 validation can return before its extensions run. Preserve the
+		// original node as the second allOf member so the first member checks
+		// the caller's budget before any keyword or reference is evaluated.
+		// Keep the original pointer as the wrapper: every existing graph edge,
+		// including recursive references, must pass through the same guard.
+		body := *schema
+		checkpoint := &validator.Schema{
+			DraftVersion: body.DraftVersion,
+			Location:     body.Location,
+			Extensions:   []validator.SchemaExt{validationCheckpoint{control: control}},
+		}
+		*schema = validator.Schema{
+			DraftVersion: body.DraftVersion,
+			Location:     body.Location,
+			AllOf:        []*validator.Schema{checkpoint, &body},
+		}
 	}
 	visit(root)
 	return len(seen)
