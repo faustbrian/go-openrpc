@@ -42,6 +42,12 @@ func (expiredDeadlineContext) Deadline() (time.Time, bool) {
 	return time.Now().Add(-time.Second), true
 }
 
+type cancelAfterValidation struct{ cancel context.CancelFunc }
+
+func (extension cancelAfterValidation) Validate(*validator.ValidatorContext, any) {
+	extension.cancel()
+}
+
 func TestECMARegexpAdapterPreservesPatternIdentity(t *testing.T) {
 	t.Parallel()
 
@@ -202,11 +208,18 @@ func TestValidatorCoversQueuedCancellationAndPostValidationLimits(t *testing.T) 
 		t.Fatalf("schema node bound error = %v", report.Err())
 	}
 
-	finalContext := &cancelOnSecondErrContext{Context: context.Background(), cancelAt: 4}
 	compiled.schemaNodes = 1
 	compiled.maxValidationSteps = 10
+	finalContext, cancelFinal := context.WithCancel(context.Background())
+	defer cancelFinal()
+	// Outer extensions run after the guarded original schema completes. This
+	// cancels at completion rather than depending on checkpoint call counts.
+	compiled.compiled.Extensions = []validator.SchemaExt{cancelAfterValidation{cancel: cancelFinal}}
 	if report = compiled.Validate(finalContext, mustInternalValue(t, `true`)); !errors.Is(report.Err(), context.Canceled) {
 		t.Fatalf("post-validation cancellation error = %v", report.Err())
+	}
+	if report = compiled.Validate(context.Background(), mustInternalValue(t, `true`)); !report.Valid() {
+		t.Fatalf("validator was not reusable after final cancellation: %v", report.Err())
 	}
 
 	falseSchema, err := Parse([]byte(`false`), jsonvalue.DefaultPolicy())
