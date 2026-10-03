@@ -3,8 +3,8 @@ package openrpc_test
 import (
 	"fmt"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/builder"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/builder"
 )
 
 func Example() {

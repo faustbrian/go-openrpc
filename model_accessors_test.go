@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/parse"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/parse"
 )
 
 func TestCompleteModelAccessorsAndUnionCases(t *testing.T) {

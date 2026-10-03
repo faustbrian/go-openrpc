@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	"github.com/faustbrian/go-openrpc/parse"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/parse"
 )
 
 func TestMarshalCanonicalIsStableAcrossObjectOrderAndWhitespace(t *testing.T) {

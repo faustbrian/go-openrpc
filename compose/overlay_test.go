@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-openrpc/compose"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/compose"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestApplyOverlaysUsesOrderedRFC7396Semantics(t *testing.T) {

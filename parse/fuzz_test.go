@@ -5,10 +5,10 @@ import (
 	"reflect"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	"github.com/faustbrian/go-openrpc/parse"
-	"github.com/faustbrian/go-openrpc/validate"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/parse"
+	"github.com/faustbrian/go-openrpc/v2/validate"
 )
 
 func FuzzDecodeOpenRPCDocument(f *testing.F) {

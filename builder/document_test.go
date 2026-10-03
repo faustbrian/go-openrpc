@@ -5,10 +5,10 @@ import (
 	"sync"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/builder"
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/builder"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestDocumentBuilderIsImmutableAndDeterministic(t *testing.T) {

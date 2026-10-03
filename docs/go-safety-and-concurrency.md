@@ -7,7 +7,14 @@ therefore supported after construction.
 `builder.MethodRegistry` and `discovery.Cache` synchronize their mutable state.
 Resolver caches are per call, so authorization and fetched resources do not
 leak across requests. Cancellation of one cache waiter does not cancel shared
-discovery work owned by other waiters.
+discovery work owned by other waiters in the same explicit authorization
+partition. Different partition keys never share a snapshot or in-flight load.
+
+Compiled Draft 7 validators serialize validation calls because their aggregate
+step budget and bounded ECMAScript regular expressions carry the active caller
+context. A caller that cancels while waiting does not start work; cancellation
+is checked during decoding, object-schema evaluation, regular expressions, and
+diagnostic traversal without leaving a background goroutine.
 
 No constructor starts a goroutine. No package installs a global resolver,
 schema loader, registry, cache, or telemetry exporter. Callers own lifecycle,

@@ -5,7 +5,7 @@
 [![Coverage](https://img.shields.io/badge/coverage-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Mutation](https://img.shields.io/badge/mutation-100%25_required-blue)](CONTRIBUTING.md#verification)
 [![Documentation](https://img.shields.io/badge/docs-checked_in_CI-blue)](docs/)
-[![Go Reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc)
+[![Published v1 reference](https://pkg.go.dev/badge/github.com/faustbrian/go-openrpc.svg)](https://pkg.go.dev/github.com/faustbrian/go-openrpc)
 [![Release](https://img.shields.io/github/v/release/faustbrian/go-openrpc?sort=semver)](https://github.com/faustbrian/go-openrpc/releases)
 [![Go](https://img.shields.io/badge/go-1.27.0-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -22,14 +22,21 @@ resolution requires a caller-supplied store and an allowlist policy. Earlier
 or future OpenRPC feature lines are rejected until their semantics are
 separately inventoried and tested.
 
-The module is active and has a stable v1 API. The minimum supported and tested
-toolchain is Go 1.27.0.
+This source tree prepares the next v2 API. No v2 tag has been published, so the
+hardened module is not yet installable through the public module proxy. The
+minimum supported and tested toolchain is Go 1.27.0.
 
 ## Installation
+
+The current published release remains available at:
 
 ```sh
 go get github.com/faustbrian/go-openrpc@v1
 ```
+
+The hardened v2 source is planned and unpublished. After its first release,
+its module path will be `github.com/faustbrian/go-openrpc/v2`; existing v1
+consumers must not update imports before that tag is available.
 
 ## Quick start
 
@@ -91,9 +98,13 @@ fmt.Println(snapshot.ETag())
 fmt.Println(string(snapshot.Bytes()))
 ```
 
-Wrap a service with `discovery.NewCache` for explicit concurrent miss
-deduplication. Call `Invalidate` when the provider revision changes. No cache,
-goroutine, or registry is process-global.
+Wrap a service with `discovery.NewPartitionedCache` and a `CacheOptions.Key`
+function for partitioned concurrent miss deduplication. The key must include
+every tenant, role, and authorization dimension that changes the filtered
+document. Call `InvalidatePartition` for one security context or `Invalidate`
+for all partitions when the provider revision changes. Keys and retained
+partitions have independent finite bounds. No cache, goroutine, or registry is
+process-global.
 
 ## Optional observability
 

@@ -2,7 +2,16 @@ package discovery
 
 import (
 	"context"
+	"errors"
+	"reflect"
 	"sync"
+)
+
+var (
+	// ErrCachePartition reports absent or invalid caller cache partitioning.
+	ErrCachePartition = errors.New("discovery: invalid cache partition")
+	// ErrCacheLimit reports that the configured partition bound was reached.
+	ErrCacheLimit = errors.New("discovery: cache partition limit exceeded")
 )
 
 // Discoverer produces discovery snapshots.
@@ -10,26 +19,70 @@ type Discoverer interface {
 	Discover(context.Context) (Snapshot, error)
 }
 
-// Cache is an explicitly owned, concurrency-safe discovery cache. Concurrent
-// misses are deduplicated. The caller that starts a refresh owns its context;
-// canceling a waiter does not cancel that shared refresh.
-type Cache struct {
-	discoverer Discoverer
+// CacheKeyFunc derives a stable, non-sensitive partition key from the caller
+// context. Callers must include every authorization and tenant dimension that
+// can change the discovered snapshot.
+type CacheKeyFunc func(context.Context) (string, error)
 
-	mu         sync.Mutex
-	snapshot   Snapshot
-	valid      bool
-	loading    bool
-	done       chan struct{}
-	generation *byte
+// CacheOptions configures explicit cache partitioning and bounds retained
+// snapshots.
+type CacheOptions struct {
+	Key           CacheKeyFunc
+	MaxKeyBytes   int
+	MaxPartitions int
 }
 
-// NewCache wraps a discoverer without loading it or starting a goroutine.
-func NewCache(discoverer Discoverer) (*Cache, error) {
-	if discoverer == nil {
+// DefaultCacheOptions returns finite cache bounds for an explicit key function.
+func DefaultCacheOptions(key CacheKeyFunc) CacheOptions {
+	return CacheOptions{Key: key, MaxKeyBytes: 1_024, MaxPartitions: 1_024}
+}
+
+// Cache is an explicitly owned, concurrency-safe discovery cache.
+// NewPartitionedCache deduplicates concurrent misses within each partition;
+// the caller that starts a refresh owns its context, and canceling a waiter
+// does not cancel that shared refresh.
+type Cache struct {
+	discoverer Discoverer
+	options    CacheOptions
+
+	mu      sync.Mutex
+	entries map[string]*cacheEntry
+}
+
+type cacheEntry struct {
+	snapshot Snapshot
+	valid    bool
+	loading  bool
+	done     chan struct{}
+}
+
+// NewPartitionedCache wraps a discoverer with bounded authorization-aware
+// snapshot retention and concurrent miss deduplication.
+func NewPartitionedCache(discoverer Discoverer, options CacheOptions) (*Cache, error) {
+	if nilDiscoverer(discoverer) {
 		return nil, ErrInvalidOptions
 	}
-	return &Cache{discoverer: discoverer}, nil
+	if options.Key == nil || options.MaxKeyBytes <= 0 || options.MaxPartitions <= 0 {
+		return nil, ErrCachePartition
+	}
+	return &Cache{
+		discoverer: discoverer,
+		options:    options,
+		entries:    make(map[string]*cacheEntry),
+	}, nil
+}
+
+func nilDiscoverer(discoverer Discoverer) bool {
+	if discoverer == nil {
+		return true
+	}
+	value := reflect.ValueOf(discoverer)
+	switch value.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Pointer, reflect.Slice:
+		return value.IsNil()
+	default:
+		return false
+	}
 }
 
 // Discover returns the cached snapshot or synchronously performs one
@@ -38,18 +91,37 @@ func (cache *Cache) Discover(ctx context.Context) (Snapshot, error) {
 	if cache == nil || cache.discoverer == nil || ctx == nil {
 		return Snapshot{}, ErrInvalidOptions
 	}
+	if err := ctx.Err(); err != nil {
+		return Snapshot{}, err
+	}
+	key, err := cache.options.Key(ctx)
+	if err != nil || key == "" || len(key) > cache.options.MaxKeyBytes {
+		if contextErr := ctx.Err(); contextErr != nil {
+			return Snapshot{}, contextErr
+		}
+		return Snapshot{}, ErrCachePartition
+	}
 	for {
 		if err := ctx.Err(); err != nil {
 			return Snapshot{}, err
 		}
 		cache.mu.Lock()
-		if cache.valid {
-			snapshot := cache.snapshot
+		entry, exists := cache.entries[key]
+		if !exists {
+			if len(cache.entries) >= cache.options.MaxPartitions {
+				cache.mu.Unlock()
+				return Snapshot{}, ErrCacheLimit
+			}
+			entry = &cacheEntry{}
+			cache.entries[key] = entry
+		}
+		if entry.valid {
+			snapshot := entry.snapshot
 			cache.mu.Unlock()
 			return snapshot, nil
 		}
-		if cache.loading {
-			done := cache.done
+		if entry.loading {
+			done := entry.done
 			cache.mu.Unlock()
 			select {
 			case <-done:
@@ -59,19 +131,22 @@ func (cache *Cache) Discover(ctx context.Context) (Snapshot, error) {
 			}
 		}
 
-		cache.loading = true
-		cache.done = make(chan struct{})
-		done := cache.done
-		generation := cache.generation
+		entry.loading = true
+		entry.done = make(chan struct{})
+		done := entry.done
 		cache.mu.Unlock()
 
 		snapshot, err := cache.discoverer.Discover(ctx)
 		cache.mu.Lock()
-		if err == nil && cache.generation == generation {
-			cache.snapshot = snapshot
-			cache.valid = true
+		if cache.entries[key] == entry {
+			if err == nil {
+				entry.snapshot = snapshot
+				entry.valid = true
+			} else {
+				delete(cache.entries, key)
+			}
 		}
-		cache.loading = false
+		entry.loading = false
 		close(done)
 		cache.mu.Unlock()
 		return snapshot, err
@@ -85,7 +160,18 @@ func (cache *Cache) Invalidate() {
 		return
 	}
 	cache.mu.Lock()
-	cache.valid = false
-	cache.generation = new(byte)
+	cache.entries = make(map[string]*cacheEntry)
 	cache.mu.Unlock()
+}
+
+// InvalidatePartition makes the next discovery for key refresh its snapshot.
+// Unknown keys are already uncached and therefore succeed without allocation.
+func (cache *Cache) InvalidatePartition(key string) error {
+	if cache == nil || key == "" || len(key) > cache.options.MaxKeyBytes {
+		return ErrCachePartition
+	}
+	cache.mu.Lock()
+	delete(cache.entries, key)
+	cache.mu.Unlock()
+	return nil
 }

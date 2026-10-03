@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-openrpc/reference"
+	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 func TestResourcesLoadsTransitiveSchemaGraphOnceAndHonorsIDs(t *testing.T) {

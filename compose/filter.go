@@ -6,7 +6,7 @@ import (
 	"context"
 	"errors"
 
-	openrpc "github.com/faustbrian/go-openrpc"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
 )
 
 var (

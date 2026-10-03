@@ -8,11 +8,11 @@ import (
 	"sync"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/go-openrpc/parse"
-	"github.com/faustbrian/go-openrpc/reference"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
+	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 func TestMetaSchemaInternalFailurePaths(t *testing.T) {
