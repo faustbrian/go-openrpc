@@ -18,6 +18,40 @@ func (extension validationOwnerBeforeCheckpoint) Validate(*validator.ValidatorCo
 
 type validationOwnerContext struct{ context.Context }
 
+type validationOwnerExpiredRegexpBudget struct{}
+
+func (validationOwnerExpiredRegexpBudget) Validate(*validator.ValidatorContext, any) {
+	_, err := regexpDeadlineTimeout(0, time.Second)
+	panic(validationCanceled{err: err})
+}
+
+func TestValidationOwnerRegexpDeadlineFailurePrecedesDiagnosticConversion(t *testing.T) {
+	schema, err := Parse([]byte(`true`), jsonvalue.DefaultPolicy())
+	if err != nil {
+		t.Fatal(err)
+	}
+	compiled, err := Compile(schema, DefaultValidationOptions())
+	if err != nil {
+		t.Fatal(err)
+	}
+	guard := compiled.compiled.AllOf[0]
+	original := guard.Extensions
+	guard.Extensions = append([]validator.SchemaExt{validationOwnerExpiredRegexpBudget{}}, original...)
+	ctx := context.Background()
+	value := mustInternalValue(t, `0`)
+	report := compiled.Validate(ctx, value)
+	guard.Extensions = original
+	if !errors.Is(report.Err(), context.DeadlineExceeded) || report.Valid() || len(report.Issues()) != 0 {
+		t.Fatalf("owned deadline report = %v, valid=%t, issues=%v", report.Err(), report.Valid(), report.Issues())
+	}
+	if ctx.Err() != nil {
+		t.Fatal("owned deadline failure canceled caller context")
+	}
+	if report = compiled.Validate(ctx, value); !report.Valid() {
+		t.Fatalf("validator reuse after owned deadline failure = %v", report.Err())
+	}
+}
+
 func TestValidationOwnerDependencyCheckpointPreservesCancellationAndReuse(t *testing.T) {
 	for _, want := range []error{context.Canceled, context.DeadlineExceeded} {
 		t.Run(want.Error(), func(t *testing.T) {
