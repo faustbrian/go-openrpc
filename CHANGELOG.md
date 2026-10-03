@@ -5,6 +5,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 2.0.0 - 2026-10-03
+
 ### Changed
 
 - Charge the validation budget before every schema evaluation, including

@@ -202,9 +202,9 @@
         }
       ],
       "purpose": "`openrpc` is a design-first Go implementation of OpenRPC 1.3.x and 1.4.x. It models their shared document shape, preserves arbitrary Draft 7 schemas and extension values, parses untrusted JSON under finite policies, emits canonical JSON, and provides explicit validation, reference resolution, runtime expressions, discovery, composition, compatibility diffing, and JSON-RPC handler integration.",
-      "lifecycle": "planned",
+      "lifecycle": "stable",
       "kind": "public library",
-      "releasable": false,
+      "releasable": true,
       "family": "protocols-and-descriptions",
       "family_label": "Protocols And Descriptions",
       "family_description": "Standards, envelopes, schemas, descriptions, signatures, and wire interoperability.",
@@ -230,8 +230,8 @@
         "package_selection": {
           "github.com/faustbrian/go-openrpc/v2": "Use openrpc for immutable document models, canonical serialization, and the entry point to bounded OpenRPC tooling."
         },
-        "lifecycle_status": "planned",
-        "maturity": "experimental",
+        "lifecycle_status": "active",
+        "maturity": "stable",
         "construction_styles": [
           "builder-build",
           "new-options",
@@ -290,17 +290,17 @@
           "examples": "docs/examples.md",
           "faq": "docs/faq.md",
           "changelog": "CHANGELOG.md",
-          "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-openrpc",
+          "pkg_go_dev": "https://pkg.go.dev/github.com/faustbrian/go-openrpc/v2",
           "ecosystem_index": "https://github.com/faustbrian/go-library-tools/blob/v1.4.0/docs/ecosystem/README.md"
         },
         "known_good_compatibility_sets": [],
         "delivery": {
-          "implementation": "not-started",
-          "hardening": "not-started",
-          "release": "not-started"
+          "implementation": "in-progress",
+          "hardening": "in-progress",
+          "release": "in-progress"
         }
       },
-      "version": "unreleased",
+      "version": "2.0.0",
       "tag_prefix": "v",
       "owned_dependencies": [],
       "reverse_owned_dependencies": [],
