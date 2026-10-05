@@ -7,6 +7,9 @@ Changelog principles, and releases use semantic versioning.
 
 ### Fixed
 
+- Update regular-expression validation to regexp2 1.12.0, correcting
+  timeout-clock restarts and lazy-loop matching while releasing retained
+  input after matching.
 - Update Draft 7 validation to jsonschema/v6 6.0.3 so numeric values do
   not equal numeric-looking strings in const, enum, or uniqueItems.
 - Reject unclosed quoted email local parts in asserted schema formats.
