@@ -5,6 +5,13 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Fixed
+
+- Update Draft 7 validation to jsonschema/v6 6.0.3 so numeric values do
+  not equal numeric-looking strings in const, enum, or uniqueItems.
+- Reject unclosed quoted email local parts in asserted schema formats.
+- Report additional tuple-item errors at their original array indices.
+
 ## 2.0.0 - 2026-10-03
 
 ### Changed
