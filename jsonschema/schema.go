@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"errors"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 // ErrInvalidSchema reports a valid JSON value that is neither an object nor a
@@ -61,6 +61,12 @@ func (schema Schema) Boolean() (bool, bool) {
 // Bytes returns an owned copy of the exact schema JSON.
 func (schema Schema) Bytes() []byte {
 	return schema.value.Bytes()
+}
+
+// ByteLen returns the exact schema input length without copying its immutable
+// bytes.
+func (schema Schema) ByteLen() int {
+	return schema.value.ByteLen()
 }
 
 // Value returns the immutable generic JSON representation.

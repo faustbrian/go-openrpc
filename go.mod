@@ -1,4 +1,4 @@
-module github.com/faustbrian/go-openrpc
+module github.com/faustbrian/go-openrpc/v2
 
 go 1.27.0
 

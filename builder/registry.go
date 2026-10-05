@@ -4,7 +4,7 @@ import (
 	"sort"
 	"sync"
 
-	openrpc "github.com/faustbrian/go-openrpc"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
 )
 
 // MethodRegistry is an explicitly owned concurrent registry. It starts no

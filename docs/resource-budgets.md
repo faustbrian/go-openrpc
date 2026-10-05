@@ -7,7 +7,7 @@ Callers should lower limits when their deployment contract is smaller.
 | --- | --- | --- |
 | Generic JSON | 16 MiB, depth 256, 2,000,000 tokens | `jsonvalue.Policy` rejects before ownership or model parsing |
 | OpenRPC parse | 10,000 methods, parameters, servers, variables, tags, errors, links, and examples; 100,000 components | `parse.Options` rejects the affected collection |
-| Draft 7 compile | 1,024 explicit resources, 64 MiB aggregate schema bytes, 1,000 issues, 100 ms regexp timeout; pinned OpenRPC meta-schema patterns use the maximum bounded 10 s window | `jsonschema.ValidationOptions` checks resources before compiler registration; a regexp timeout returns `ErrValidationResourceLimit` instead of a false pattern mismatch |
+| Draft 7 compile and validation | 1,024 explicit resources, 64 MiB aggregate schema bytes, 16 MiB instance, 1,000,000 validation steps, 1,000 issues, 100 ms regexp timeout; a nearer caller deadline takes precedence | `jsonschema.ValidationOptions` checks resources and bytes before compilation; one per-call step budget covers context-aware instance decoding, reachable schema size, schema checkpoints, regular expressions, and diagnostic traversal |
 | Semantic validation | 10,000 methods and 1,000 diagnostics | `validate.Options` checks method count before copying and stops bounded reporting |
 | URI reference | 16 KiB encoded length | `reference.Policy` rejects before URI parsing |
 | JSON Pointer | 16 KiB, 256 tokens, 19 index digits | `reference.PointerPolicy` rejects before token or index work |
@@ -15,6 +15,7 @@ Callers should lower limits when their deployment contract is smaller.
 | Dereference | depth 256, 100,000 references, 64 MiB output, 4,000,000 output tokens | `reference.TransformPolicy` checks traversal and reparses bounded output |
 | Runtime expression | 16 KiB source, 256 expressions, 256 segments, 19 index digits, 4,096 selected nodes, 1 MiB output | `expression.Policy` applies during parse and evaluation |
 | Discovery | 64 MiB canonical output and 1,000 validation diagnostics | `discovery.Options` rejects before publishing a snapshot |
+| Discovery cache | 1,024 bytes per key and 1,024 caller-keyed partitions | `discovery.CacheOptions` rejects missing or oversized keys and new partitions after the configured bound; failed refreshes release their entries |
 | Filter | 10,000 methods | `compose.FilterOptions` checks before predicate traversal |
 | Merge | 32 documents, 10,000 methods, 100,000 components | `compose.MergeOptions` counts across every input |
 | Overlay | 1,000 actions and 64 MiB output | `compose.OverlayOptions` checks after every ordered action |

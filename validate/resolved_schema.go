@@ -8,10 +8,10 @@ import (
 	"slices"
 	"strings"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonschema"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	"github.com/faustbrian/go-openrpc/reference"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonschema"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 type schemaReferenceLocation struct {

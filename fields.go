@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 var (

@@ -3,12 +3,20 @@ package reference
 import (
 	"context"
 	"errors"
-	"io"
 	"io/fs"
 	"net/url"
 	"path"
+	"reflect"
 	"strings"
 )
+
+// ContextReadFS supplies context-aware bounded file reads. Implementations must
+// stop promptly when ctx is canceled, must not return more than maxBytes, and
+// must prevent reads from escaping their intended filesystem root.
+type ContextReadFS interface {
+	fs.FS
+	ReadFileContext(ctx context.Context, name string, maxBytes int) ([]byte, error)
+}
 
 var (
 	// ErrStorePolicy reports invalid store configuration or byte bounds.
@@ -66,16 +74,16 @@ func (store *MemoryStore) Load(ctx context.Context, documentURI string, maxBytes
 }
 
 // FSStore maps document URIs below one explicit absolute base into a supplied
-// fs.FS. Supplying os.DirFS enables caller-authorized files; embed.FS and
-// fstest.MapFS work without granting ambient filesystem access.
+// context-aware filesystem boundary.
 type FSStore struct {
-	filesystem fs.FS
+	filesystem ContextReadFS
 	base       *url.URL
 }
 
-// NewFSStore constructs a traversal-safe filesystem store.
-func NewFSStore(filesystem fs.FS, baseURI string) (*FSStore, error) {
-	if filesystem == nil {
+// NewFSStore constructs a URI traversal-safe store over a caller-owned
+// context-aware filesystem boundary.
+func NewFSStore(filesystem ContextReadFS, baseURI string) (*FSStore, error) {
+	if nilContextReadFS(filesystem) {
 		return nil, ErrStorePolicy
 	}
 	base, err := url.Parse(baseURI)
@@ -84,6 +92,19 @@ func NewFSStore(filesystem fs.FS, baseURI string) (*FSStore, error) {
 		return nil, ErrStorePolicy
 	}
 	return &FSStore{filesystem: filesystem, base: base}, nil
+}
+
+func nilContextReadFS(filesystem ContextReadFS) bool {
+	if filesystem == nil {
+		return true
+	}
+	value := reflect.ValueOf(filesystem)
+	switch value.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Pointer, reflect.Slice:
+		return value.IsNil()
+	default:
+		return false
+	}
 }
 
 // Load implements Store with a hard read limit and URI-scope enforcement.
@@ -129,13 +150,14 @@ func (store *FSStore) Load(ctx context.Context, documentURI string, maxBytes int
 	if !fs.ValidPath(relative) {
 		return nil, ErrStoreURI
 	}
-	file, err := store.filesystem.Open(relative)
+	data, err := store.filesystem.ReadFileContext(ctx, relative, maxBytes)
 	if err != nil {
-		return nil, ErrStoreRead
-	}
-	data, err := io.ReadAll(io.LimitReader(file, int64(maxBytes)+1))
-	closeErr := file.Close()
-	if err != nil || closeErr != nil {
+		if contextErr := ctx.Err(); contextErr != nil {
+			return nil, contextErr
+		}
+		if errors.Is(err, ErrStoreLimit) {
+			return nil, ErrStoreLimit
+		}
 		return nil, ErrStoreRead
 	}
 	if len(data) > maxBytes {
@@ -144,7 +166,7 @@ func (store *FSStore) Load(ctx context.Context, documentURI string, maxBytes int
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	return data, nil
+	return append([]byte(nil), data...), nil
 }
 
 func storeDocumentURI(input string) (string, error) {

@@ -90,6 +90,11 @@ func (value Value) Bytes() []byte {
 	return append([]byte(nil), value.raw...)
 }
 
+// ByteLen returns the exact input length without copying its immutable bytes.
+func (value Value) ByteLen() int {
+	return len(value.raw)
+}
+
 // MarshalJSON implements json.Marshaler without exposing internal storage.
 func (value Value) MarshalJSON() ([]byte, error) {
 	if len(value.raw) == 0 {

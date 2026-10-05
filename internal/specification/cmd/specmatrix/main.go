@@ -7,7 +7,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/faustbrian/go-openrpc/internal/specification"
+	"github.com/faustbrian/go-openrpc/v2/internal/specification"
 )
 
 const (
@@ -80,13 +80,13 @@ func run() error {
 	default:
 		return fmt.Errorf("apply field evidence: %w", err)
 	}
-	//nolint:gosec // Output paths are fixed package constants, not user input.
+	// #nosec G703 -- output path is a fixed package constant, not user input.
 	switch err := os.WriteFile(normativePath, normative, 0o600); err {
 	case nil:
 	default:
 		return fmt.Errorf("write normative matrix: %w", err)
 	}
-	//nolint:gosec // Output paths are fixed package constants, not user input.
+	// #nosec G703 -- output path is a fixed package constant, not user input.
 	switch err := os.WriteFile(fieldsPath, fields, 0o600); err {
 	case nil:
 	default:

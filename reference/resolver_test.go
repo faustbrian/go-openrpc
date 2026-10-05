@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	"github.com/faustbrian/go-openrpc/reference"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 type recordingStore struct {

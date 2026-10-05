@@ -5,7 +5,23 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 2.0.0 - 2026-10-03
+
 ### Changed
+
+- Charge the validation budget before every schema evaluation, including
+  boolean schemas and reference results that return before dependency
+  extension callbacks.
+- Move the module to `github.com/faustbrian/go-openrpc/v2`; callers must update
+  imports, replace `discovery.NewCache` with `NewPartitionedCache` and an
+  authorization-complete key, and adapt filesystem stores to `ContextReadFS`.
+- Replace the unpartitioned discovery cache constructor with explicit bounded
+  authorization partitioning, so filtered output cannot be reused across
+  caller security contexts.
+- Require filesystem reference stores to provide context-aware bounded reads.
+- Bound aggregate validation traversal, schema evaluations, diagnostics, and
+  regular expressions under one caller-cancelable work budget; serialize
+  operations that share compiled regular expressions.
 
 - Require Go 1.27.0 across module, development, CI, specification, and
   compatibility metadata.
