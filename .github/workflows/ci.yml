@@ -103,7 +103,7 @@ jobs:
 
   ci:
     if: github.event_name != 'workflow_dispatch' || !inputs.native_security_qualification
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@531e4db50fd81a7201257a7b488a0cf22d333aca # v1.4.0 public-first resolution
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@be0fd7d09b02c9dff29e6b00a5245ceac3cdfdfb # v1.4.0 public-first resolution
     with:
       tooling_sha: 531e4db50fd81a7201257a7b488a0cf22d333aca
       release_dry_run: ${{ inputs.release_dry_run || false }}
