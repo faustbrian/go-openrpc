@@ -7,7 +7,7 @@ This module contains or depends on the following third-party work:
   `specification/`.
 - `github.com/dlclark/regexp2` v1.12.0: MIT License, copyright Doug Clark.
 - `github.com/santhosh-tekuri/jsonschema/v6` v6.0.3: Apache License 2.0.
-- `golang.org/x/text` v0.14.0: BSD-3-Clause License, copyright The Go Authors.
+- `golang.org/x/text` v0.41.0: BSD-3-Clause License, copyright The Go Authors.
 
 Dependency versions are pinned in `go.mod` and `go.sum`. Full dependency
 license texts remain available from their respective source distributions.

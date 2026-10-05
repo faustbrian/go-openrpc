@@ -5,6 +5,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 2.0.1 - 2026-10-05
+
 ### Fixed
 
 - Update regular-expression validation to regexp2 1.12.0, correcting
