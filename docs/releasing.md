@@ -1,7 +1,7 @@
 # Releasing
 
 1. Confirm the worktree is clean and the release commit is reviewed.
-2. Run `make check-all` with the pinned minimum Go version.
+2. Run `make check` with the pinned minimum Go version.
 3. Review `CHANGELOG.md`, supported versions, conformance matrices, dependency
    licenses, vulnerability output, API compatibility, and benchmark evidence.
 4. Confirm every workflow uses immutable action commits and least-privilege
