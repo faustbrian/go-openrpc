@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: faustbrian/go-library-tools
-          ref: 594a2561ecb1c1242fb6dd149a8d611d7ca6d6eb
+          ref: a00daed7352f630608881bc4032aa8b28d5887e4
           path: native-tooling
           persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -74,7 +74,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "${PRODUCER_SHA}"
           test "$(git rev-parse --is-shallow-repository)" = false
           test -z "$(git status --porcelain)"
-          test "$(git -C ../native-tooling rev-parse HEAD)" = 594a2561ecb1c1242fb6dd149a8d611d7ca6d6eb
+          test "$(git -C ../native-tooling rev-parse HEAD)" = a00daed7352f630608881bc4032aa8b28d5887e4
           task="$(mktemp -d "${RUNNER_TEMP}/openrpc-native.XXXXXX")"
           printf 'NATIVE_TASK=%s\n' "${task}" >>"${GITHUB_ENV}"
           trap 'chmod -R u+w "${task}"; find "${task}" -depth -delete' EXIT
