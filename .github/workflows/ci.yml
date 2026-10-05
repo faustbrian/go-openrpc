@@ -13,6 +13,11 @@ on:
         required: false
         default: false
         type: boolean
+      native_security_qualification:
+        description: Run development-source security qualification (not release evidence)
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -23,7 +28,81 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # This explicit development route supplements, never replaces, released CI.
+  # Its source-built Tools binary is not a public Tools v2 release.
+  native-security:
+    name: Development native security qualification
+    if: github.event_name == 'workflow_dispatch' && inputs.native_security_qualification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Reject mixing development qualification with release rehearsal
+        env:
+          RELEASE_DRY_RUN: ${{ inputs.release_dry_run }}
+        run: test "${RELEASE_DRY_RUN}" != true
+      - name: Check out exact producer with full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          path: producer
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Check out integrated development tooling
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: faustbrian/go-library-tools
+          ref: 594a2561ecb1c1242fb6dd149a8d611d7ca6d6eb
+          path: native-tooling
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: '1.27.0'
+          cache: false
+      - name: Qualify owned analysis and history/current-tree secrets
+        working-directory: producer
+        shell: bash
+        env:
+          PRODUCER_SHA: ${{ github.sha }}
+          GOWORK: 'off'
+          GOTOOLCHAIN: local
+          GOFLAGS: '-p=1'
+          GOMAXPROCS: '2'
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${PRODUCER_SHA}"
+          test "$(git rev-parse --is-shallow-repository)" = false
+          test -z "$(git status --porcelain)"
+          test "$(git -C ../native-tooling rev-parse HEAD)" = 594a2561ecb1c1242fb6dd149a8d611d7ca6d6eb
+          task="$(mktemp -d "${RUNNER_TEMP}/openrpc-native.XXXXXX")"
+          printf 'NATIVE_TASK=%s\n' "${task}" >>"${GITHUB_ENV}"
+          trap 'chmod -R u+w "${task}"; find "${task}" -depth -delete' EXIT
+          mkdir -p "${task}/cache" "${task}/mod" "${task}/tmp" "${task}/lint"
+          export GOCACHE="${task}/cache" GOMODCACHE="${task}/mod" GOTMPDIR="${task}/tmp"
+          export TMPDIR="${task}/tmp" GOLANGCI_LINT_CACHE="${task}/lint"
+          (cd ../native-tooling && go build -o "${task}/golib" ./cmd/golib)
+          test "$("${task}/golib" --version)" = dev
+          "${task}/golib" check --local --module .
+          test -z "$(git status --porcelain)"
+      - name: Remove development tooling and remaining task resources
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${NATIVE_TASK:-}" && -e "${NATIVE_TASK}" ]]; then
+            [[ "${NATIVE_TASK}" == "${RUNNER_TEMP}/openrpc-native."* ]]
+            chmod -R u+w "${NATIVE_TASK}"
+            find "${NATIVE_TASK}" -depth -delete
+          fi
+          tooling="${GITHUB_WORKSPACE}/native-tooling"
+          if [[ -d "${tooling}" ]]; then
+            chmod -R u+w "${tooling}"
+            find "${tooling}" -depth -delete
+          fi
+
   ci:
+    if: github.event_name != 'workflow_dispatch' || !inputs.native_security_qualification
     uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@531e4db50fd81a7201257a7b488a0cf22d333aca # v1.4.0 public-first resolution
     with:
       tooling_sha: 531e4db50fd81a7201257a7b488a0cf22d333aca
