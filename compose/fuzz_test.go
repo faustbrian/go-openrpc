@@ -5,10 +5,10 @@ import (
 	"context"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/compose"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/go-openrpc/parse"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/compose"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
 )
 
 func FuzzCompositionIsDeterministicAndPanicFree(f *testing.F) {

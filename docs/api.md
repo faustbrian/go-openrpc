@@ -39,4 +39,18 @@ their own correlation identifiers rather than raw input.
 `ErrValidationResourceLimit`, not as an ordinary schema mismatch. Callers can
 therefore distinguish an invalid instance from validation that did not finish
 within `ValidationOptions.RegexpTimeout`; the default is 100 milliseconds and
-the accepted maximum is 10 seconds.
+the accepted maximum is 10 seconds. `MaxInstanceBytes` rejects oversized values
+before decoding. `MaxValidationSteps` is shared by context-aware input decoding,
+compiled-schema checkpoints, regular expressions, and diagnostic traversal. A
+nearer context deadline is returned as `context.DeadlineExceeded`. Concurrent
+calls on one validator are serialized and waiting callers can cancel without
+starting validation work.
+
+`discovery.NewPartitionedCache` requires explicit `CacheOptions`; its key function owns
+authorization partitioning, while `MaxKeyBytes` and `MaxPartitions` bound
+retained keys and snapshots. Empty, oversized, or failed keys and exhausted
+capacity fail closed. A provider failure releases the empty partition entry.
+
+`reference.NewFSStore` requires `ContextReadFS`. The supplied read receives the
+caller context and remaining byte allowance; the store rechecks both before
+returning data to the resolver.

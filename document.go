@@ -1,6 +1,6 @@
 package openrpc
 
-import "github.com/faustbrian/go-openrpc/jsonschema"
+import "github.com/faustbrian/go-openrpc/v2/jsonschema"
 
 const defaultSchemaURI = "https://meta.open-rpc.org/"
 

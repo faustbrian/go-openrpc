@@ -6,9 +6,9 @@ import (
 	"errors"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/compose"
-	openrpcparse "github.com/faustbrian/go-openrpc/parse"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/compose"
+	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
 )
 
 func TestRenameComponentsRewritesEveryMatchingReference(t *testing.T) {

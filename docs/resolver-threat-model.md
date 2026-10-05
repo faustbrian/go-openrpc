@@ -8,7 +8,8 @@ allowlists.
 | Threat | Control | Executable evidence |
 | --- | --- | --- |
 | SSRF and unsafe schemes | External access defaults off; schemes and hosts require exact allowlisting | `TestResolverDisablesExternalAccessByDefault`, `TestResolverEnforcesExternalSchemeHostBytesAndCancellation` |
-| Local file disclosure | No ambient file loader; `FSStore` is scoped to an explicit `fs.FS` and rejects traversal, queries, fragments, credentials, and encoded paths | `TestFSStoreMapsOnlyURIsBelowExplicitBase` |
+| Local file disclosure | No ambient file loader; `FSStore` is scoped to an explicit `ContextReadFS` and rejects traversal, queries, fragments, credentials, and encoded paths | `TestFSStoreMapsOnlyURIsBelowExplicitBase` |
+| Blocking filesystem reads | `ContextReadFS` receives the operation context and remaining byte allowance; returned bytes and cancellation are rechecked and copied | `TestFSStoreUsesContextAwareBoundedReads`, `TestFSStoreRejectsUnsafeAndNoncompliantFilesystems` |
 | Credential-bearing URLs | HTTP authorization rejects `url.User`; safe errors omit the URL | `TestStoreDeniesHostsSchemesCredentialsAndPrivateAddresses` |
 | Redirect escape | Every redirect is reauthorized and redirect count is bounded | `TestStoreRejectsLimitsCompressionStatusAndRedirects` |
 | DNS rebinding and private addresses | Every resolved address is checked; dialing uses only the checked IP while TLS retains the request host | `TestStoreDeniesHostsSchemesCredentialsAndPrivateAddresses` |

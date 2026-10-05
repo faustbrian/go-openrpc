@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	openrpc "github.com/faustbrian/go-openrpc"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
 )
 
 func TestMetadataObjectsPreserveOptionalPresence(t *testing.T) {

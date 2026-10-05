@@ -5,10 +5,10 @@ import (
 	"errors"
 	"strconv"
 
-	openrpc "github.com/faustbrian/go-openrpc"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
-	openrpcparse "github.com/faustbrian/go-openrpc/parse"
-	"github.com/faustbrian/go-openrpc/reference"
+	openrpc "github.com/faustbrian/go-openrpc/v2"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
+	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
+	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
 const (

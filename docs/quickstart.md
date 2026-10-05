@@ -56,8 +56,10 @@ if err != nil {
 fmt.Println(snapshot.ETag(), string(snapshot.Bytes()))
 ```
 
-`discovery.NewCache` adds explicit miss deduplication. The caller invalidates
-the cache when its provider revision changes.
+`discovery.NewPartitionedCache` requires explicit `CacheOptions`. Its key
+function must partition snapshots by every authorization dimension that affects
+visibility. The caller invalidates one partition or the complete cache when its
+provider revision changes.
 
 ## jsonrpc
 

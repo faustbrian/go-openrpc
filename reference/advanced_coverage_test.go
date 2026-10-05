@@ -6,7 +6,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 func TestResolverCoversInputErrorsCancellationAndLoadFailures(t *testing.T) {
@@ -445,7 +445,7 @@ func TestReferencePolicyMutationBoundaries(t *testing.T) {
 	if _, err := store.Load(context.Background(), "https://example.com/a", 0); !errors.Is(err, ErrStorePolicy) {
 		t.Fatalf("memory store zero byte limit error = %v", err)
 	}
-	filesystem, err := NewFSStore(fstest.MapFS{"a": {Data: []byte(`{}`)}}, "https://example.com/")
+	filesystem, err := NewFSStore(contextMapFS{MapFS: fstest.MapFS{"a": {Data: []byte(`{}`)}}}, "https://example.com/")
 	if err != nil {
 		t.Fatal(err)
 	}

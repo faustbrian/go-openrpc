@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/faustbrian/go-openrpc/discovery"
-	"github.com/faustbrian/go-openrpc/jsonvalue"
+	"github.com/faustbrian/go-openrpc/v2/discovery"
+	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
 var (
