@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: faustbrian/go-library-tools
-          ref: a00daed7352f630608881bc4032aa8b28d5887e4
+          ref: f490f4c88c29fff9fa63aeb36dfa7f1b3de4566b
           path: native-tooling
           persist-credentials: false
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
@@ -74,7 +74,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "${PRODUCER_SHA}"
           test "$(git rev-parse --is-shallow-repository)" = false
           test -z "$(git status --porcelain)"
-          test "$(git -C ../native-tooling rev-parse HEAD)" = a00daed7352f630608881bc4032aa8b28d5887e4
+          test "$(git -C ../native-tooling rev-parse HEAD)" = f490f4c88c29fff9fa63aeb36dfa7f1b3de4566b
           task="$(mktemp -d "${RUNNER_TEMP}/openrpc-native.XXXXXX")"
           printf 'NATIVE_TASK=%s\n' "${task}" >>"${GITHUB_ENV}"
           trap 'chmod -R u+w "${task}"; find "${task}" -depth -delete' EXIT
@@ -103,9 +103,11 @@ jobs:
 
   ci:
     if: github.event_name != 'workflow_dispatch' || !inputs.native_security_qualification
-    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@be0fd7d09b02c9dff29e6b00a5245ceac3cdfdfb # v1.4.0 public-first resolution
+    uses: faustbrian/go-library-tools/.github/workflows/library-ci.yml@f490f4c88c29fff9fa63aeb36dfa7f1b3de4566b
     with:
-      tooling_sha: 531e4db50fd81a7201257a7b488a0cf22d333aca
+      tooling_sha: f490f4c88c29fff9fa63aeb36dfa7f1b3de4566b
+      source_bootstrap: true
+      public_dependencies: true
       release_dry_run: ${{ inputs.release_dry_run || false }}
 
   required:
