@@ -20,8 +20,11 @@ No constructor starts a goroutine. No package installs a global resolver,
 schema loader, registry, cache, or telemetry exporter. Callers own lifecycle,
 shutdown, transport, and exporter behavior.
 
-Run `make race` after concurrency changes. `make leak` runs package-wide
-goroutine leak detection around the registry, discovery cache, observer hooks,
-resolver, HTTP store, and all cancellation tests. Both gates are blocking.
+Run `GOWORK=off go test -race ./...` for full concurrency qualification, or
+select the affected packages after a focused concurrency change. `make check-full`
+retains the complete race campaign; ordinary Make selects the named registry
+race. Existing TestMain checks in builder, discovery, observe, reference and
+reference/httpstore enforce goroutine cleanup during their ordinary tests,
+including cancellation cases; there is no separate root `make leak` target.
 Ownership claims also require mutation tests that modify caller inputs and
 returned snapshots, not only race-detector silence.

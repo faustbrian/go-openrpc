@@ -3,8 +3,11 @@
 Run allocation benchmarks with:
 
 ```sh
-make benchmark BENCH_TIME=100ms
+GOWORK=off go test -run '^$' -bench . -benchmem -benchtime=100ms -count=1 -timeout=20m ./...
 ```
+
+`make check-full` retains this configured full benchmark campaign; ordinary
+Make and scheduled shared CI do not replay it.
 
 The suite measures complete-document parse, semantic validation, canonical
 serialization, reference resolve, bundle collection, semantic diff, discovery,

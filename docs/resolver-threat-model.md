@@ -16,7 +16,7 @@ allowlists.
 | Decompression bombs | Automatic compression is disabled, non-identity encodings are rejected, and bodies use a streamed remaining-byte limit | `TestStoreRejectsLimitsCompressionStatusAndRedirects`, `TestStoreHandlesStreamingLimitsReadFailuresAndRequestCancellation` |
 | Cycles and aliases | Per-chain target identities detect cycles; per-call documents are immutable and deduplicated | `TestResolverRejectsCyclesAndBounds`, `TestResolverFollowsAliasesAndLoadsEachDocumentOnce` |
 | Depth and fan-out exhaustion | Depth, document, fetched-byte, pointer, JSON, and aggregate-reference limits are mandatory | `TestResolverBoundsAggregateReferenceFanout`, `TestResourcesBoundsTransitiveReferenceFanout`, `TestBundleBoundsRootReferenceFanoutBeforeLoading` |
-| Cancellation races | Context checks surround queue, load, resolve, cache wait, and transform paths; race and leak gates are blocking | `make race`, `make leak` |
+| Cancellation races | Context checks surround queue, load, resolve, cache wait, and transform paths; existing TestMain cleanup assertions run with package tests, and full race qualification is explicit | `GOWORK=off go test -race ./reference ./reference/httpstore ./discovery ./observe`, `make check-full` |
 | Sensitive diagnostics | Store failures collapse to stable categories; observer events exclude payloads, references, URLs, and error text | `TestResolverCoversInputErrorsCancellationAndLoadFailures`, `TestOperationsContainObserversAndClassifyFailures` |
 
 `AllowHTTP` and `AllowPrivateAddresses` are explicit trust-boundary overrides.

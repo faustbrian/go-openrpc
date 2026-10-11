@@ -1,11 +1,14 @@
 # Repository standards
 
-- Minimum Go is the exact stable version pinned in `.go-version` and `go.mod`.
+- The verification producer is Go 1.27.2 in `.go-version` and the root catalog;
+  the public module minimum remains Go 1.27.0 in `go.mod`.
 - Dependencies and tools use reviewed versions; workflow actions use immutable
   commit SHAs.
-- Formatting, tidy, vet, lint, Staticcheck, tests, race, fuzz, coverage,
-  mutation, conformance, docs, vulnerabilities, workflows, and benchmarks are
-  reproducible through `make` targets.
+- `make check` and `make ci` run bounded local verification; `make ci` adds
+  offline specification validation. `make check-full` retains the explicit full
+  race, fuzz, coverage, mutation, conformance, interoperability, API, docs,
+  security and benchmark campaigns. Scheduled shared CI remains bounded;
+  hosted release rehearsal requires `release_dry_run: true`.
 - Production code may not use `unsafe`, cgo, or `go:linkname`.
 - Core packages perform no implicit I/O and install no global mutable state.
 - Conventional commits include a rationale body; release notes come from the
