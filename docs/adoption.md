@@ -2,9 +2,12 @@
 
 [Documentation index](README.md)
 
-Canonical output now sorts nested opaque object keys, so persisted hashes and
-discovery ETags can change after upgrading. Preserve raw source when lexical
-order matters; canonical numbers and arrays retain their spelling/order.
+Candidate patch v2.0.2 retains the `/v2` module identity and Go 1.27.0 minimum.
+Once published, adopt it explicitly. Regenerate persisted canonical bytes,
+hashes and discovery ETags from authoritative documents: canonical output now
+sorts nested opaque object keys, so previous persisted values can change.
+Preserve raw source when lexical order matters; canonical numbers and arrays
+retain their spelling/order.
 Typed parsing refuses scalar nulls rather than silently coercing them to empty
 strings or false; allowed JSON payload nulls remain valid. Duplicate error codes
 0 and -0 are rejected by semantic validation. Trusted discovery callback panics

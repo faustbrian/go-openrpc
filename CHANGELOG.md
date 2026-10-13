@@ -5,6 +5,8 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+## 2.0.2 - 2026-10-13
+
 ### Fixed
 
 - Sort opaque nested object keys in canonical serialization and discovery
@@ -22,6 +24,31 @@ Changelog principles, and releases use semantic versioning.
 - Clarify model presence/ownership, parser versus validation admission,
   serialization and diagnostic limits, resolver/provider cancellation,
   discovery cache lifetime and inherited HTTP transport boundaries.
+
+### Adoption
+
+- Once v2.0.2 is published, select it explicitly and regenerate persisted
+  canonical bytes, hashes and discovery ETags from authoritative documents.
+  Nested opaque object keys are now sorted; raw-preserving source APIs,
+  number lexemes and array order retain their existing contracts. This is
+  the package canonical profile, not an RFC 8785 conformance claim.
+
+### Source
+
+- Document/discovery contract restoration and source/adoption documentation:
+  [06ff491277](https://github.com/faustbrian/go-openrpc/commit/06ff491277f25890aad9e63c087ef8b9f1320716),
+  [df7632a357](https://github.com/faustbrian/go-openrpc/commit/df7632a357825c847f1e6bc26c311ad073a887dd),
+  [a9ddda6f2e](https://github.com/faustbrian/go-openrpc/commit/a9ddda6f2ee7a75a33898c265e4d9a1a4c24570f).
+- Tooling, development policy, documentation security and bounded verification
+  updates; these are not additional OpenRPC runtime changes:
+  [cccb36ad63](https://github.com/faustbrian/go-openrpc/commit/cccb36ad63b507ae435614ed14f4186191cb9429),
+  [91716c9fbf](https://github.com/faustbrian/go-openrpc/commit/91716c9fbfe873225336dc0bc97bde527bd2cb8e),
+  [518ed2868d](https://github.com/faustbrian/go-openrpc/commit/518ed2868d8fca170013968c6d157979b15d5a88),
+  [4a0820e027](https://github.com/faustbrian/go-openrpc/commit/4a0820e027ab2ca0b6b17d2d1fb1c6d6e39641fa),
+  [ffb7c0a979](https://github.com/faustbrian/go-openrpc/commit/ffb7c0a979318e5f2b4a6c85cb44effacb6c656d),
+  [69a4190a07](https://github.com/faustbrian/go-openrpc/commit/69a4190a071e6e31911247e87bb3c13b2dcd6c92),
+  [3bd6e0c3f1](https://github.com/faustbrian/go-openrpc/commit/3bd6e0c3f13b73a741ddafb5102fb6bcc67a45e0),
+  [3294d32452](https://github.com/faustbrian/go-openrpc/commit/3294d324526e70f56c51fede995cb4625285aae3).
 
 ## 2.0.1 - 2026-10-05
 

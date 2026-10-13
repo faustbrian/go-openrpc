@@ -25,10 +25,12 @@ Go 1.27.0; the declared verification producer is Go 1.27.2.
 
 ## Installation
 
-Install the published v2 module:
+Candidate patch: v2.0.2. Once its tag and release are published, install it
+explicitly and follow the [adoption guide](docs/adoption.md) when regenerating
+persisted canonical bytes, hashes and discovery ETags:
 
 ```sh
-go get github.com/faustbrian/go-openrpc/v2@v2
+go get github.com/faustbrian/go-openrpc/v2@v2.0.2
 ```
 
 When upgrading from v1, update imports to `/v2` and follow the cache and
