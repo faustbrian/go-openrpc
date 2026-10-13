@@ -18,6 +18,7 @@ Start with the quickstart, then use the section matching your task.
 - [Specification decisions](specification-decisions.md)
 - [Specification and interoperability report](specification-report.md)
 - [Go safety and concurrency](go-safety-and-concurrency.md)
+- [Source documentation audit](source-documentation-audit.md)
 
 ## Operations
 

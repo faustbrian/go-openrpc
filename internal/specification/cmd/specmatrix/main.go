@@ -1,5 +1,8 @@
 // Command specmatrix regenerates the reviewed conformance inventories from the
-// pinned OpenRPC specification inputs.
+// pinned OpenRPC specification inputs. Run from the repository root using
+// go run ./internal/specification/cmd/specmatrix after explicit input/evidence
+// review. It writes two files sequentially, not transactionally; a second-write
+// failure can leave only the first updated. It owns no network fetches.
 package main
 
 import (

@@ -1,5 +1,12 @@
 // Package validate provides deterministic, resource-bounded OpenRPC document
-// validation with stable machine-readable diagnostics.
+// validation with stable machine-readable diagnostics. Document checks semantic
+// rules on immutable models; MetaSchema independently validates raw JSON using
+// pinned OpenRPC 1.4.1 inputs and OPENRPC-DEC-001's narrow Server URL correction.
+// ResolveDocument explicitly loads only through caller resolver policy and
+// distinguishes OpenRPC object references from recursive Draft 7 schemas.
+// Reports retain bounded generic messages but pointers can include caller names.
+// Validation is synchronous with cooperative cancellation, no implicit I/O,
+// invocation workers or cgo; borrowed providers retain their own contracts.
 package validate
 
 import (
@@ -23,26 +30,41 @@ import (
 type Code string
 
 const (
-	CodeDuplicateMethodName      Code = "method.name.duplicate"
-	CodeDuplicateParameterName   Code = "method.parameter.name.duplicate"
-	CodeRequiredParameterOrder   Code = "method.parameter.required_order"
-	CodeDuplicateErrorCode       Code = "method.error.code.duplicate"
-	CodeErrorMessageNotConcise   Code = "error.message.not_concise"
-	CodeUnresolvedLinkMethod     Code = "link.method.unresolved"
+	// CodeDuplicateMethodName identifies repeated case-sensitive method names.
+	CodeDuplicateMethodName Code = "method.name.duplicate"
+	// CodeDuplicateParameterName identifies repeated parameter names.
+	CodeDuplicateParameterName Code = "method.parameter.name.duplicate"
+	// CodeRequiredParameterOrder identifies a required parameter after an optional one.
+	CodeRequiredParameterOrder Code = "method.parameter.required_order"
+	// CodeDuplicateErrorCode identifies repeated error integer lexemes.
+	CodeDuplicateErrorCode Code = "method.error.code.duplicate"
+	// CodeErrorMessageNotConcise identifies a non-concise error message.
+	CodeErrorMessageNotConcise Code = "error.message.not_concise"
+	// CodeUnresolvedLinkMethod identifies an unavailable link target method.
+	CodeUnresolvedLinkMethod Code = "link.method.unresolved"
+	// CodeInvalidRuntimeExpression identifies invalid runtime-template syntax.
 	CodeInvalidRuntimeExpression Code = "runtime_expression.invalid"
-	CodeMissingServerVariable    Code = "server.variable.missing"
-	CodeInvalidReference         Code = "reference.invalid"
-	CodeInvalidFormat            Code = "format.invalid"
-	CodeCanceled                 Code = "validation.canceled"
-	CodeInvalidOptions           Code = "validation.options.invalid"
-	CodeResourceLimit            Code = "validation.resource_limit"
+	// CodeMissingServerVariable identifies an undeclared template variable.
+	CodeMissingServerVariable Code = "server.variable.missing"
+	// CodeInvalidReference identifies invalid reference syntax.
+	CodeInvalidReference Code = "reference.invalid"
+	// CodeInvalidFormat identifies invalid field format.
+	CodeInvalidFormat Code = "format.invalid"
+	// CodeCanceled identifies observed cancellation.
+	CodeCanceled Code = "validation.canceled"
+	// CodeInvalidOptions identifies invalid execution options/context.
+	CodeInvalidOptions Code = "validation.options.invalid"
+	// CodeResourceLimit identifies exhausted validation admission/work limits.
+	CodeResourceLimit Code = "validation.resource_limit"
 )
 
 // Severity classifies diagnostic impact.
 type Severity string
 
 const (
-	SeverityError   Severity = "error"
+	// SeverityError makes a report invalid.
+	SeverityError Severity = "error"
+	// SeverityWarning records a finding without making the report invalid.
 	SeverityWarning Severity = "warning"
 )
 
@@ -51,15 +73,20 @@ const (
 type Mode uint8
 
 const (
+	// Collect collects failures until the diagnostic bound or cancellation stops work.
 	Collect Mode = iota
+	// FailFast stops after the first rule failure.
 	FailFast
 )
 
 // Options controls validation execution.
 type Options struct {
-	Mode           Mode
+	// Mode selects collection or first-failure behavior.
+	Mode Mode
+	// MaxDiagnostics caps retained diagnostics and stops further rule evaluation.
 	MaxDiagnostics int
-	MaxMethods     int
+	// MaxMethods caps document method entries before copying them.
+	MaxMethods int
 }
 
 // DefaultOptions returns deterministic collect mode with a finite bound.
@@ -69,11 +96,16 @@ func DefaultOptions() Options {
 
 // Diagnostic is one safe validation finding.
 type Diagnostic struct {
-	Code          Code
-	Pointer       string
-	Severity      Severity
+	// Code identifies the stable validation rule.
+	Code Code
+	// Pointer locates the logical finding and can contain caller member names.
+	Pointer string
+	// Severity controls whether the finding makes Report.Valid false.
+	Severity Severity
+	// Specification identifies the associated normative rule or package policy.
 	Specification string
-	Message       string
+	// Message contains a stable summary without document values.
+	Message string
 }
 
 // Report is an immutable validation result.
@@ -90,7 +122,8 @@ func (report Report) Diagnostics() []Diagnostic {
 // Truncated reports that the configured diagnostic bound stopped validation.
 func (report Report) Truncated() bool { return report.truncated }
 
-// Valid reports whether validation found no error-severity diagnostics.
+// Valid reports whether retained diagnostics contain no error-severity finding.
+// A zero Report is valid; this does not prove that any operation was performed.
 func (report Report) Valid() bool {
 	for _, diagnostic := range report.diagnostics {
 		if diagnostic.Severity == SeverityError {

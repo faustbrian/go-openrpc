@@ -9,6 +9,9 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
+// FuzzDraft7CompileAndValidateDeterministically bounds both inputs to 1 MiB/depth
+// 64/100000 tokens and compares returned issue slices; it does not assert agreement
+// with an independent oracle or compare every report field.
 func FuzzDraft7CompileAndValidateDeterministically(f *testing.F) {
 	f.Add([]byte(`{"$schema":"http://json-schema.org/draft-07/schema#","type":"string"}`), []byte(`"value"`))
 	f.Add([]byte(`true`), []byte(`null`))

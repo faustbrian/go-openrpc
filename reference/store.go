@@ -15,6 +15,8 @@ import (
 // must prevent reads from escaping their intended filesystem root.
 type ContextReadFS interface {
 	fs.FS
+	// ReadFileContext reads owned or stable bytes within maxBytes and the implementation
+	// filesystem root; it must honor cancellation and prevent symlink/root escape.
 	ReadFileContext(ctx context.Context, name string, maxBytes int) ([]byte, error)
 }
 

@@ -141,6 +141,8 @@ func TestEvaluateEnforcesNodeBudgetForSelectedPayloads(t *testing.T) {
 	}
 }
 
+// FuzzTemplateNeverPanics bounds template bytes/interpolations/segments/output and
+// evaluates fixed bindings for panic safety; results are discarded.
 func FuzzTemplateNeverPanics(f *testing.F) {
 	for _, seed := range []string{
 		"${result}",

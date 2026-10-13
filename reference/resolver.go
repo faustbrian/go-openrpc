@@ -37,6 +37,8 @@ var (
 // the remaining resolver allowance; implementations should stop reading when
 // it is exceeded. Resolver rechecks the returned size before parsing.
 type Store interface {
+	// Load returns bytes for a fragment-free absolute document URI under maxBytes;
+	// implementations own resource cleanup, concurrency and cancellation.
 	Load(ctx context.Context, documentURI string, maxBytes int) ([]byte, error)
 }
 
@@ -51,16 +53,28 @@ func (function StoreFunc) Load(ctx context.Context, documentURI string, maxBytes
 // ResolvePolicy bounds resolution and explicitly authorizes external targets.
 // Allowed schemes and hosts use case-insensitive exact matching.
 type ResolvePolicy struct {
-	MaxDepth        int
-	MaxDocuments    int
+	// MaxDepth caps each alias chain and queued resource-graph depth.
+	MaxDepth int
+	// MaxDocuments caps externally fetched documents per call, excluding the supplied
+	// root.
+	MaxDocuments int
+	// MaxFetchedBytes caps total externally fetched bytes per call.
 	MaxFetchedBytes int
-	MaxReferences   int
-	AllowExternal   bool
-	AllowedSchemes  []string
-	AllowedHosts    []string
-	Reference       Policy
-	Pointer         PointerPolicy
-	JSON            jsonvalue.Policy
+	// MaxReferences caps input/visited references under one shared operation budget.
+	MaxReferences int
+	// AllowExternal enables explicit Store calls; false is the offline default.
+	AllowExternal bool
+	// AllowedSchemes lists exact case-insensitive permitted external URI schemes.
+	AllowedSchemes []string
+	// AllowedHosts lists exact case-insensitive hostnames without ports; it is not a
+	// DNS/IP sandbox.
+	AllowedHosts []string
+	// Reference bounds URI-reference parsing.
+	Reference Policy
+	// Pointer bounds fragment pointer parsing and index conversion.
+	Pointer PointerPolicy
+	// JSON bounds loaded documents and selected target JSON.
+	JSON jsonvalue.Policy
 }
 
 // DefaultResolvePolicy disables external access while applying finite bounds.
@@ -77,7 +91,10 @@ func DefaultResolvePolicy() ResolvePolicy {
 }
 
 // Resolver resolves JSON Pointer targets and reference aliases. It performs no
-// I/O unless external access is enabled and a Store is supplied.
+// I/O unless external access is enabled and a Store is supplied. Policies are
+// immutable after construction and caches/budgets are per call; concurrent use
+// depends on the borrowed Store. It cannot preempt blocking loads or panics.
+// Nil is refused but a zero Resolver is not a constructed finite policy.
 type Resolver struct {
 	store          Store
 	policy         ResolvePolicy

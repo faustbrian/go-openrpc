@@ -1,5 +1,8 @@
 // Package jsonvalue preserves arbitrary JSON values without numeric coercion,
-// key reordering, or shared mutable byte storage.
+// key reordering, or shared mutable byte storage. Parse rejects duplicate names,
+// invalid UTF-8 and trailing values under finite Policy before taking a copy.
+// The zero Value is invalid, unlike JSON null. Values may be shared by concurrent
+// readers; parsing is synchronous with no context, I/O, workers or cgo.
 package jsonvalue
 
 import (
@@ -32,8 +35,11 @@ var (
 
 // Policy bounds work performed while validating a JSON value.
 type Policy struct {
-	MaxBytes  int
-	MaxDepth  int
+	// MaxBytes caps input bytes before validation/copying.
+	MaxBytes int
+	// MaxDepth caps nested containers, with the outer container at depth one.
+	MaxDepth int
+	// MaxTokens caps decoder tokens, including member names and closing delimiters.
 	MaxTokens int
 }
 

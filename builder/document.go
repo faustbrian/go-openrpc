@@ -1,5 +1,9 @@
 // Package builder provides ownership-safe, deterministic OpenRPC construction
 // without making design-first documents depend on reflection or registration.
+// NewDocument returns copy-on-write builders; MethodRegistry is separately
+// synchronized mutable registration. Building copies collections and orders
+// inline methods then references, but does not perform complete validation or
+// bound constructor input sizes. It owns no I/O, workers, cgo or global registry.
 package builder
 
 import (
@@ -37,7 +41,8 @@ type Document struct {
 	valid         bool
 }
 
-// NewDocument constructs a builder with valid required root state.
+// NewDocument checks the version and creates explicit empty methods. Info is
+// copied as an immutable value; its nested validity is not checked here.
 func NewDocument(version openrpc.Version, info openrpc.Info) (Document, error) {
 	if _, err := openrpc.NewDocument(openrpc.DocumentInput{
 		Version: version,

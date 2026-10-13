@@ -26,21 +26,36 @@ var (
 type ComponentKind string
 
 const (
-	SchemaComponents            ComponentKind = "schemas"
-	LinkComponents              ComponentKind = "links"
-	ErrorComponents             ComponentKind = "errors"
-	ExampleComponents           ComponentKind = "examples"
-	ExamplePairingComponents    ComponentKind = "examplePairings"
+	// SchemaComponents selects the schemas registry for explicit key/reference rewriting.
+	SchemaComponents ComponentKind = "schemas"
+	// LinkComponents selects the links registry for explicit key/reference rewriting.
+	LinkComponents ComponentKind = "links"
+	// ErrorComponents selects the errors registry for explicit key/reference rewriting.
+	ErrorComponents ComponentKind = "errors"
+	// ExampleComponents selects the examples registry for explicit key/reference
+	// rewriting.
+	ExampleComponents ComponentKind = "examples"
+	// ExamplePairingComponents selects the example pairings registry for explicit
+	// key/reference rewriting.
+	ExamplePairingComponents ComponentKind = "examplePairings"
+	// ContentDescriptorComponents selects the content descriptors registry for explicit
+	// key/reference rewriting.
 	ContentDescriptorComponents ComponentKind = "contentDescriptors"
-	TagComponents               ComponentKind = "tags"
+	// TagComponents selects the tags registry for explicit key/reference rewriting.
+	TagComponents ComponentKind = "tags"
 )
 
 // RenameOptions bounds deterministic component rewriting.
 type RenameOptions struct {
-	MaxRenames     int
+	// MaxRenames caps the supplied rename entries across all registries.
+	MaxRenames int
+	// MaxOutputBytes caps encoded results after serialization, not peak allocation during
+	// transformation.
 	MaxOutputBytes int
-	Parse          openrpcparse.Options
-	Validation     validate.Options
+	// Parse selects structural decoding and unknown-field policy for the result.
+	Parse openrpcparse.Options
+	// Validation selects semantic validation of the transformed document.
+	Validation validate.Options
 }
 
 // DefaultRenameOptions preserves already accepted future fields and applies
@@ -58,7 +73,10 @@ func DefaultRenameOptions() RenameOptions {
 
 // RenameComponents atomically renames component keys and rewrites matching
 // internal JSON Pointer references throughout the document. Unrelated and
-// external references retain their exact spelling.
+// external references retain their exact spelling. Renames run in sorted kind/
+// source-name order, not as a simultaneous permutation. Every nested string
+// member named $ref is considered, including opaque schema/extension objects;
+// this is spelling-based rewriting, not base-URI-aware reference resolution.
 func RenameComponents(
 	ctx context.Context,
 	document openrpc.Document,

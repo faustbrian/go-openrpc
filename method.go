@@ -59,13 +59,23 @@ func (reference Reference) Ref() string { return reference.ref }
 
 // ContentDescriptorInput supplies Content Descriptor Object fields.
 type ContentDescriptorInput struct {
-	Name          string
-	Description   *string
-	Summary       *string
-	Schema        *jsonschema.Schema
-	Required      *bool
-	Deprecated    *bool
-	Extensions    Fields
+	// Name must be nonempty and retains its case-sensitive spelling.
+	Name string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Summary is copied when nonnil; nil means absent.
+	Summary *string
+	// Schema is required and copied as an immutable schema; compilation is separate.
+	Schema *jsonschema.Schema
+	// Required is copied when nonnil; nil means absent.
+	Required *bool
+	// Deprecated is copied when nonnil; nil means absent.
+	Deprecated *bool
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -161,10 +171,17 @@ func (value ContentDescriptorOrReference) Reference() (Reference, bool) {
 
 // TagInput supplies Tag Object fields.
 type TagInput struct {
-	Name          string
-	Description   *string
-	ExternalDocs  *ExternalDocumentation
-	Extensions    Fields
+	// Name must be nonempty and retains its case-sensitive spelling.
+	Name string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// ExternalDocs is copied when nonnil; nil means absent.
+	ExternalDocs *ExternalDocumentation
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -231,11 +248,20 @@ func (value TagOrReference) Reference() (Reference, bool) {
 // ErrorInput supplies Error Object fields. Set HasMessage when representing a
 // required but empty message.
 type ErrorInput struct {
-	Code          Integer
-	Message       string
-	HasMessage    bool
-	Data          *jsonvalue.Value
-	Extensions    Fields
+	// Code must be a constructed Integer; the zero Go value is invalid, but numeric
+	// zero is allowed. JSON-RPC reserved-range policy is separate.
+	Code Integer
+	// Message is required; HasMessage permits an explicitly empty message.
+	Message string
+	// HasMessage records required-message presence even when Message is empty.
+	HasMessage bool
+	// Data is copied when nonnil; nil means absent.
+	Data *jsonvalue.Value
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -297,13 +323,24 @@ func (value ErrorOrReference) Reference() (Reference, bool) {
 
 // LinkInput supplies Link Object fields.
 type LinkInput struct {
-	Name          *jsonvalue.Value
-	Summary       *string
-	Description   *string
-	Method        *string
-	Params        *jsonvalue.Value
-	Server        *Server
-	Extensions    Fields
+	// Name is an optional arbitrary JSON value, not restricted to a Go string.
+	Name *jsonvalue.Value
+	// Summary is copied when nonnil; nil means absent.
+	Summary *string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Method is copied when nonnil; nil means absent.
+	Method *string
+	// Params is an optional JSON value; expression evaluation separately requires an
+	// object.
+	Params *jsonvalue.Value
+	// Server is copied when nonnil; nil means absent.
+	Server *Server
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -379,11 +416,19 @@ func (value LinkOrReference) Reference() (Reference, bool) {
 
 // ExampleInput supplies Example Object fields.
 type ExampleInput struct {
-	Name          string
-	Summary       *string
-	Description   *string
-	Value         jsonvalue.Value
-	Extensions    Fields
+	// Name must be nonempty and retains its case-sensitive spelling.
+	Name string
+	// Summary is copied when nonnil; nil means absent.
+	Summary *string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Value must be a nonzero JSON value; JSON null remains present.
+	Value jsonvalue.Value
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -455,10 +500,16 @@ func (value ExampleOrReference) Reference() (Reference, bool) {
 
 // ExamplePairingInput supplies Example Pairing Object fields.
 type ExamplePairingInput struct {
-	Name          string
-	Description   *string
-	Params        []ExampleOrReference
-	Result        *ExampleOrReference
+	// Name must be nonempty and retains its case-sensitive spelling.
+	Name string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Params must be nonnil and is copied; an allocated empty slice is accepted.
+	Params []ExampleOrReference
+	// Result is copied when nonnil; nil means absent.
+	Result *ExampleOrReference
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -563,26 +614,48 @@ func validParamStructure(value ParamStructure) bool {
 // MethodInput supplies Method Object fields. Params must be non-nil; an empty
 // slice represents a method without parameters.
 type MethodInput struct {
-	Name           string
-	Description    *string
-	Summary        *string
-	Servers        []Server
-	HasServers     bool
-	Tags           []TagOrReference
-	HasTags        bool
-	Params         []ContentDescriptorOrReference
+	// Name must be nonempty and retains its case-sensitive spelling.
+	Name string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Summary is copied when nonnil; nil means absent.
+	Summary *string
+	// Servers is copied; nil is absent unless HasServers records explicit presence.
+	Servers []Server
+	// HasServers records explicit presence even when Servers is empty or nil.
+	HasServers bool
+	// Tags is copied; nil is absent unless HasTags records explicit presence.
+	Tags []TagOrReference
+	// HasTags records explicit presence even when Tags is empty or nil.
+	HasTags bool
+	// Params is required and copied; a nonnil empty slice means no parameters.
+	Params []ContentDescriptorOrReference
+	// ParamStructure is copied when nonnil; nil selects either without emitting a field.
 	ParamStructure *ParamStructure
-	Result         *ContentDescriptorOrReference
-	Errors         []ErrorOrReference
-	HasErrors      bool
-	Links          []LinkOrReference
-	HasLinks       bool
-	Examples       []ExamplePairingOrReference
-	HasExamples    bool
-	Deprecated     *bool
-	ExternalDocs   *ExternalDocumentation
-	Extensions     Fields
-	UnknownFields  Fields
+	// Result is copied when nonnil; nil means absent.
+	Result *ContentDescriptorOrReference
+	// Errors is copied; nil is absent unless HasErrors records explicit presence.
+	Errors []ErrorOrReference
+	// HasErrors records explicit presence even when Errors is empty or nil.
+	HasErrors bool
+	// Links is copied; nil is absent unless HasLinks records explicit presence.
+	Links []LinkOrReference
+	// HasLinks records explicit presence even when Links is empty or nil.
+	HasLinks bool
+	// Examples is copied; nil is absent unless HasExamples records explicit presence.
+	Examples []ExamplePairingOrReference
+	// HasExamples records explicit presence even when Examples is empty or nil.
+	HasExamples bool
+	// Deprecated is copied when nonnil; nil means absent.
+	Deprecated *bool
+	// ExternalDocs is copied when nonnil; nil means absent.
+	ExternalDocs *ExternalDocumentation
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
+	UnknownFields Fields
 }
 
 // Method is an immutable OpenRPC Method Object.

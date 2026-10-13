@@ -1,5 +1,11 @@
 // Package reference provides JSON Pointer, URI reference, and bounded OpenRPC
-// reference-resolution primitives without implicit I/O.
+// reference-resolution primitives without implicit I/O. Start with ParsePointer,
+// Parse or NewResolver; external loads require explicit policy and Store.
+// URI spelling plus decoded pointer identity controls per-chain alias detection;
+// structural dereferencing and resource bundling have different contracts.
+// Immutable values/policies are copied, but stores/selectors are borrowed;
+// provider concurrency, containment, cancellation and cleanup remain explicit.
+// Core parsing owns no workers or cgo; httpstore is an optional network adapter.
 package reference
 
 import (
@@ -28,8 +34,11 @@ var (
 
 // PointerPolicy bounds pointer parsing and array-index work.
 type PointerPolicy struct {
-	MaxLength      int
-	MaxTokens      int
+	// MaxLength caps the decoded plain pointer bytes.
+	MaxLength int
+	// MaxTokens caps slash-separated pointer tokens.
+	MaxTokens int
+	// MaxIndexDigits caps array-index digit length before integer conversion.
 	MaxIndexDigits int
 }
 
@@ -74,7 +83,9 @@ func ParsePointer(input string, policy PointerPolicy) (Pointer, error) {
 	return Pointer{tokens: tokens, maxIndexDigits: policy.MaxIndexDigits}, nil
 }
 
-// ParseFragment parses the URI fragment representation of a JSON Pointer.
+// ParseFragment percent-decodes a fragment before plain-pointer admission.
+// MaxLength applies after decoding, not before that allocation; bound encoded
+// transport input separately.
 func ParseFragment(input string, policy PointerPolicy) (Pointer, error) {
 	if input == "" || input[0] != '#' {
 		return Pointer{}, ErrInvalidPointer

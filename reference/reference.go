@@ -21,6 +21,7 @@ var (
 
 // Policy bounds URI-reference parsing.
 type Policy struct {
+	// MaxLength caps URI-reference source bytes before parsing.
 	MaxLength int
 }
 

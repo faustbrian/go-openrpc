@@ -7,14 +7,27 @@ const defaultSchemaURI = "https://meta.open-rpc.org/"
 // ComponentsInput supplies reusable Components maps. Nil means absent; an
 // allocated empty map means explicitly present and empty.
 type ComponentsInput struct {
-	Schemas            map[string]jsonschema.Schema
-	Links              map[string]Link
-	Errors             map[string]Error
-	Examples           map[string]Example
-	ExamplePairings    map[string]ExamplePairing
+	// Schemas is copied; nil means absent and an allocated empty map is explicitly
+	// present.
+	Schemas map[string]jsonschema.Schema
+	// Links is copied; nil means absent and an allocated empty map is explicitly present.
+	Links map[string]Link
+	// Errors is copied; nil means absent and an allocated empty map is explicitly present.
+	Errors map[string]Error
+	// Examples is copied; nil means absent and an allocated empty map is explicitly
+	// present.
+	Examples map[string]Example
+	// ExamplePairings is copied; nil means absent and an allocated empty map is explicitly
+	// present.
+	ExamplePairings map[string]ExamplePairing
+	// ContentDescriptors is copied; nil means absent and an allocated empty map is
+	// explicitly present.
 	ContentDescriptors map[string]ContentDescriptor
-	Tags               map[string]Tag
-	UnknownFields      Fields
+	// Tags is copied; nil means absent and an allocated empty map is explicitly present.
+	Tags map[string]Tag
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
+	UnknownFields Fields
 }
 
 // Components is an immutable OpenRPC Components Object.
@@ -98,15 +111,28 @@ func (components Components) UnknownFields() Fields { return components.unknown 
 // DocumentInput supplies root OpenRPC document fields. Info must be non-nil,
 // and Methods must be non-nil even when the visible list is empty.
 type DocumentInput struct {
-	Version       Version
-	SchemaURI     *string
-	Info          *Info
-	ExternalDocs  *ExternalDocumentation
-	Servers       []Server
-	HasServers    bool
-	Methods       []MethodOrReference
-	Components    *Components
-	Extensions    Fields
+	// Version must be a nonzero supported specification version.
+	Version Version
+	// SchemaURI is copied when nonnil; nil means absent.
+	SchemaURI *string
+	// Info supplies a required nonnil immutable Info value.
+	Info *Info
+	// ExternalDocs is copied when nonnil; nil means absent.
+	ExternalDocs *ExternalDocumentation
+	// Servers is copied; nil is absent unless HasServers records explicit presence.
+	Servers []Server
+	// HasServers records explicit presence even when Servers is empty or nil.
+	HasServers bool
+	// Methods supplies the required nonnil method list; an empty allocated list is
+	// accepted.
+	Methods []MethodOrReference
+	// Components is copied when nonnil; nil means absent.
+	Components *Components
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -125,7 +151,9 @@ type Document struct {
 	hasComponents bool
 }
 
-// NewDocument constructs an owned OpenRPC document.
+// NewDocument copies root collections and checks required input presence.
+// It does not validate nested zero values, uniqueness, schemas or references;
+// use parse/validate for those distinct admission boundaries.
 func NewDocument(input DocumentInput) (Document, error) {
 	if input.Version.String() == "" {
 		return Document{}, missingField("openrpc")

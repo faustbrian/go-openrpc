@@ -10,6 +10,8 @@ import (
 	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
 )
 
+// FuzzDiscoverySnapshotsAreDeterministic admits bounded documents and compares
+// successful static-provider bytes/revisions; invalid first discoveries are skipped.
 func FuzzDiscoverySnapshotsAreDeterministic(f *testing.F) {
 	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`))
 	f.Fuzz(func(t *testing.T, input []byte) {

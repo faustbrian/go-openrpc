@@ -14,9 +14,13 @@ var (
 	ErrInvalidUnion = errors.New("openrpc: invalid union value")
 )
 
-// MarshalCanonical serializes a Document deterministically. Object members
-// are sorted lexically, insignificant whitespace is removed, and optional
-// field presence is retained without materializing defaults.
+// MarshalCanonical serializes the modeled Document deterministically into
+// owned bytes. Modeled object keys are sorted, whitespace is compacted and
+// optional presence is retained without materializing defaults. Opaque schemas
+// and arbitrary JSON retain member order and number lexemes; this is not RFC
+// 8785 or normalization of every semantically equivalent JSON value. It checks
+// field collisions/unions, not complete semantic validity, and has no context
+// or output-size argument. Bound source construction before serialization.
 func MarshalCanonical(document Document) ([]byte, error) {
 	if document.version.String() == "" {
 		return nil, missingField("openrpc")
@@ -756,6 +760,8 @@ func mergeFields(object map[string]any, fields Fields) error {
 	return nil
 }
 
+// Reject collisions rather than letting extension/unknown fields silently
+// override modeled contracts; admission into Fields does not establish this.
 func put(object map[string]any, name string, value any) error {
 	if _, exists := object[name]; exists {
 		return ErrFieldCollision

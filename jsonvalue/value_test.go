@@ -241,6 +241,8 @@ func TestParseMalformedArrayTerminates(t *testing.T) {
 	}
 }
 
+// FuzzParseNeverPanics uses 4096-byte/depth 32/1024-token admission and checks
+// accepted byte preservation.
 func FuzzParseNeverPanics(f *testing.F) {
 	for _, seed := range [][]byte{
 		[]byte(`null`),

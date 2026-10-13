@@ -21,7 +21,9 @@ var (
 
 // Field is one named, arbitrary JSON value supplied to a field constructor.
 type Field struct {
-	Name  string
+	// Name is case-sensitive and nonempty; extension constructors also require x-.
+	Name string
+	// Value must be a nonzero immutable JSON value; null is accepted.
 	Value jsonvalue.Value
 }
 

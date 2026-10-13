@@ -1,5 +1,9 @@
 // Package jsonschema provides lossless JSON Schema Draft 7 values used by
-// OpenRPC. It supports both object and boolean schemas without reflection.
+// OpenRPC. Parse preserves schema bytes; Compile separately enforces the pinned
+// Draft 7 dialect with explicit resources and regexp/evaluation limits. No
+// implicit filesystem/network loader or cgo is installed. Compiled validators
+// and their WithMaxIssues copies serialize evaluation through a shared owner;
+// syntax values remain immutable and concurrent-reader safe.
 package jsonschema
 
 import (

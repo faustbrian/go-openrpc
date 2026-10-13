@@ -10,8 +10,13 @@ import (
 )
 
 var (
-	ErrInvalidMerge  = errors.New("compose: invalid merge options")
-	ErrMergeLimit    = errors.New("compose: merge limit exceeded")
+	// ErrInvalidMerge reports invalid bounds, conflict policy, nil context or no
+	// documents.
+	ErrInvalidMerge = errors.New("compose: invalid merge options")
+	// ErrMergeLimit reports aggregate input methods/components or document count beyond
+	// policy.
+	ErrMergeLimit = errors.New("compose: merge limit exceeded")
+	// ErrMergeConflict reports unequal versions or a duplicate under ConflictError.
 	ErrMergeConflict = errors.New("compose: merge conflict")
 )
 
@@ -19,19 +24,28 @@ var (
 type ConflictPolicy uint8
 
 const (
+	// ConflictError rejects duplicate identities, even when their values are equal.
 	ConflictError ConflictPolicy = iota
+	// KeepFirst retains the first value for a duplicate identity in input order.
 	KeepFirst
+	// KeepLast retains the last value for a duplicate identity in input order.
 	KeepLast
 )
 
 // MergeOptions bounds composition and makes collision behavior explicit.
 type MergeOptions struct {
-	Conflict      ConflictPolicy
-	MaxDocuments  int
-	MaxMethods    int
+	// Conflict selects duplicate handling; zero rejects duplicates.
+	Conflict ConflictPolicy
+	// MaxDocuments caps the input document count.
+	MaxDocuments int
+	// MaxMethods caps total input method/reference entries before deduplication.
+	MaxMethods int
+	// MaxComponents caps total input entries across all component registries, including
+	// duplicates.
 	MaxComponents int
 }
 
+// DefaultMergeOptions returns finite admission bounds with duplicate refusal.
 func DefaultMergeOptions() MergeOptions {
 	return MergeOptions{
 		Conflict: ConflictError, MaxDocuments: 32,

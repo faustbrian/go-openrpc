@@ -22,9 +22,12 @@ const (
 // ResolvedOptions controls bounded dereferencing, structural decoding, and
 // semantic validation through Reference Objects.
 type ResolvedOptions struct {
+	// Validation selects semantic diagnostics after replacement.
 	Validation Options
-	Transform  reference.TransformPolicy
-	Parse      openrpcparse.Options
+	// Transform bounds structural OpenRPC-reference expansion.
+	Transform reference.TransformPolicy
+	// Parse selects typed result admission while schema references remain schema values.
+	Parse openrpcparse.Options
 }
 
 // DefaultResolvedOptions returns strict, bounded, offline-safe defaults.

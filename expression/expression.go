@@ -1,6 +1,10 @@
 // Package expression parses and evaluates the JSON Template Language used by
 // OpenRPC runtime expressions. Evaluation only selects JSON values; it does
-// not execute code or invoke user callbacks.
+// not execute code or invoke user callbacks. Start with Parse and NewContext,
+// or EvaluateServer/EvaluateLinkParams for model integration. The restricted
+// grammar follows the pinned OpenRPC 1.4.1 runtime-expression policy; evaluation
+// is synchronous without context, I/O, workers or cgo. Expanded strings are not
+// URL escaping, endpoint authorization or permission to fetch a resource.
 package expression
 
 import (
@@ -34,11 +38,17 @@ var (
 
 // Policy bounds expression parsing and the resulting JSON value.
 type Policy struct {
-	MaxLength      int
+	// MaxLength caps template source bytes.
+	MaxLength int
+	// MaxExpressions caps interpolation expressions in one template.
 	MaxExpressions int
-	MaxSegments    int
+	// MaxSegments caps access segments in each expression.
+	MaxSegments int
+	// MaxIndexDigits caps decimal array-index length before machine-integer conversion.
 	MaxIndexDigits int
-	MaxNodes       int
+	// MaxNodes caps JSON-token work for access evaluation and visited link-value nodes.
+	MaxNodes int
+	// MaxOutputBytes caps evaluated JSON output, not retained binding memory.
 	MaxOutputBytes int
 }
 

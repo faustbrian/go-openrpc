@@ -1,5 +1,11 @@
 // Package diff performs deterministic semantic compatibility comparisons of
 // OpenRPC documents without resolving external resources implicitly.
+// Compare/CompareResolved use package policy OPENRPC-DEC-011, not arbitrary
+// Draft 7 implication proof. Validate input documents separately: name-indexed
+// comparison does not diagnose every invalid duplicate or metadata change.
+// Report.Compatible fails closed on errors, truncation and conditional findings.
+// Calls are synchronous and read-only; no workers, I/O or cgo are introduced
+// except explicit resolver providers supplied to CompareResolved.
 package diff
 
 import (
@@ -17,45 +23,79 @@ import (
 type Classification string
 
 const (
-	Additive    Classification = "additive"
-	Compatible  Classification = "compatible"
+	// Additive marks a newly available surface under the package compatibility policy.
+	Additive Classification = "additive"
+	// Compatible marks a change classified as nonbreaking by the package policy.
+	Compatible Classification = "compatible"
+	// Conditional marks insufficient evidence; Report.Compatible returns false.
 	Conditional Classification = "conditionally-compatible"
-	Breaking    Classification = "breaking"
+	// Breaking marks an observed consumer-contract break; Report.Compatible returns false.
+	Breaking Classification = "breaking"
 )
 
 // Code is a stable machine-readable change identifier.
 type Code string
 
 const (
-	CodeVersionChanged         Code = "version.changed"
-	CodeMethodAdded            Code = "method.added"
-	CodeMethodRemoved          Code = "method.removed"
+	// CodeVersionChanged identifies a specification feature-line change.
+	CodeVersionChanged Code = "version.changed"
+	// CodeMethodAdded identifies an added inline method.
+	CodeMethodAdded Code = "method.added"
+	// CodeMethodRemoved identifies a removed inline method.
+	CodeMethodRemoved Code = "method.removed"
+	// CodeParameterAddedRequired identifies an added required parameter.
 	CodeParameterAddedRequired Code = "parameter.added.required"
+	// CodeParameterAddedOptional identifies an added optional parameter.
 	CodeParameterAddedOptional Code = "parameter.added.optional"
-	CodeParameterRemoved       Code = "parameter.removed"
-	CodeParameterOrderChanged  Code = "parameter.order.changed"
-	CodeParameterRequired      Code = "parameter.required.changed"
+	// CodeParameterRemoved identifies a removed parameter.
+	CodeParameterRemoved Code = "parameter.removed"
+	// CodeParameterOrderChanged identifies a positional parameter-order change.
+	CodeParameterOrderChanged Code = "parameter.order.changed"
+	// CodeParameterRequired identifies an optional parameter becoming required.
+	CodeParameterRequired Code = "parameter.required.changed"
+	// CodeParameterSchemaChanged identifies a changed parameter schema without implication
+	// proof.
 	CodeParameterSchemaChanged Code = "parameter.schema.changed"
-	CodeResultAdded            Code = "result.added"
-	CodeResultRemoved          Code = "result.removed"
-	CodeResultChanged          Code = "result.changed"
-	CodeErrorsChanged          Code = "errors.changed"
-	CodeServersChanged         Code = "servers.changed"
-	CodeLinksChanged           Code = "links.changed"
-	CodeExamplesChanged        Code = "examples.changed"
-	CodeSchemaChanged          Code = "schema.changed"
-	CodeComponentAdded         Code = "component.added"
-	CodeComponentRemoved       Code = "component.removed"
-	CodeComponentChanged       Code = "component.changed"
-	CodeUnresolvedReference    Code = "reference.unresolved"
+	// CodeResultAdded identifies an added result.
+	CodeResultAdded Code = "result.added"
+	// CodeResultRemoved identifies a removed result.
+	CodeResultRemoved Code = "result.removed"
+	// CodeResultChanged identifies changed result semantics.
+	CodeResultChanged Code = "result.changed"
+	// CodeErrorsChanged identifies changed declared errors.
+	CodeErrorsChanged Code = "errors.changed"
+	// CodeServersChanged identifies changed server endpoints.
+	CodeServersChanged Code = "servers.changed"
+	// CodeLinksChanged identifies changed link declarations.
+	CodeLinksChanged Code = "links.changed"
+	// CodeExamplesChanged identifies changed examples.
+	CodeExamplesChanged Code = "examples.changed"
+	// CodeSchemaChanged identifies changed schema bytes without implication proof.
+	CodeSchemaChanged Code = "schema.changed"
+	// CodeComponentAdded identifies an added reusable component.
+	CodeComponentAdded Code = "component.added"
+	// CodeComponentRemoved identifies a removed reusable component.
+	CodeComponentRemoved Code = "component.removed"
+	// CodeComponentChanged identifies changed reusable component bytes.
+	CodeComponentChanged Code = "component.changed"
+	// CodeUnresolvedReference identifies an unresolved method or target requiring
+	// conditional comparison.
+	CodeUnresolvedReference Code = "reference.unresolved"
 )
 
+// ErrInvalidOptions reports invalid bounds/context or input counts beyond comparison
+// admission.
 var ErrInvalidOptions = errors.New("diff: invalid options")
 
 // Options bounds diff complexity and output.
 type Options struct {
-	MaxChanges    int
-	MaxMethods    int
+	// MaxChanges caps returned findings after comparison, not the temporary change
+	// collection.
+	MaxChanges int
+	// MaxMethods caps combined distinct inline methods and method references from both
+	// documents.
+	MaxMethods int
+	// MaxComponents caps component entries compared across both documents.
 	MaxComponents int
 }
 
@@ -66,10 +106,15 @@ func DefaultOptions() Options {
 
 // Change is one stable compatibility finding.
 type Change struct {
-	Code           Code
+	// Code identifies the stable kind of finding.
+	Code Code
+	// Classification records the package-owned compatibility disposition.
 	Classification Classification
-	Pointer        string
-	Message        string
+	// Pointer locates the logical changed surface; method names are escaped identity
+	// tokens, not array offsets.
+	Pointer string
+	// Message contains a stable summary rather than document values.
+	Message string
 }
 
 // Report is one immutable bounded diff result.
@@ -79,9 +124,16 @@ type Report struct {
 	err       error
 }
 
+// Changes returns an owned finding slice; an empty result alone does not establish
+// compatibility.
 func (report Report) Changes() []Change { return append([]Change(nil), report.changes...) }
-func (report Report) Truncated() bool   { return report.truncated }
-func (report Report) Err() error        { return report.err }
+
+// Truncated reports that findings were omitted from the returned slice.
+func (report Report) Truncated() bool { return report.truncated }
+
+// Err returns comparison refusal or cancellation; inspect before accepting
+// compatibility.
+func (report Report) Err() error { return report.err }
 
 // Compatible reports that comparison completed without breaking,
 // conditional, or truncated findings. It fails closed when the available
@@ -100,7 +152,9 @@ func (report Report) Compatible() bool {
 
 // Compare classifies method and parameter changes. Reference-dependent
 // comparisons remain explicitly conditional until callers supply resolved
-// documents.
+// documents. MaxChanges truncates after collection, not before allocation;
+// invalid duplicate names can be collapsed by indexes. Logical pointers may
+// contain method/component names and are not guaranteed source array positions.
 func Compare(ctx context.Context, before openrpc.Document, after openrpc.Document, options Options) Report {
 	if ctx == nil || options.MaxChanges <= 0 || options.MaxMethods <= 0 ||
 		options.MaxComponents <= 0 {

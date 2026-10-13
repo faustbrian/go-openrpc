@@ -48,10 +48,15 @@ func (overlay Overlay) Bytes() []byte { return overlay.patch.Bytes() }
 // OverlayOptions bounds ordered patch application and configures the strict
 // parser used for the resulting document.
 type OverlayOptions struct {
-	MaxActions     int
+	// MaxActions caps the supplied overlay count.
+	MaxActions int
+	// MaxOutputBytes caps encoded results after serialization, not peak allocation during
+	// transformation.
 	MaxOutputBytes int
-	Parse          openrpcparse.Options
-	Validation     validate.Options
+	// Parse selects structural decoding and unknown-field policy for the result.
+	Parse openrpcparse.Options
+	// Validation selects semantic validation of the transformed document.
+	Validation validate.Options
 }
 
 // DefaultOverlayOptions returns strict finite composition limits.

@@ -1,4 +1,10 @@
 // Package parse provides bounded strict and preserving OpenRPC JSON parsing.
+// Decode first admits duplicate-free UTF-8 JSON, then the typed object shape.
+// It preserves accepted source bytes and optional presence; semantic rules and
+// full pinned meta-schema validation remain separate validate operations.
+// Options select unknown-field retention but do not allow Reference siblings
+// (OPENRPC-DEC-002). Decode is synchronous without context, I/O, workers or cgo;
+// lower finite JSON/collection bounds for untrusted inputs.
 package parse
 
 import (
@@ -53,17 +59,29 @@ const (
 
 // Options controls parsing behavior and resource bounds.
 type Options struct {
-	JSON               jsonvalue.Policy
-	UnknownFields      UnknownFieldMode
-	MaxMethods         int
-	MaxComponents      int
-	MaxParameters      int
-	MaxServers         int
+	// JSON bounds complete strict JSON admission before typed decoding.
+	JSON jsonvalue.Policy
+	// UnknownFields selects strict refusal or retention at locations allowing additional
+	// fields.
+	UnknownFields UnknownFieldMode
+	// MaxMethods caps root method entries.
+	MaxMethods int
+	// MaxComponents caps each component registry and their aggregate.
+	MaxComponents int
+	// MaxParameters caps each method or Example Pairing parameter array.
+	MaxParameters int
+	// MaxServers caps each server array.
+	MaxServers int
+	// MaxServerVariables caps variables on each server.
 	MaxServerVariables int
-	MaxTags            int
-	MaxErrors          int
-	MaxLinks           int
-	MaxExamples        int
+	// MaxTags caps each tag array.
+	MaxTags int
+	// MaxErrors caps each error array.
+	MaxErrors int
+	// MaxLinks caps each link array.
+	MaxLinks int
+	// MaxExamples caps each method example-pairing collection.
+	MaxExamples int
 }
 
 // DefaultOptions returns strict parsing with explicit finite bounds.
@@ -85,11 +103,14 @@ func DefaultOptions() Options {
 
 // Error is a safe structural parsing error at an RFC 6901 JSON Pointer.
 type Error struct {
+	// Pointer is the escaped logical source location and may contain caller member names.
 	Pointer string
-	Err     error
+	// Err is the wrapped category; manually supplied errors are printed by Error.
+	Err error
 }
 
-// Error implements error without document values.
+// Error prints Pointer and Err; a nonnil receiver is required. Package-created
+// causes are stable categories, but caller-supplied names/causes are not redacted.
 func (err *Error) Error() string {
 	return fmt.Sprintf("openrpc parse at %s: %v", err.Pointer, err.Err)
 }
@@ -110,6 +131,8 @@ func (result Result) Document() openrpc.Document { return result.document }
 func (result Result) PreservingJSON() []byte { return result.source.Bytes() }
 
 // Decode parses one OpenRPC JSON document without filesystem or network I/O.
+// An error returns a zero Result, not a partially accepted model. Success is
+// structural model admission, not complete meta-schema or semantic validity.
 func Decode(input []byte, options Options) (Result, error) {
 	if options.MaxMethods <= 0 || options.MaxComponents <= 0 ||
 		options.MaxParameters <= 0 || options.MaxServers <= 0 ||
@@ -497,6 +520,8 @@ func parseDescriptorOrReference(raw json.RawMessage, options Options, pointer st
 	return openrpc.ContentDescriptorValue(descriptor), nil
 }
 
+// OPENRPC-DEC-002 follows the pinned Reference Object's exact shape even when
+// ordinary unknown fields are preserved; sibling data has no defined semantics.
 func parseReferenceObject(object map[string]json.RawMessage, pointer string) (openrpc.Reference, error) {
 	if len(object) != 1 {
 		return openrpc.Reference{}, at(pointer, ErrInvalidObject)

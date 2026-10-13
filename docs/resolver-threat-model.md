@@ -23,3 +23,11 @@ allowlists.
 They are intended only for controlled environments. The caller remains
 responsible for the ownership and behavior of custom stores and allowlisted
 hosts.
+
+The HTTP store clones `http.DefaultTransport`, including its proxy and TLS
+settings. Deployment owns ambient proxy policy and must retain a non-nil
+`*http.Transport` before construction. Direct target IP checks are not a
+complete proxy target-resolution policy. Each response is closed, but the store
+exposes no public idle-connection close operation; standard transport workers
+and idle connections retain their configured lifecycle. Loaded status-200 bytes
+are not JSON until the resolver separately parses them.

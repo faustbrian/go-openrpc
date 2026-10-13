@@ -54,3 +54,15 @@ capacity fail closed. A provider failure releases the empty partition entry.
 `reference.NewFSStore` requires `ContextReadFS`. The supplied read receives the
 caller context and remaining byte allowance; the store rechecks both before
 returning data to the resolver.
+
+## Serialization and diagnostic boundaries
+
+`MarshalCanonical` sorts modeled object keys and compacts whitespace, but opaque
+schemas and arbitrary JSON retain member order and number lexemes. It is not
+RFC 8785 or recursive normalization of all equivalent JSON. It has no output
+size or context argument; discovery checks output size after serialization.
+Constructor success is not complete semantic or meta-schema validation.
+
+Generic diagnostic messages omit values, but logical pointers may contain
+caller-controlled member/method names. Public error structs also print a
+manually supplied underlying error; logging policy remains caller-owned.

@@ -1,6 +1,7 @@
 # Resource budgets
 
-All defaults are finite. A zero or negative configured limit is rejected.
+All defaults are finite. Positive byte/count/work limits are required unless
+a surface documents a meaningful zero, such as refusing all HTTP redirects.
 Callers should lower limits when their deployment contract is smaller.
 
 | Surface | Default budget | Enforcement |
@@ -27,6 +28,11 @@ Generation and CLI budgets are not applicable because those optional surfaces
 are not present. Adding either surface requires explicit input, semantic,
 output, and diagnostic limits before it can enter the release gate.
 
-Errors are stable categories. Limit errors and diagnostics do not include
-documents, schemas, fetched bodies, URLs, credentials, method names, or raw
-extension values.
+Operation errors use stable categories and generic messages rather than full
+documents, schemas, fetched bodies or raw extension values. Logical diagnostic
+pointers can contain caller member/method names, and manually constructed public
+error values can print their supplied causes; logging remains caller-owned.
+Output bounds on discovery, transforms, overlays, renames and diff reporting
+are not peak-allocation limits: serialization/temporary collections precede the
+final output check. Constructors and compilation without contexts cannot be
+forcibly canceled by supplying a context to a later operation.

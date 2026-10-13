@@ -8,6 +8,8 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/reference"
 )
 
+// FuzzReferenceAndPointerParsing caps URI-reference bytes at 1024 and exercises
+// fragment/target panic safety against fixed JSON; outcomes are discarded.
 func FuzzReferenceAndPointerParsing(f *testing.F) {
 	for _, seed := range []string{
 		"#/components/schemas/Value",
@@ -39,6 +41,8 @@ func FuzzReferenceAndPointerParsing(f *testing.F) {
 	})
 }
 
+// FuzzResolverInternalReferences admits 4 KiB/depth 32/512-token roots and exercises
+// offline resolver panic safety without asserting success/rejection.
 func FuzzResolverInternalReferences(f *testing.F) {
 	f.Add([]byte(`{"value":{"nested":true}}`), "#/value")
 	f.Add([]byte(`[]`), "#/0")

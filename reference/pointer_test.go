@@ -105,6 +105,8 @@ func TestPointerPolicyAndTokensAreOwnershipSafe(t *testing.T) {
 	}
 }
 
+// FuzzPointerNeverPanics caps pointer bytes/tokens/index digits and exercises fixed-
+// target panic safety; outcomes are discarded.
 func FuzzPointerNeverPanics(f *testing.F) {
 	for _, seed := range []string{"", "/a~1b", "/m~0n", "/0", "/~2"} {
 		f.Add(seed)

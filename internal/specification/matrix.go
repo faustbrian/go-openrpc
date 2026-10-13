@@ -41,7 +41,9 @@ type descriptionBlock struct {
 // GenerateMatrices inventories normative prose and every schema-declared
 // object field. Empty implementation and evidence columns are deliberate: a
 // generated inventory must not claim conformance before executable proof is
-// linked during review.
+// linked during review. Inputs are trusted pinned maintenance artifacts;
+// this inventory uses sentence/schema heuristics, not a general Markdown or
+// Draft 7 interpreter, and has no untrusted-input/context budget.
 func GenerateMatrices(specification string, schemaJSON []byte) ([]byte, []byte, error) {
 	var schema any
 	if err := json.Unmarshal(schemaJSON, &schema); err != nil {

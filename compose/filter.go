@@ -1,5 +1,9 @@
 // Package compose provides explicit, deterministic OpenRPC filtering, merging,
-// and overlay operations.
+// and overlay operations. Start with FilterMethods, Merge or ApplyOverlays and
+// explicit options. These are package policies (OPENRPC-DEC-010), not an OpenRPC
+// merge protocol. Inputs remain immutable; returned results are all-or-error.
+// Context checks are cooperative and cannot preempt caller predicates or one
+// serialization/recursive rewrite. No implicit resolution, workers or cgo is owned.
 package compose
 
 import (
@@ -20,6 +24,8 @@ var (
 
 // MethodPredicate decides whether one inline method remains visible.
 type MethodPredicate interface {
+	// Visible decides inline-method visibility synchronously; implementations own
+	// cancellation, concurrency and bounded return.
 	Visible(context.Context, openrpc.Method) (bool, error)
 }
 
@@ -33,7 +39,10 @@ func (function MethodPredicateFunc) Visible(ctx context.Context, method openrpc.
 
 // FilterOptions controls bounded handling of unresolved method references.
 type FilterOptions struct {
-	MaxMethods     int
+	// MaxMethods caps admitted input methods before visibility callbacks.
+	MaxMethods int
+	// KeepReferences retains unresolved methods without invoking the inline predicate;
+	// false removes them.
 	KeepReferences bool
 }
 
@@ -44,7 +53,9 @@ func DefaultFilterOptions() FilterOptions {
 }
 
 // FilterMethods applies context-aware visibility to inline methods and returns
-// an ownership-safe document. An empty method list remains valid.
+// an ownership-safe document. An empty method list remains valid. Predicates
+// run synchronously in input order; failures are sanitized and panics propagate.
+// It filters methods only, not unreachable components or deployment authority.
 func FilterMethods(
 	ctx context.Context,
 	document openrpc.Document,

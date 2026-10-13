@@ -36,14 +36,25 @@ const defaultBaseURI = "https://openrpc.invalid/schema.json"
 // Resources are the only external schemas available during compilation; no
 // filesystem or network loader is installed.
 type ValidationOptions struct {
-	BaseURI            string
-	Resources          map[string]Schema
-	MaxResources       int
-	MaxSchemaBytes     int
-	MaxInstanceBytes   int
+	// BaseURI is the absolute fragment-free identity used to compile the root schema.
+	BaseURI string
+	// Resources supplies the only external schemas; callers must not mutate the map during
+	// compilation.
+	Resources map[string]Schema
+	// MaxResources caps external resource entries, excluding the root.
+	MaxResources int
+	// MaxSchemaBytes caps aggregate root and external schema bytes.
+	MaxSchemaBytes int
+	// MaxInstanceBytes caps admitted instance bytes before copying/decoding.
+	MaxInstanceBytes int
+	// MaxValidationSteps caps charged decoding/schema/regexp/diagnostic checkpoints, not
+	// elapsed time.
 	MaxValidationSteps int
-	MaxIssues          int
-	RegexpTimeout      time.Duration
+	// MaxIssues caps returned issues; additional failures set Truncated.
+	MaxIssues int
+	// RegexpTimeout bounds individual matches, lowered by deadlines; must be positive and
+	// at most ten seconds.
+	RegexpTimeout time.Duration
 }
 
 // DefaultValidationOptions returns strict Draft 7 compilation with finite
@@ -57,7 +68,10 @@ func DefaultValidationOptions() ValidationOptions {
 	}
 }
 
-// Validator is an immutable compiled Draft 7 schema safe for concurrent use.
+// Validator is a compiled Draft 7 schema safe for concurrent Validate calls.
+// Calls and WithMaxIssues copies share one cancellable evaluation slot because
+// regexp timeouts and evaluation budgets belong to one active caller. Its zero
+// value refuses validation; compilation itself is synchronous without context.
 type Validator struct {
 	compiled           *validator.Schema
 	maxIssues          int
@@ -82,7 +96,9 @@ func (compiled Validator) WithMaxIssues(maxIssues int) (Validator, error) {
 }
 
 // Compile compiles one Draft 7 schema using only explicitly supplied
-// resources. It never performs network or filesystem access.
+// resources. It never performs network or filesystem access. Resources must
+// remain unchanged during compilation. Byte/resource admission is not a heap
+// cap; compilation has no context and does not execute an instance.
 func Compile(schema Schema, options ValidationOptions) (Validator, error) {
 	if options.MaxResources <= 0 || options.MaxSchemaBytes <= 0 ||
 		options.MaxInstanceBytes <= 0 || options.MaxValidationSteps <= 0 ||
@@ -176,6 +192,8 @@ func newValidationControl(regexpTimeout time.Duration) *validationControl {
 	return control
 }
 
+// One active owner covers the shared regexp MatchTimeout and checkpoint state.
+// Waiting callers can cancel without resetting or canceling the active budget.
 func (control *validationControl) begin(ctx context.Context, maxSteps int) error {
 	select {
 	case <-ctx.Done():
@@ -363,10 +381,15 @@ func ecmaRegexpEngine(control *validationControl) validator.RegexpEngine {
 
 // Issue is one safe validation failure. Messages contain no instance value.
 type Issue struct {
+	// InstancePointer locates the failing instance and can contain caller member names.
 	InstancePointer string
-	SchemaPointer   string
-	Keyword         string
-	Message         string
+	// SchemaPointer locates the failing keyword path; it is not a complete external schema
+	// URI.
+	SchemaPointer string
+	// Keyword identifies the failing keyword without the instance value.
+	Keyword string
+	// Message is a package-owned generic failure summary, not dependency payload text.
+	Message string
 }
 
 // Report is one immutable bounded validation result.
@@ -389,7 +412,10 @@ func (report Report) Err() error { return report.err }
 func (report Report) Valid() bool { return report.err == nil && len(report.issues) == 0 }
 
 // Validate checks one immutable JSON value and converts dependency diagnostics
-// into stable, payload-free package-owned issues.
+// into stable package-owned issues. Messages omit instance values, but pointers
+// retain member names. Waiting for the shared slot honors ctx; schema/decoding
+// work checks cooperative checkpoints, not a process heap or exact wall-time cap.
+// Only package budget/cancellation panics are converted; other panics propagate.
 func (compiled Validator) Validate(ctx context.Context, instance jsonvalue.Value) Report {
 	if compiled.compiled == nil || compiled.maxIssues <= 0 ||
 		compiled.control == nil || ctx == nil {

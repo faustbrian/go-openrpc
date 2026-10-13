@@ -8,7 +8,8 @@ import (
 )
 
 // MethodRegistry is an explicitly owned concurrent registry. It starts no
-// goroutines and returns immutable, lexically ordered snapshots.
+// goroutines and returns immutable, lexically ordered snapshots. Its zero value
+// initializes on first Register; nil Register refuses and nil Methods returns nil.
 type MethodRegistry struct {
 	mu      sync.RWMutex
 	methods map[string]openrpc.Method

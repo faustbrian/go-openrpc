@@ -1,6 +1,10 @@
 // Package jsonrpc adapts transport-neutral OpenRPC discovery to the handler
 // signature used by github.com/faustbrian/go-jsonrpc without coupling the core
-// model, parser, or validator to that server implementation.
+// model, parser, or validator to that server implementation. RegisterDiscovery
+// reserves rpc.discover through an explicit registrar; DiscoveryHandler accepts
+// omitted params, [] or {}, rejecting null/nonempty values. Handler results own
+// RawMessage bytes. Concurrency/cancellation depend on the borrowed discoverer;
+// no transport, invocation workers or cgo are introduced here.
 package jsonrpc
 
 import (
@@ -32,6 +36,8 @@ type Handler func(context.Context, json.RawMessage) (any, error)
 // register rpc.discover. H permits adapters to retain their named handler
 // type without introducing a package dependency here.
 type SystemRegistrar[H ~func(context.Context, json.RawMessage) (any, error)] interface {
+	// RegisterSystem registers the reserved name/handler or returns refusal;
+	// implementations own registration concurrency and server lifecycle.
 	RegisterSystem(string, H) error
 }
 

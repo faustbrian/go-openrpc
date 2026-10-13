@@ -16,6 +16,8 @@ var (
 
 // Discoverer produces discovery snapshots.
 type Discoverer interface {
+	// Discover returns a snapshot under caller context; implementations own concurrency,
+	// cancellation and callback lifetime.
 	Discover(context.Context) (Snapshot, error)
 }
 
@@ -27,8 +29,13 @@ type CacheKeyFunc func(context.Context) (string, error)
 // CacheOptions configures explicit cache partitioning and bounds retained
 // snapshots.
 type CacheOptions struct {
-	Key           CacheKeyFunc
-	MaxKeyBytes   int
+	// Key derives every tenant/authorization dimension; invoked synchronously outside
+	// cache locks.
+	Key CacheKeyFunc
+	// MaxKeyBytes caps nonempty partition-key bytes.
+	MaxKeyBytes int
+	// MaxPartitions caps retained/loading partitions; there is no automatic eviction or
+	// expiry.
 	MaxPartitions int
 }
 
@@ -40,7 +47,11 @@ func DefaultCacheOptions(key CacheKeyFunc) CacheOptions {
 // Cache is an explicitly owned, concurrency-safe discovery cache.
 // NewPartitionedCache deduplicates concurrent misses within each partition;
 // the caller that starts a refresh owns its context, and canceling a waiter
-// does not cancel that shared refresh.
+// does not cancel that shared refresh. Snapshot entries do not expire; callers
+// must invalidate after changing authorization or underlying document state.
+// Key/discoverer callbacks run unlocked; their panics are not recovered. A
+// panicking refresh leaves existing waiters dependent on their own cancellation;
+// invalidation permits future refreshes but does not release those waiters.
 type Cache struct {
 	discoverer Discoverer
 	options    CacheOptions
@@ -131,6 +142,8 @@ func (cache *Cache) Discover(ctx context.Context) (Snapshot, error) {
 			}
 		}
 
+		// The leader owns done's closure after synchronous completion. Invalidation
+		// removes the entry identity so this old leader cannot republish stale data.
 		entry.loading = true
 		entry.done = make(chan struct{})
 		done := entry.done

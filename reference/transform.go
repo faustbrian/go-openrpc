@@ -27,11 +27,15 @@ var (
 // TransformError identifies the logical JSON Pointer where dereferencing
 // failed while retaining a stable error category through Unwrap.
 type TransformError struct {
+	// Pointer is the escaped logical failure path and may contain caller member names.
 	Pointer string
-	Err     error
+	// Err preserves the underlying category; manually supplied errors are printed by
+	// Error.
+	Err error
 }
 
-// Error implements error without including referenced values or URI text.
+// Error prints the logical Pointer and Err; a nonnil receiver is required.
+// Manually supplied paths/causes are not sanitized by this method.
 func (err *TransformError) Error() string {
 	return fmt.Sprintf("reference transform at %s: %v", err.Pointer, err.Err)
 }
@@ -42,15 +46,23 @@ func (err *TransformError) Unwrap() error { return err.Err }
 // TransformPolicy bounds structural reference transformations independently
 // from fetching and URI resolution limits.
 type TransformPolicy struct {
-	MaxDepth        int
-	MaxReferences   int
-	MaxOutputBytes  int
+	// MaxDepth caps structural expansion depth, with the root at depth zero.
+	MaxDepth int
+	// MaxReferences caps selected structural reference expansions.
+	MaxReferences int
+	// MaxOutputBytes caps serialized output after expansion, not peak intermediate
+	// allocations.
+	MaxOutputBytes int
+	// MaxOutputTokens caps the final JSON validation token count.
 	MaxOutputTokens int
 }
 
 // Selector decides whether the $ref object at a logical JSON path is a
-// transformable reference. The supplied path is owned by the caller.
+// transformable reference. Each supplied path is a fresh owned snapshot that
+// the selector may retain; calls are synchronous and panics propagate.
 type Selector interface {
+	// Dereference selects a reference synchronously using an owned path snapshot;
+	// callbacks must remain bounded and own concurrency.
 	Dereference(path []string) bool
 }
 

@@ -7,6 +7,8 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/jsonvalue"
 )
 
+// FuzzParseStrictJSON admits 4 KiB/depth 32/512-token inputs and checks exact-byte
+// marshal/reparse, not numeric narrowing.
 func FuzzParseStrictJSON(f *testing.F) {
 	for _, seed := range [][]byte{
 		[]byte(`null`),

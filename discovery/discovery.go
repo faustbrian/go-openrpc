@@ -1,5 +1,10 @@
 // Package discovery provides transport-neutral OpenRPC service discovery.
 // It owns neither JSON-RPC request execution nor any network transport.
+// NewService combines an explicit provider/filter with semantic validation and
+// owned serialized snapshots. Concurrent safety/cancellation depend on providers
+// and filters. Cache adds explicit authorization partitioning, no background
+// refresh or expiry. SHA-256 revisions fingerprint bytes, not authorization.
+// No workers or cgo are introduced.
 package discovery
 
 import (
@@ -33,8 +38,11 @@ var (
 
 // Options bounds discovery validation and canonical output.
 type Options struct {
+	// MaxOutputBytes caps canonical bytes after serialization; it is not an allocation
+	// budget.
 	MaxOutputBytes int
-	Validation     validate.Options
+	// Validation selects semantic admission before serialization.
+	Validation validate.Options
 }
 
 // DefaultOptions returns finite discovery output and diagnostic bounds.
@@ -47,6 +55,8 @@ func DefaultOptions() Options {
 
 // Provider supplies a static or dynamically generated OpenRPC document.
 type Provider interface {
+	// Document returns an immutable document; implementations own timely cancellation and
+	// concurrent calls.
 	Document(context.Context) (openrpc.Document, error)
 }
 
@@ -74,6 +84,8 @@ func (provider staticProvider) Document(context.Context) (openrpc.Document, erro
 // Filter applies caller-owned authorization or deployment visibility policy.
 // Returning an empty method list is valid.
 type Filter interface {
+	// Filter returns the visible document synchronously; implementations own
+	// authorization, concurrency and cancellation.
 	Filter(context.Context, openrpc.Document) (openrpc.Document, error)
 }
 
@@ -86,7 +98,9 @@ func (function FilterFunc) Filter(ctx context.Context, document openrpc.Document
 }
 
 // Service coordinates provider, visibility, validation, and canonical output.
-// It retains no cache and starts no goroutines.
+// It retains no cache and starts no goroutines. Providers/filters are borrowed
+// for its lifetime and must support the application's concurrent call pattern;
+// their panics propagate and cancellation cannot force their return.
 type Service struct {
 	provider Provider
 	filter   Filter

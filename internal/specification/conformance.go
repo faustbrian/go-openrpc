@@ -1,3 +1,9 @@
+// Package specification audits pinned OpenRPC inputs and generates local
+// normative/object-field evidence matrices. These are maintenance artifacts,
+// not runtime validation or a conformance claim by themselves. See
+// specification/manifest.json and internal/specification/cmd/specmatrix.
+// VerifyPinnedInputs reads an explicit filesystem; GenerateMatrices and evidence
+// joins operate on caller inputs without network loading, workers or cgo.
 package specification
 
 // nonBehavioralRequirements records normative inventory rows whose condition

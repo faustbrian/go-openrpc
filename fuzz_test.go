@@ -9,6 +9,9 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/parse"
 )
 
+// FuzzAcceptedDocumentsRoundTripDeterministically admits preserving JSON under 1
+// MiB/depth 64/100000-token bounds, then checks source ownership and repeatable typed
+// serialization.
 func FuzzAcceptedDocumentsRoundTripDeterministically(f *testing.F) {
 	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`))
 	f.Add([]byte("{\n  \"openrpc\": \"1.4.9\", \"info\": {\"title\": \"Fuzz\", \"version\": \"1\"}, \"methods\": [], \"x-value\": 1\n}"))

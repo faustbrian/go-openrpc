@@ -17,6 +17,12 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/validate"
 )
 
+// Complete-document workloads exclude fixture loading/parsing and service setup
+// via ResetTimer. Compile includes compilation of a prebuilt 500-property schema;
+// reference/bundle calls use explicit memory resources, not network latency.
+// HostileBoundedParse measures depth refusal, not successful parsing throughput.
+// Compare only equivalent input, ownership and operation scope; no result is
+// asserted by these descriptions.
 func BenchmarkParseCompleteDocument(b *testing.B) {
 	input, _ := benchmarkDocument(b)
 	options := parse.DefaultOptions()

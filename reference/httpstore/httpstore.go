@@ -1,6 +1,11 @@
 // Package httpstore provides an optional, SSRF-resistant HTTP document store
 // for the reference resolver. Core reference parsing never imports or invokes
-// this package implicitly.
+// this package implicitly. New clones http.DefaultTransport, including proxy/
+// TLS policy; deployment must control ambient proxy configuration and transport
+// customization. Direct DNS candidates are checked and dialed by IP; a proxy
+// remains a separate trust/target-resolution boundary. Store.Load returns owned
+// bytes and closes each response, but has no public idle-connection close API.
+// Standard HTTP transport may create workers on use; no cgo is introduced here.
 package httpstore
 
 import (
@@ -15,25 +20,44 @@ import (
 )
 
 var (
-	ErrPolicy          = errors.New("reference httpstore: invalid policy")
-	ErrURIDenied       = errors.New("reference httpstore: URI denied")
-	ErrAddressDenied   = errors.New("reference httpstore: network address denied")
-	ErrRedirect        = errors.New("reference httpstore: redirect denied")
-	ErrRequest         = errors.New("reference httpstore: request failed")
-	ErrHTTPStatus      = errors.New("reference httpstore: unexpected HTTP status")
+	// ErrPolicy reports invalid time/byte/redirect policy, nil handle/context or
+	// nonpositive read bound.
+	ErrPolicy = errors.New("reference httpstore: invalid policy")
+	// ErrURIDenied reports an unauthorized scheme/host, user information or fragment.
+	ErrURIDenied = errors.New("reference httpstore: URI denied")
+	// ErrAddressDenied reports a refused DNS/IP target without exposing its address.
+	ErrAddressDenied = errors.New("reference httpstore: network address denied")
+	// ErrRedirect reports redirected-target refusal or too many redirects.
+	ErrRedirect = errors.New("reference httpstore: redirect denied")
+	// ErrRequest reports sanitized DNS, transport or body-read failure.
+	ErrRequest = errors.New("reference httpstore: request failed")
+	// ErrHTTPStatus reports any status other than 200.
+	ErrHTTPStatus = errors.New("reference httpstore: unexpected HTTP status")
+	// ErrContentEncoding reports content encoding other than absent/identity.
 	ErrContentEncoding = errors.New("reference httpstore: content encoding denied")
-	ErrResponseLimit   = errors.New("reference httpstore: response limit exceeded")
+	// ErrResponseLimit reports an advertised or read body beyond maxBytes.
+	ErrResponseLimit = errors.New("reference httpstore: response limit exceeded")
 )
 
 // Policy explicitly authorizes HTTP targets and bounds transport behavior.
 type Policy struct {
-	AllowedHosts           []string
-	AllowHTTP              bool
-	AllowPrivateAddresses  bool
-	MaxRedirects           int
-	Timeout                time.Duration
-	DialTimeout            time.Duration
-	ResponseHeaderTimeout  time.Duration
+	// AllowedHosts lists copied exact hostnames; matching lowercases and removes one
+	// trailing dot, without constraining ports.
+	AllowedHosts []string
+	// AllowHTTP permits plaintext HTTP in addition to HTTPS.
+	AllowHTTP bool
+	// AllowPrivateAddresses disables the built-in nonpublic-IP refusal; deployment owns
+	// the resulting trust boundary.
+	AllowPrivateAddresses bool
+	// MaxRedirects caps followed redirects; zero allows none.
+	MaxRedirects int
+	// Timeout bounds the complete HTTP exchange through the client.
+	Timeout time.Duration
+	// DialTimeout bounds each dial attempt, not all candidate addresses together.
+	DialTimeout time.Duration
+	// ResponseHeaderTimeout bounds waiting for response headers.
+	ResponseHeaderTimeout time.Duration
+	// MaxResponseHeaderBytes caps parsed response-header bytes through the transport.
 	MaxResponseHeaderBytes int64
 }
 
@@ -58,7 +82,9 @@ type Store struct {
 }
 
 // New constructs an isolated client with compression disabled, safe DNS/IP
-// dialing, and bounded redirects. It starts no goroutines.
+// dialing, and bounded redirects. It requires http.DefaultTransport to be a
+// nonnil *http.Transport; replacing it with another RoundTripper panics. Cloned
+// proxy/TLS settings are caller-controlled. Construction itself starts no workers.
 func New(policy Policy) (*Store, error) {
 	if policy.MaxRedirects < 0 || policy.Timeout <= 0 || policy.DialTimeout <= 0 ||
 		policy.ResponseHeaderTimeout <= 0 || policy.MaxResponseHeaderBytes <= 0 {
@@ -101,7 +127,11 @@ func New(policy Policy) (*Store, error) {
 	return store, nil
 }
 
-// Load fetches one identity-encoded JSON resource within maxBytes.
+// Load fetches one status-200 identity-encoded resource into owned bytes. It
+// does not parse JSON or assert Content-Type. Bounds must be positive and leave
+// room for the extra sentinel byte in int64; use finite practical read limits.
+// Responses are closed on every post-response path. Errors are sanitized; a
+// cancellation during body reading can be returned as ErrRequest.
 func (store *Store) Load(ctx context.Context, documentURI string, maxBytes int) ([]byte, error) {
 	if store == nil || store.client == nil || ctx == nil || maxBytes <= 0 {
 		return nil, ErrPolicy

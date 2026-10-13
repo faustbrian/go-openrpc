@@ -1,5 +1,10 @@
 // Package observe provides optional, payload-free operation hooks. It is a
 // leaf adapter: core OpenRPC packages neither import it nor install exporters.
+// Wrappers dispatch Observer synchronously after work; they contain observer
+// panics but cannot preempt blocking callbacks. Concurrent use requires a safe
+// observer. Event outcomes describe wrapper execution, not independent policy
+// validity. No workers or cgo are owned; supplied resolver/discovery providers
+// retain their own lifetime and I/O contracts.
 package observe
 
 import (
@@ -23,11 +28,17 @@ var ErrInvalidContext = errors.New("observe: invalid context")
 type Phase string
 
 const (
-	PhaseParse    Phase = "parse"
+	// PhaseParse labels parsing observations.
+	PhaseParse Phase = "parse"
+	// PhaseValidate labels semantic validation observations.
 	PhaseValidate Phase = "validate"
-	PhaseResolve  Phase = "resolve"
-	PhaseBundle   Phase = "bundle"
-	PhaseDiff     Phase = "diff"
+	// PhaseResolve labels reference resolution observations.
+	PhaseResolve Phase = "resolve"
+	// PhaseBundle labels resource bundling observations.
+	PhaseBundle Phase = "bundle"
+	// PhaseDiff labels compatibility comparison observations.
+	PhaseDiff Phase = "diff"
+	// PhaseDiscover labels discovery observations.
 	PhaseDiscover Phase = "discover"
 )
 
@@ -35,25 +46,38 @@ const (
 type Outcome string
 
 const (
-	OutcomeSuccess  Outcome = "success"
-	OutcomeInvalid  Outcome = "invalid"
-	OutcomeFailure  Outcome = "failure"
+	// OutcomeSuccess labels successful execution, not necessarily compatibility.
+	OutcomeSuccess Outcome = "success"
+	// OutcomeInvalid labels invalid parsing or semantic validation.
+	OutcomeInvalid Outcome = "invalid"
+	// OutcomeFailure labels an operation failure.
+	OutcomeFailure Outcome = "failure"
+	// OutcomeCanceled labels observed context cancellation/deadline.
 	OutcomeCanceled Outcome = "canceled"
 )
 
 // Event contains only bounded metadata. It deliberately excludes payloads,
 // schemas, method names, references, resource URIs, and error strings.
 type Event struct {
-	Phase           Phase
-	Outcome         Outcome
+	// Phase identifies the observed wrapper operation.
+	Phase Phase
+	// Outcome records the wrapper result category, not independent semantic validity.
+	Outcome Outcome
+	// DiagnosticCount counts returned findings, not omitted diagnostics.
 	DiagnosticCount int
-	ReferenceCount  int
-	Duration        time.Duration
+	// ReferenceCount counts supplied references or loaded bundle resources, depending on
+	// phase.
+	ReferenceCount int
+	// Duration measures elapsed wrapper work before observer dispatch.
+	Duration time.Duration
 }
 
 // Observer receives completed operation metadata. Implementations must return
-// promptly; panics are contained and never change operation results.
+// promptly; wrapper dispatch contains panics without changing operation results.
+// Calling ObserverFunc.Observe directly does not provide that containment.
 type Observer interface {
+	// Observe receives metadata synchronously; wrappers contain panics but cannot preempt
+	// a blocked observer.
 	Observe(context.Context, Event)
 }
 
@@ -65,7 +89,8 @@ func (function ObserverFunc) Observe(ctx context.Context, event Event) {
 	function(ctx, event)
 }
 
-// Parse performs bounded parsing and reports one payload-free event.
+// Parse performs bounded parsing and reports one payload-free event. Context
+// is checked before Decode, not during its synchronous parsing work.
 func Parse(ctx context.Context, input []byte, options parse.Options, observer Observer) (parse.Result, error) {
 	started := time.Now()
 	if ctx == nil {

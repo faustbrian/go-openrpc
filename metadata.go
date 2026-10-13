@@ -12,10 +12,12 @@ var ErrMissingRequiredField = errors.New("openrpc: missing required field")
 // MissingRequiredFieldError identifies one absent required field without
 // including document values.
 type MissingRequiredFieldError struct {
+	// Field names the missing standard member, not its value.
 	Field string
 }
 
-// Error implements error.
+// Error prints Field and requires a nonnil receiver. Manually supplied field
+// names are not sanitized; constructor-generated names are standard members.
 func (err *MissingRequiredFieldError) Error() string {
 	return fmt.Sprintf("openrpc: missing required field %q", err.Field)
 }
@@ -62,10 +64,17 @@ func (fields objectFields) UnknownFields() Fields {
 
 // ContactInput supplies optional Contact Object fields.
 type ContactInput struct {
-	Name          *string
-	Email         *string
-	URL           *string
-	Extensions    Fields
+	// Name is copied when nonnil; nil means absent.
+	Name *string
+	// Email is copied when nonnil; nil means absent.
+	Email *string
+	// URL is copied when nonnil; nil means absent.
+	URL *string
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -98,9 +107,15 @@ func (contact Contact) URL() (string, bool) { return contact.url.get() }
 
 // LicenseInput supplies optional License Object fields.
 type LicenseInput struct {
-	Name          *string
-	URL           *string
-	Extensions    Fields
+	// Name is copied when nonnil; nil means absent.
+	Name *string
+	// URL is copied when nonnil; nil means absent.
+	URL *string
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -128,14 +143,24 @@ func (license License) URL() (string, bool) { return license.url.get() }
 
 // InfoInput supplies Info Object fields. Title and Version must be non-empty.
 type InfoInput struct {
-	Title          string
-	Version        string
-	Description    *string
+	// Title must be a nonempty application title.
+	Title string
+	// Version is the nonempty application API version, not the OpenRPC feature line.
+	Version string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// TermsOfService is copied when nonnil; nil means absent.
 	TermsOfService *string
-	Contact        *Contact
-	License        *License
-	Extensions     Fields
-	UnknownFields  Fields
+	// Contact is copied when nonnil; nil means absent.
+	Contact *Contact
+	// License is copied when nonnil; nil means absent.
+	License *License
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
+	UnknownFields Fields
 }
 
 // Info is an immutable OpenRPC Info Object.
@@ -197,9 +222,15 @@ func (info Info) License() (License, bool) { return info.license, info.hasLicens
 
 // ExternalDocumentationInput supplies External Documentation Object fields.
 type ExternalDocumentationInput struct {
-	URL           string
-	Description   *string
-	Extensions    Fields
+	// URL must be nonempty; format/template semantics are validated separately.
+	URL string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -233,10 +264,16 @@ func (documentation ExternalDocumentation) Description() (string, bool) {
 // ServerVariableInput supplies Server Variable Object fields. Default uses a
 // pointer because the required value may legally be an empty string.
 type ServerVariableInput struct {
-	Default       *string
-	Description   *string
-	Enum          []string
-	HasEnum       bool
+	// Default is required and copied; a nonnil empty string is a present default.
+	Default *string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Enum is copied; nil is absent unless HasEnum records explicit presence.
+	Enum []string
+	// HasEnum records explicit presence even when Enum is empty or nil.
+	HasEnum bool
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 
@@ -281,13 +318,24 @@ func (variable ServerVariable) UnknownFields() Fields { return variable.unknown 
 
 // ServerInput supplies Server Object fields.
 type ServerInput struct {
-	URL           string
-	Name          *string
-	Description   *string
-	Summary       *string
-	Variables     map[string]ServerVariable
-	HasVariables  bool
-	Extensions    Fields
+	// URL must be nonempty; format/template semantics are validated separately.
+	URL string
+	// Name is copied when nonnil; nil means absent.
+	Name *string
+	// Description is copied when nonnil; nil means absent.
+	Description *string
+	// Summary is copied when nonnil; nil means absent.
+	Summary *string
+	// Variables is copied; nil means absent and an allocated empty map is explicitly
+	// present.
+	Variables map[string]ServerVariable
+	// HasVariables records explicit presence even when Variables is empty or nil.
+	HasVariables bool
+	// Extensions supplies immutable x- fields; serialization rejects collisions with
+	// standard fields.
+	Extensions Fields
+	// UnknownFields supplies immutable preserved fields; serialization rejects name
+	// collisions.
 	UnknownFields Fields
 }
 

@@ -52,7 +52,10 @@ func (report MetaSchemaReport) Valid() bool {
 }
 
 // MetaSchema validates raw JSON against the pinned OpenRPC 1.4.1 meta-schema.
-// Compilation installs no external loader and performs no implicit I/O.
+// Compilation installs no external loader and performs no implicit I/O. First
+// use compiles once synchronously; context does not interrupt that compilation.
+// This operation does not apply the separate typed semantic rules. The shared
+// validator serializes instance evaluation and respects its own finite limits.
 func MetaSchema(ctx context.Context, document jsonvalue.Value, maxIssues int) MetaSchemaReport {
 	if ctx == nil || maxIssues <= 0 {
 		return MetaSchemaReport{err: ErrMetaSchemaPolicy}
@@ -115,8 +118,9 @@ func draft7CompatibleMetaSchema(input []byte) ([]byte, error) {
 	return encoded, nil
 }
 
-// OpenRPC permits relative server URLs and server-variable templates. The
-// pinned schema's generic URI format rejects both, contradicting the normative
+// OPENRPC-DEC-001 / pinned OpenRPC 1.4.1 Server Object permits relative URLs
+// and server-variable templates. The pinned schema's generic URI format rejects
+// both, contradicting the normative
 // Server Object description, so structural validation leaves this field to
 // the package's dedicated server-expression validation.
 func alignServerURLWithNormativeSemantics(document any) {

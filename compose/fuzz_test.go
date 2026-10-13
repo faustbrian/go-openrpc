@@ -11,6 +11,9 @@ import (
 	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
 )
 
+// FuzzCompositionIsDeterministicAndPanicFree admits 1 MiB/depth 64/100000-token
+// documents/patches and compares repeated operation errors/bytes; it is not an
+// independent composition oracle.
 func FuzzCompositionIsDeterministicAndPanicFree(f *testing.F) {
 	f.Add(
 		[]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[],"components":{"schemas":{"Old":true}}}`),

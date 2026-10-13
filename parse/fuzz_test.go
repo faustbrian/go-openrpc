@@ -11,6 +11,9 @@ import (
 	"github.com/faustbrian/go-openrpc/v2/validate"
 )
 
+// FuzzDecodeOpenRPCDocument admits 16 KiB/depth 48/2048-token documents and checks
+// reparse plus deterministic semantic diagnostics; MetaSchema.Err alone is not a Valid
+// assertion.
 func FuzzDecodeOpenRPCDocument(f *testing.F) {
 	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`))
 	f.Add([]byte(`{"openrpc":"1.4.1","openrpc":"1.4.1"}`))

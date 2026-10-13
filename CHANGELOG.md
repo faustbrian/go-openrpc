@@ -5,6 +5,12 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Documentation
+
+- Clarify model presence/ownership, parser versus validation admission,
+  serialization and diagnostic limits, resolver/provider cancellation,
+  discovery cache lifetime and inherited HTTP transport boundaries.
+
 ## 2.0.1 - 2026-10-05
 
 ### Fixed

@@ -10,6 +10,9 @@ import (
 	openrpcparse "github.com/faustbrian/go-openrpc/v2/parse"
 )
 
+// FuzzSemanticDiffIsDeterministic admits two bounded 1 MiB/depth 64/100000-token
+// documents and compares complete returned changes/truncation, not a compatibility
+// oracle.
 func FuzzSemanticDiffIsDeterministic(f *testing.F) {
 	document := []byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`)
 	f.Add(document, document)
