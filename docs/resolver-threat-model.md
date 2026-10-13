@@ -1,5 +1,7 @@
 # Resolver threat model
 
+[Documentation index](README.md)
+
 The core parser, validator, reference parser, and pointer evaluator perform no
 filesystem or network access. External resolution exists only behind a
 caller-supplied `reference.Store`, `AllowExternal`, and exact scheme and host
@@ -31,3 +33,5 @@ complete proxy target-resolution policy. Each response is closed, but the store
 exposes no public idle-connection close operation; standard transport workers
 and idle connections retain their configured lifecycle. Loaded status-200 bytes
 are not JSON until the resolver separately parses them.
+
+Continue with [Security model](security.md).

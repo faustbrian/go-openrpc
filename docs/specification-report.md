@@ -1,5 +1,7 @@
 # Specification and interoperability report
 
+[Documentation index](README.md)
+
 The [specification decision register](specification-decisions.md) records the
 explicit interpretation whenever normative prose, the meta-schema, examples,
 or adjacent standards do not determine one observable behavior on their own.

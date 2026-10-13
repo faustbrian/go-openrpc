@@ -1,5 +1,7 @@
 # Go safety and concurrency
 
+[Documentation index](README.md)
+
 Parsed and constructed values own their input bytes, slices, maps, and fields.
 Public collection and byte getters return copies. Concurrent read-only use is
 therefore supported after construction.
@@ -29,3 +31,5 @@ the HTTP reference store enforce goroutine cleanup during their ordinary tests,
 including cancellation cases; there is no separate root `make leak` target.
 Ownership claims also require mutation tests that modify caller inputs and
 returned snapshots, not only race-detector silence.
+
+Continue with [API guide](api.md).

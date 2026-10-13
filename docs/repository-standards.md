@@ -1,5 +1,7 @@
 # Repository standards
 
+[Documentation index](README.md)
+
 - The verification producer is Go 1.27.2 in `.go-version` and the root catalog;
   the public module minimum remains Go 1.27.0 in `go.mod`.
 - Dependencies and tools use reviewed versions; workflow actions use immutable
@@ -20,3 +22,5 @@
 Repository settings should enable vulnerability alerts, dependency review,
 secret scanning, signed releases, protected branches, required reviews, and
 the blocking workflow jobs documented here.
+
+Continue with [API guide](api.md).

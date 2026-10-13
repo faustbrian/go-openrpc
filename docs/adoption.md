@@ -1,5 +1,7 @@
 # Adoption guide
 
+[Documentation index](README.md)
+
 ## V2 migration
 
 Version v2.0.0 is published at `github.com/faustbrian/go-openrpc/v2`.
@@ -65,3 +67,5 @@ and review `Conditional` changes rather than silently accepting them.
 Create specification extensions with `NewExtensions`; exact names must start
 with lowercase `x-`. Preserve unknown standard fields only during an explicit
 forward-compatibility workflow and do not reinterpret them as known fields.
+
+Continue with [API guide](api.md).

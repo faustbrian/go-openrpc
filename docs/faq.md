@@ -1,5 +1,7 @@
 # FAQ
 
+[Documentation index](README.md)
+
 ## Does parsing fetch references?
 
 No. Core parsing and validation perform no network or filesystem access.
@@ -28,3 +30,5 @@ pinned, implemented, and tested.
 The normative Server Object text permits both. The pinned schema's conflicting
 absolute-URI format assertion is narrowly removed during meta-schema compile;
 semantic expression checks remain active.
+
+Continue with [API guide](api.md).

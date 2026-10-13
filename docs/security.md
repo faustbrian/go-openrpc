@@ -1,5 +1,7 @@
 # Security model
 
+[Documentation index](README.md)
+
 Model revision: 2. Applies to the v2.0.0 source contract, published on
 2026-10-03; it does not change the behavior of published v1.
 
@@ -109,3 +111,5 @@ network fetches, global mutable registries, or telemetry exporters.
 Do not open a public issue for a suspected vulnerability. Send a private report
 to the repository owner with the affected version, a minimal reproducer, impact,
 and any proposed mitigation. Avoid including credentials or production data.
+
+Continue with [API guide](api.md).

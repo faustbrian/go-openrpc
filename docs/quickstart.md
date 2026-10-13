@@ -1,5 +1,7 @@
 # Five-minute quickstarts
 
+[Documentation index](README.md)
+
 ## Design-first
 
 Construct required values explicitly and use the immutable builder:
@@ -72,3 +74,5 @@ err := registerDiscovery(registry, service)
 The adapter registers `rpc.discover` through the sibling registry's trusted
 system-method contract without making the core OpenRPC packages depend on the
 JSON-RPC server package.
+
+Continue with [API guide](api.md).

@@ -1,5 +1,7 @@
 # Documentation
 
+[Package README](../README.md)
+
 `openrpc` models, validates, resolves, composes, and serves OpenRPC documents.
 Start with the quickstart, then use the section matching your task.
 
@@ -38,3 +40,12 @@ Start with the quickstart, then use the section matching your task.
 - [Releasing](releasing.md)
 - [Contributing](../CONTRIBUTING.md)
 - [Release history](../CHANGELOG.md)
+
+## Ecosystem navigation
+
+See the [versioned Golib ecosystem index](https://github.com/faustbrian/go-library-tools/blob/v1.8.4/docs/ecosystem/README.md) for package
+selection, explicit ownership, and compatibility guidance.
+
+## Additional guides and reference
+
+- [FAQ](faq.md)

@@ -1,5 +1,7 @@
 # Performance
 
+[Documentation index](README.md)
+
 Run allocation benchmarks with:
 
 ```sh
@@ -32,3 +34,5 @@ Do not optimize by dropping duplicate-key detection, exact numeric lexemes,
 ownership copies, diagnostics bounds, reference authorization, cancellation,
 or schema semantics. Record baseline hardware, Go version, command, and
 allocations when proposing a performance budget.
+
+Continue with [API guide](api.md).

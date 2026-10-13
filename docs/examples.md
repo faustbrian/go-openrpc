@@ -1,5 +1,7 @@
 # Examples and fixtures
 
+[Documentation index](README.md)
+
 The maintained 1.4.1 complete fixture is
 [`parse/testdata/complete-openrpc.json`](../parse/testdata/complete-openrpc.json).
 It passes strict parsing, the aligned pinned meta-schema, semantic validation,
@@ -14,3 +16,5 @@ any fixture.
 Package-level `Example` functions should be added only when they compile under
 `go test` and demonstrate a public adoption path without ignored errors in
 production-style flow.
+
+Continue with [API guide](api.md).

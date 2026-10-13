@@ -1,5 +1,7 @@
 # OpenRPC specification decisions
 
+[Documentation index](README.md)
+
 This register records observable choices where OpenRPC 1.3.x or 1.4.x, its
 Draft 7 meta-schema, official examples, JSON-RPC 2.0, or an adjacent standard
 permits or appears to permit more than one implementation. Authoritative

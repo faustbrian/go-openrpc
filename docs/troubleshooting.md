@@ -1,5 +1,7 @@
 # Troubleshooting
 
+[Documentation index](README.md)
+
 ## `openrpc: unsupported specification version`
 
 Use a canonical `1.3.x` or `1.4.x` version. Prerelease, build metadata, earlier,
@@ -33,3 +35,5 @@ tests; do not exclude ordinary production files.
 Use `jsonrpc.RegisterDiscovery` with `jsonrpc.Registry.RegisterSystem`.
 Ordinary `Registry.Register` intentionally continues to reject every `rpc.*`
 method so application code cannot impersonate protocol extensions.
+
+Continue with [API guide](api.md).

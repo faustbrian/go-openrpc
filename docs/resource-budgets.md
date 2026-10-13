@@ -1,5 +1,7 @@
 # Resource budgets
 
+[Documentation index](README.md)
+
 All defaults are finite. Positive byte/count/work limits are required unless
 a surface documents a meaningful zero, such as refusing all HTTP redirects.
 Callers should lower limits when their deployment contract is smaller.
@@ -36,3 +38,5 @@ Output bounds on discovery, transforms, overlays, renames and diff reporting
 are not peak-allocation limits: serialization/temporary collections precede the
 final output check. Constructors and compilation without contexts cannot be
 forcibly canceled by supplying a context to a later operation.
+
+Continue with [API guide](api.md).

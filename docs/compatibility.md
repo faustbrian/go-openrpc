@@ -1,5 +1,7 @@
 # Compatibility policy
 
+[Documentation index](README.md)
+
 Observable interpretations and defensive policies are normative package
 contracts recorded in the [specification decision register](specification-decisions.md).
 

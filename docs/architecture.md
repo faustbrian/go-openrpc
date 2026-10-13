@@ -1,5 +1,7 @@
 # Architecture
 
+[Documentation index](README.md)
+
 The root package owns immutable OpenRPC values and deterministic serialization.
 It depends only on package-owned arbitrary JSON and JSON Schema value types.
 
@@ -22,3 +24,5 @@ code generator is required to construct a compliant design-first document.
 Concurrent operations use immutable values or explicitly owned synchronized
 objects. Discovery cache invalidation, resolver per-call caches, and registries
 have visible lifetimes; the module starts no hidden goroutines.
+
+Continue with [API guide](api.md).

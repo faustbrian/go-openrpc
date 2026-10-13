@@ -1,5 +1,7 @@
 # API guide
 
+[Documentation index](README.md)
+
 The Go package documentation is authoritative for signatures. This guide maps
 responsibility and failure boundaries.
 
@@ -66,3 +68,5 @@ Constructor success is not complete semantic or meta-schema validation.
 Generic diagnostic messages omit values, but logical pointers may contain
 caller-controlled member/method names. Public error structs also print a
 manually supplied underlying error; logging policy remains caller-owned.
+
+Continue with [Adoption guide](adoption.md).

@@ -1,5 +1,7 @@
 # Cookbook
 
+[Documentation index](README.md)
+
 ## Every OpenRPC object
 
 [`complete-openrpc.json`](../parse/testdata/complete-openrpc.json) contains every
@@ -37,3 +39,5 @@ non-scalar interpolation, output size, and node limits are explicit errors.
 Use `diff.CompareResolved` for documents whose source references differ but
 whose target semantics may be equal. Preserve report pointers in review output;
 do not reduce conditional findings to compatible automatically.
+
+Continue with [API guide](api.md).

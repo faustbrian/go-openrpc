@@ -1,5 +1,7 @@
 # Migration and compatibility
 
+[Documentation index](README.md)
+
 ## From raw maps or generated structs
 
 Parse existing JSON in preserving mode, inspect unknown fields, then move to
@@ -25,3 +27,5 @@ Incompatible Go API changes require a new major release, must preserve document
 semantics, and must be recorded in `CHANGELOG.md`. Release checks
 must compare exported APIs and document migrations before an incompatible major
 release.
+
+Continue with [API guide](api.md).

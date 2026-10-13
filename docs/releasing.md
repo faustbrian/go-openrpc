@@ -1,5 +1,7 @@
 # Releasing
 
+[Documentation index](README.md)
+
 1. Confirm the worktree is clean on `main` and the release commit is reviewed.
 2. Run `make check-full` with the declared Go 1.27.2 producer; the public
    module minimum remains Go 1.27.0. Ordinary and scheduled shared CI use the
@@ -19,3 +21,5 @@
 Do not release while coverage, mutation, conformance, vulnerability, docs, API,
 or integration gates are waived. A failed optional NilAway advisory must remain
 visible even when it is not blocking.
+
+Continue with [API guide](api.md).

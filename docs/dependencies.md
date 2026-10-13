@@ -1,5 +1,7 @@
 # Dependencies
 
+[Documentation index](README.md)
+
 The runtime dependency surface is deliberately small:
 
 - `regexp2` supplies bounded ECMAScript-compatible Draft 7 regular expressions.
@@ -16,3 +18,5 @@ schema behavior.
 Pinned OpenRPC inputs are not Go dependencies. Their repository commits,
 normalized hashes, and license copies are in `specification/manifest.json` and
 verified offline by tests.
+
+Continue with [API guide](api.md).
