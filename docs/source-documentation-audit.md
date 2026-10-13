@@ -269,3 +269,12 @@ frozen public API baseline is regenerated. Two finite offline observations
 confirm that opaque object order changes canonical bytes and that 0/-0 integer
 spellings are admitted and remain distinct. No external HTTP server or broad
 runtime/assurance campaign was used.
+
+## Objective Enforcement
+
+The checksum-pinned public Tools v2.4.0 verifier now supplies
+`make source-docs-check` as a prerequisite of the existing local and CI Make
+routes. Ordinary shared CI selects strict source-documentation checking and
+requires its result. Native prerequisites, operation budgets, security and
+release controls are retained. Hosted exact-head evidence is recorded by the
+coordination ledger; configuration alone does not establish green delivery.
