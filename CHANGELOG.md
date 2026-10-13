@@ -5,6 +5,18 @@ Changelog principles, and releases use semantic versioning.
 
 ## Unreleased
 
+### Fixed
+
+- Sort opaque nested object keys in canonical serialization and discovery
+  fingerprints without changing raw value/source APIs, array order or exact
+  number lexemes. Persisted hashes and ETags may change after upgrading.
+- Detect equivalent 0/-0 custom error codes inline and through references
+  without narrowing or rewriting public arbitrary-precision integer lexemes.
+- Reject null in typed string/boolean fields and string-array members while
+  retaining allowed JSON payload nulls and optional absence/empty/false values.
+- Release cache-owned discovery flights and partition capacity when a trusted
+  leader panics, preserving panic propagation and newer invalidated replacements.
+
 ### Documentation
 
 - Clarify model presence/ownership, parser versus validation admission,

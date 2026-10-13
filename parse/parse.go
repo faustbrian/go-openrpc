@@ -41,7 +41,8 @@ var (
 	ErrLinkLimit = errors.New("openrpc parse: link limit exceeded")
 	// ErrExampleLimit reports too many examples in one array.
 	ErrExampleLimit = errors.New("openrpc parse: example limit exceeded")
-	// ErrInvalidObject reports a field with the wrong structural JSON kind.
+	// ErrInvalidObject reports a field with the wrong structural JSON kind,
+	// including null where a typed scalar or string-array member is required.
 	ErrInvalidObject = errors.New("openrpc parse: invalid object structure")
 	// ErrInvalidOptions reports non-positive parser-specific limits.
 	ErrInvalidOptions = errors.New("openrpc parse: invalid options")
@@ -1265,7 +1266,7 @@ func requiredString(object map[string]json.RawMessage, name string, pointer stri
 		return "", err
 	}
 	var value string
-	if err := json.Unmarshal(raw, &value); err != nil {
+	if err := decodeNonNullScalar(raw, &value); err != nil {
 		return "", at(pointer, ErrInvalidObject)
 	}
 	return value, nil
@@ -1277,7 +1278,7 @@ func optionalStringField(object map[string]json.RawMessage, name string, pointer
 		return nil, nil
 	}
 	var value string
-	if err := json.Unmarshal(raw, &value); err != nil {
+	if err := decodeNonNullScalar(raw, &value); err != nil {
 		return nil, at(pointer, ErrInvalidObject)
 	}
 	return &value, nil
@@ -1289,10 +1290,23 @@ func optionalBoolField(object map[string]json.RawMessage, name string, pointer s
 		return nil, nil
 	}
 	var value bool
-	if err := json.Unmarshal(raw, &value); err != nil {
+	if err := decodeNonNullScalar(raw, &value); err != nil {
 		return nil, at(pointer, ErrInvalidObject)
 	}
 	return &value, nil
+}
+
+// decodeNonNullScalar enforces typed string/boolean admission before Go's JSON
+// decoder can silently coerce null into a zero value. Payload JSON uses its own
+// exact-value boundary and may still contain null.
+func decodeNonNullScalar(raw json.RawMessage, target any) error {
+	if bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		return ErrInvalidObject
+	}
+	if err := json.Unmarshal(raw, target); err != nil {
+		return ErrInvalidObject
+	}
+	return nil
 }
 
 func optionalJSONValue(object map[string]json.RawMessage, name string, options Options, pointer string) (*jsonvalue.Value, error) {
@@ -1327,14 +1341,20 @@ func optionalStringArray(object map[string]json.RawMessage, name string, pointer
 	if !exists {
 		return nil, false, nil
 	}
-	var values []string
+	var values []json.RawMessage
 	if err := json.Unmarshal(raw, &values); err != nil {
 		return nil, false, at(pointer, ErrInvalidObject)
 	}
 	if values == nil {
 		return nil, false, at(pointer, ErrInvalidObject)
 	}
-	return values, true, nil
+	decoded := make([]string, len(values))
+	for index, value := range values {
+		if err := decodeNonNullScalar(value, &decoded[index]); err != nil {
+			return nil, false, at(pointer, ErrInvalidObject)
+		}
+	}
+	return decoded, true, nil
 }
 
 func requiredArray(object map[string]json.RawMessage, name string, pointer string) ([]json.RawMessage, error) {

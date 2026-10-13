@@ -17,8 +17,9 @@ var (
 // MarshalCanonical serializes the modeled Document deterministically into
 // owned bytes. Modeled object keys are sorted, whitespace is compacted and
 // optional presence is retained without materializing defaults. Opaque schemas
-// and arbitrary JSON retain member order and number lexemes; this is not RFC
-// 8785 or normalization of every semantically equivalent JSON value. It checks
+// and arbitrary JSON also have sorted object keys; arrays and number lexemes
+// retain their order/spelling. Raw value and preserving-source APIs are unchanged.
+// This is not RFC 8785 or numeric normalization. It checks
 // field collisions/unions, not complete semantic validity, and has no context
 // or output-size argument. Bound source construction before serialization.
 func MarshalCanonical(document Document) ([]byte, error) {
@@ -32,10 +33,23 @@ func MarshalCanonical(document Document) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Raw JSON marshalers deliberately preserve lexical object order. Decode
+	// only this serialization tree with UseNumber so the final encoder sorts
+	// every object without rounding or rewriting any JSON number lexeme.
+	encoded, err := json.Marshal(object)
+	if err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(bytes.NewReader(encoded))
+	decoder.UseNumber()
+	var canonical any
+	if err := decoder.Decode(&canonical); err != nil {
+		return nil, err
+	}
 	var output bytes.Buffer
 	encoder := json.NewEncoder(&output)
 	encoder.SetEscapeHTML(false)
-	if err := encoder.Encode(object); err != nil {
+	if err := encoder.Encode(canonical); err != nil {
 		return nil, err
 	}
 	return bytes.TrimSuffix(output.Bytes(), []byte{'\n'}), nil

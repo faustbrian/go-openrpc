@@ -52,6 +52,8 @@ starting validation work.
 authorization partitioning, while `MaxKeyBytes` and `MaxPartitions` bound
 retained keys and snapshots. Empty, oversized, or failed keys and exhausted
 capacity fail closed. A provider failure releases the empty partition entry.
+Trusted callback panics propagate, but refresh unwinding releases cache-owned
+partition capacity and wakes followers without discarding a newer replacement.
 
 `reference.NewFSStore` requires `ContextReadFS`. The supplied read receives the
 caller context and remaining byte allowance; the store rechecks both before
@@ -59,11 +61,16 @@ returning data to the resolver.
 
 ## Serialization and diagnostic boundaries
 
-`MarshalCanonical` sorts modeled object keys and compacts whitespace, but opaque
-schemas and arbitrary JSON retain member order and number lexemes. It is not
-RFC 8785 or recursive normalization of all equivalent JSON. It has no output
+`MarshalCanonical` sorts all object keys, including opaque schemas and arbitrary
+JSON, and compacts whitespace. Arrays retain order and numbers retain exact
+lexemes; raw JSON/schema getters and preserving-source APIs remain unchanged.
+It is not RFC 8785 or numeric normalization. It has no output
 size or context argument; discovery checks output size after serialization.
 Constructor success is not complete semantic or meta-schema validation.
+Typed parsing rejects null for string/boolean fields and string-array members,
+while permitted example values and error data retain explicit null. Optional
+absence, empty strings and false remain distinct. Error-code uniqueness compares
+exact integer values (including the 0/-0 alias) without changing wire lexemes.
 
 Generic diagnostic messages omit values, but logical pointers may contain
 caller-controlled member/method names. Public error structs also print a

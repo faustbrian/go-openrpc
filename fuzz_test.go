@@ -13,6 +13,7 @@ import (
 // MiB/depth 64/100000-token bounds, then checks source ownership and repeatable typed
 // serialization.
 func FuzzAcceptedDocumentsRoundTripDeterministically(f *testing.F) {
+	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[],"x-object":{"z":-0,"a":[3,1,{"b":9007199254740993,"a":1e+20}]}}`))
 	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`))
 	f.Add([]byte("{\n  \"openrpc\": \"1.4.9\", \"info\": {\"title\": \"Fuzz\", \"version\": \"1\"}, \"methods\": [], \"x-value\": 1\n}"))
 	f.Fuzz(func(t *testing.T, input []byte) {

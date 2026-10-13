@@ -15,6 +15,7 @@ import (
 // reparse plus deterministic semantic diagnostics; MetaSchema.Err alone is not a Valid
 // assertion.
 func FuzzDecodeOpenRPCDocument(f *testing.F) {
+	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1","description":null},"methods":[{"name":"m","params":[],"deprecated":null}]}`))
 	f.Add([]byte(`{"openrpc":"1.4.1","info":{"title":"Fuzz","version":"1"},"methods":[]}`))
 	f.Add([]byte(`{"openrpc":"1.4.1","openrpc":"1.4.1"}`))
 	f.Add([]byte(`{"openrpc":"1.4.1","info":null,"methods":[]}`))

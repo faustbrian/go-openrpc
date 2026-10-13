@@ -2,6 +2,14 @@
 
 [Documentation index](README.md)
 
+Canonical output now sorts nested opaque object keys, so persisted hashes and
+discovery ETags can change after upgrading. Preserve raw source when lexical
+order matters; canonical numbers and arrays retain their spelling/order.
+Typed parsing refuses scalar nulls rather than silently coercing them to empty
+strings or false; allowed JSON payload nulls remain valid. Duplicate error codes
+0 and -0 are rejected by semantic validation. Trusted discovery callback panics
+still propagate, with cache-owned flights and capacity released during unwind.
+
 ## V2 migration
 
 Version v2.0.0 is published at `github.com/faustbrian/go-openrpc/v2`.

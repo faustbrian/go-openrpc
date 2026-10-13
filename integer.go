@@ -17,8 +17,8 @@ type Integer struct {
 
 // ParseInteger validates a canonical JSON integer without narrowing it to a Go
 // machine integer. The original lexeme is retained, including -0; no magnitude
-// bound or numeric normalization is applied. Equality/duplicate checks using
-// String compare spelling, not normalized mathematical integers.
+// bound or numeric normalization is applied. String compares spelling; semantic
+// error-code validation separately treats 0 and -0 as the same integer value.
 func ParseInteger(value string) (Integer, error) {
 	if !integerPattern.MatchString(value) {
 		return Integer{}, ErrInvalidInteger

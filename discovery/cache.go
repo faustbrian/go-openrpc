@@ -49,9 +49,9 @@ func DefaultCacheOptions(key CacheKeyFunc) CacheOptions {
 // the caller that starts a refresh owns its context, and canceling a waiter
 // does not cancel that shared refresh. Snapshot entries do not expire; callers
 // must invalidate after changing authorization or underlying document state.
-// Key/discoverer callbacks run unlocked; their panics are not recovered. A
-// panicking refresh leaves existing waiters dependent on their own cancellation;
-// invalidation permits future refreshes but does not release those waiters.
+// Key/discoverer callbacks run unlocked; their panics propagate unchanged.
+// A panicking refresh releases its owned flight and partition before unwinding;
+// waiters can retry while their own cancellation remains independent.
 type Cache struct {
 	discoverer Discoverer
 	options    CacheOptions
@@ -149,19 +149,24 @@ func (cache *Cache) Discover(ctx context.Context) (Snapshot, error) {
 		done := entry.done
 		cache.mu.Unlock()
 
-		snapshot, err := cache.discoverer.Discover(ctx)
-		cache.mu.Lock()
-		if cache.entries[key] == entry {
-			if err == nil {
-				entry.snapshot = snapshot
-				entry.valid = true
-			} else {
-				delete(cache.entries, key)
+		var snapshot Snapshot
+		completed := false
+		defer func() {
+			cache.mu.Lock()
+			defer cache.mu.Unlock()
+			if cache.entries[key] == entry {
+				if completed && err == nil {
+					entry.snapshot = snapshot
+					entry.valid = true
+				} else {
+					delete(cache.entries, key)
+				}
 			}
-		}
-		entry.loading = false
-		close(done)
-		cache.mu.Unlock()
+			entry.loading = false
+			close(done)
+		}()
+		snapshot, err = cache.discoverer.Discover(ctx)
+		completed = true
 		return snapshot, err
 	}
 }

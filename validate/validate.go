@@ -471,6 +471,11 @@ func (validator *validator) validateErrors(methodIndex int, method openrpc.Metho
 				pointer("methods", methodIndex, "errors", index, "message"), object,
 			)
 			code := object.Code().String()
+			// The accepted integer grammar has one numeric alias: negative zero.
+			// Preserve public/wire lexemes, but use exact values for DEC-004 identity.
+			if code == "-0" {
+				code = "0"
+			}
 			if seen[code] {
 				validator.add(Diagnostic{
 					Code:          CodeDuplicateErrorCode,
