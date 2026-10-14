@@ -52,6 +52,22 @@ The module declares no services or test/build tags. This command runs
 deterministic fuzz seeds and saved corpus regressions, not active exploration.
 Existing builder, discovery, observer, reference and HTTP-store TestMain
 checks also retain goroutine cleanup assertions in ordinary tests.
+The mandatory shared package-test operation also runs
+`make -f verification/package.mk coverage-exact`. It collects a fresh complete
+atomic production profile and rejects every gap except the two independently
+reviewed returned-error arms in `MarshalCanonical`. Under default Go 1.27.2's
+JSONv2 implementation, initial marshaling validates the entire aggregate before
+its same-policy decoding, and the decoded closed tree cannot fail encoding to
+its owned buffer. All parser refusal paths remain mandatory.
+
+The owner check binds selected production sources, dependencies, active codec,
+compiler geometry and executable checker/test policy to
+[`verification/coverage-exception.json`](verification/coverage-exception.json).
+Non-default experiments, changed material inputs, ambiguous or incomplete
+profiles, and expiry at 2026-11-14T00:00:00Z refuse. The shared coverage collector
+records evidence only; it does not replace this fatal owner acceptance or certify
+release readiness. The guards remain in production unchanged.
+
 With the checksum-pinned public Tools v2.4.0 verifier selected by `.golib.yaml`:
 
 ```bash

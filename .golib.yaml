@@ -17,7 +17,18 @@ api:
     - module: .
       mode: apidiff
       path: api/v2.export
+coverage:
+  modules:
+    - module: .
+      mode: evidence
 operations:
+  - module: .
+    gate: test
+    steps:
+      - type: make
+        makefile: verification/package.mk
+        target: coverage-exact
+        timeout: 10m
   - module: .
     gate: local-test
     steps:

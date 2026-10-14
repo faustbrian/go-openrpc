@@ -11,3 +11,9 @@ conformance:
 
 interoperability:
 	./verification/check-jsonrpc-integration.sh
+
+.PHONY: coverage-exact
+
+coverage-exact:
+	$(GO) test scripts/coverage-exception/check.go scripts/coverage-exception/check_test.go -count=1
+	./scripts/check-coverage.sh

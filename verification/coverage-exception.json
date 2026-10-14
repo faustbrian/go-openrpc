@@ -1,0 +1,6 @@
+{
+  "inputs_sha256": "ab09734f61cdfec6e1627c826e4b6209c1af3ad4741e683b299bdeda758c57b0",
+  "geometry_sha256": "dbe227475f2384a06559ca60c0a72919a783b475b5b0e735173e7fc3c0531a18",
+  "expires": "2026-11-14",
+  "proof": "Independent active-default-Go1.27.2 source proof by /root/regexp_repair, 2026-10-14: only serialization.go 47.3-48.1 and 53.3-54.1, one statement each. Successful initial JSONv2 Marshal validates the entire aggregate with the same permissive V1 syntax/depth options used by Decode; UseNumber avoids numeric range coercion. Fresh nil-any decoding creates only a finite acyclic primitive/map/slice/valid-Number tree, with no caller callbacks or aliases. The final default encoder uses identical depth semantics and an owned bytes.Buffer whose Write cannot return an error. Earlier marshal errors and resource panics are not these returned-error branches. All nine parser refusal arms and every other production statement remain mandatory. Source-backed all32/64 reasoning is not executed32 runtime qualification. Expires at 2026-11-14T00:00:00Z or any earlier material production/dependency/compiler/active-codec/default-experiment/inventory/checker/test-policy change."
+}
